@@ -1,5 +1,13 @@
 package asteroids.model;
 
+import be.kuleuven.cs.som.annotate.*;
+/**
+ * A class of ships involving a position, velocity, radius and orientation.
+ * 
+ * @version 1.4
+ * @author  Sander Leyssens & Sarah Joseph
+ *
+ */
 public class Ship {
 	
 	/**
@@ -28,10 +36,10 @@ public class Ship {
 	 */
 	public Ship(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation){
-		setPosition(new double[] {x,y});
-		setVelocity(new double[] {xVelocity,yVelocity});
-		setRadius(radius);
-		setOrientation(orientation);
+		this.setPosition(new double[] {x,y});
+		this.setVelocity(new double[] {xVelocity,yVelocity});
+		this.setRadius(radius);
+		this.setOrientation(orientation);
 	}
 	
 	/**
@@ -52,20 +60,21 @@ public class Ship {
 	public Ship() {
 		this(0,0,0,0,1,0);
 	}
-
+	
 	/**
 	 * Return the position of this ship as an array of length 2, with the
 	 * x-coordinate at index 0 and the y-coordinate at index 1.
 	 * @return Returns the position of this ship.
 	 *         | result == this.position
 	 */
+	@Basic @Raw
 	public double[] getPosition() {
 		return position;
 	}
 	
 	/**
-	 * If the given position is an array of two values, set the position to the given position.
-	 * @param position
+	 * Set the position to the given position.
+	 * @param  position
 	 * @throws IllegalArgumentException
 	 *         The given position is not an array of two values.
 	 *         | position.length != 2
@@ -74,7 +83,7 @@ public class Ship {
 		if (position.length != 2) throw new IllegalArgumentException();
 		this.position = position;
 	}
-
+	
 	private double[] position = new double[2];
 	
 	/**
@@ -83,25 +92,28 @@ public class Ship {
 	 * @return Returns the velocity of this ship.
 	 *         | result == this.velocity
 	 */
+	@Basic @Raw
 	public double[] getVelocity() {
 		return velocity;
 	}
-
+	
 	private void setVelocity(double[] velocity) {
-		if (velocity.length == 1) setVelocity(new double[] {velocity[0],0});
-		double speed = getSpeed();
+		if (velocity.length == 1) this.setVelocity(new double[] {velocity[0],0});
+		double speed = this.getSpeed();
 		if (speed < SPEED_OF_LIGHT) this.velocity = velocity;
 		else this.velocity = new double[] {velocity[0]/speed,velocity[1]/speed};
 	}
-
+	
+	@Raw
 	public double getSpeed() {
-		return Math.sqrt(Math.pow(getVelocity()[0],2)+Math.pow(getVelocity()[1],2));
+		return Math.sqrt(dotProduct(this.getVelocity(), this.getVelocity()));
 	}
 	
 	private double[] velocity = new double[2];
 	
 	public static double SPEED_OF_LIGHT = 300000;
 	
+	@Raw
 	public boolean isValidRadius(double radius) {
 		return (radius > MIN_RADIUS);
 	}
@@ -109,6 +121,7 @@ public class Ship {
 	/**
 	 * Return the radius of this ship.
 	 */
+	@Basic @Raw
 	public double getRadius() {
 		return radius;
 	}
@@ -121,7 +134,8 @@ public class Ship {
 	private double radius;
 	
 	private static final double MIN_RADIUS = 10;
-
+	
+	@Raw
 	public boolean isValidOrientation(double orientation) {
 		return (orientation >=0 && orientation < 2*Math.PI);
 	}
@@ -129,6 +143,7 @@ public class Ship {
 	/**
 	 * Return the orientation of this ship (in radians).
 	 */
+	@Basic @Raw
 	public double getOrientation() {
 		return orientation;
 	}
@@ -146,8 +161,9 @@ public class Ship {
 	 * Update this ship's position, assuming it moves <code>dt</code>
 	 * seconds at its current velocity.
 	 */
-	public void move(double dt) {
+	public void move(double dt) throws IllegalArgumentException {
 		//TODO Defensive implementation
+		if (dt < 0) throw new IllegalArgumentException();
 		setPosition(getPositionAfterMovingForAPeriodOf(dt));
 		
 	}
@@ -165,6 +181,7 @@ public class Ship {
 	 */
 	public void thrust(double amount) {
 		//TODO Total implementation
+		if (amount < 0) amount = 0;
 		double[] velocity = getVelocity();
 		double orientation = getOrientation();
 		setVelocity(new double[] {velocity[0]+amount*Math.cos(orientation),velocity[1]+amount*Math.sin(orientation)});
@@ -197,7 +214,7 @@ public class Ship {
 	
 	public double getDistanceBetweenCenters(Ship ship2) {
 		double[] positionDifference = getPositionDifference(ship2);
-		double distance = Math.sqrt(positionDifference[0]*positionDifference[0]+positionDifference[1]*positionDifference[1]);
+		double distance = Math.sqrt(dotProduct(positionDifference, positionDifference));
 		return distance;
 	}
 	
@@ -226,20 +243,25 @@ public class Ship {
 	 * they never collide. A ship never collides with itself.
 	 */
 	public double getTimeToCollision(Ship ship2) {
-		//TODO Fix
 		double[] deltaR = getPositionDifference(ship2);
 		double[] deltaV = getVelocityDifference(ship2);
-		if (vectorMultiply(deltaR,deltaV) >= 0) return Double.POSITIVE_INFINITY;
-		if (getDistanceBetween(ship2) <= 0) return Double.POSITIVE_INFINITY;
+		if (dotProduct(deltaR,deltaV) >= 0) return Double.POSITIVE_INFINITY;
+		if (this.overlap(ship2)) return Double.POSITIVE_INFINITY;
 		else {
-			double d = Math.pow(vectorMultiply(deltaV,deltaR), 2) - (vectorMultiply(deltaV,deltaV))*(vectorMultiply(deltaR,deltaR)-Math.pow(this.getRadius()+ship2.getRadius(), 2));
-			return -(vectorMultiply(deltaR,deltaV)+Math.sqrt(d))/vectorMultiply(deltaV,deltaV);
+			double d = Math.pow(dotProduct(deltaV,deltaR), 2) - (dotProduct(deltaV,deltaV))*(dotProduct(deltaR,deltaR)-Math.pow(this.getRadius()+ship2.getRadius(), 2));
+			return -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV);
 		}
 	}
 
-
-	private double vectorMultiply(double[] vector1, double[] vector2) {
-		return vector1[0]*vector2[0]+vector1[1]+vector2[1];
+	/**
+	 * Calculates the dot product of the given vectors of length 2
+	 * @param vector1
+	 * @param vector2
+	 * @return
+	 */
+	@Raw
+	private double dotProduct(double[] vector1, double[] vector2) {
+		return vector1[0]*vector2[0]+vector1[1]*vector2[1];
 	}
 
 	/**
