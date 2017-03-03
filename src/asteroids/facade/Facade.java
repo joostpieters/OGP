@@ -56,28 +56,41 @@ public class Facade implements IFacade {
 	@Override
 	public double getDistanceBetween(Ship ship1, Ship ship2)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return ship1.getDistanceBetween(ship2);
+		try {
+			return ship1.getDistanceBetween(ship2);
+		} catch(IllegalArgumentException exc){
+			throw new ModelException(exc.getMessage());
+		}
+		
 	}
 
 	@Override
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
-		// TODO Auto-generated method stub
-		return ship1.overlap(ship2);
+		try {
+			return ship1.overlap(ship2);
+		} catch(IllegalArgumentException exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double getTimeToCollision(Ship ship1, Ship ship2)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return ship1.getTimeToCollision(ship2);
+		try {
+			return ship1.getTimeToCollision(ship2);
+		} catch(IllegalArgumentException exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double[] getCollisionPosition(Ship ship1, Ship ship2)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return ship1.getCollisionPosition(ship2);
+		try {
+			return ship1.getCollisionPosition(ship2);
+		} catch(IllegalArgumentException exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 }
