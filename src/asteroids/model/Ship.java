@@ -391,9 +391,9 @@ public class Ship {
 	 * @param ship2
 	 * 		  The ship named ship2
 	 * @post  The time to collision is a positive number
-	 * 		  | dotProduct(deltaR,deltaV) >= 0
+	 * 		  | dotProduct(deltaR,deltaV) < 0
 	 * @return Return  the time to collision between ship and ship2
-	 * 		  | return -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV)
+	 * 		  | result == -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV)
 	 */
 	
 	
@@ -417,7 +417,7 @@ public class Ship {
 	 * @param vector2
 	 * 		  A given vector of length 2
 	 * @return Return the dot product of the two vectors
-	 * 		   | return vector1[0]*vector2[0]+vector1[1]*vector2[1]		
+	 * 		   | result == vector1[0]*vector2[0]+vector1[1]*vector2[1]		
 	 */
 	@Raw
 	private double dotProduct(double[] vector1, double[] vector2) {
@@ -435,7 +435,7 @@ public class Ship {
 	 * 
 	 * @param ship2
 	 * 		  The ship named ship2
-	 * @return Return the position at time of collision between ship and ship2
+	 * @return result == the position at time of collision between ship and ship2
 	 */
 	
 	public double[] getCollisionPosition(Ship ship2) throws NullPointerException, IllegalArgumentException {
