@@ -15,7 +15,11 @@ public class Facade implements IFacade {
 	public Ship createShip(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation)
 			throws ModelException {
-		return new Ship(x,y,xVelocity,yVelocity,radius,orientation);
+		try {	
+			return new Ship(x,y,xVelocity,yVelocity,radius,orientation);
+		} catch(IllegalArgumentException exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -40,7 +44,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void move(Ship ship, double dt) throws ModelException {
-		ship.move(dt);
+		try {	
+			ship.move(dt);
+		} catch(IllegalArgumentException exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -68,7 +76,7 @@ public class Facade implements IFacade {
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
 		try {
 			return ship1.overlap(ship2);
-		} catch(IllegalArgumentException exc){
+		} catch(NullPointerException exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -78,7 +86,9 @@ public class Facade implements IFacade {
 			throws ModelException {
 		try {
 			return ship1.getTimeToCollision(ship2);
-		} catch(IllegalArgumentException exc){
+		} catch(NullPointerException exc){
+			throw new ModelException(exc.getMessage());
+		} catch(IllegalArgumentException exc) {
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -88,7 +98,9 @@ public class Facade implements IFacade {
 			throws ModelException {
 		try {
 			return ship1.getCollisionPosition(ship2);
-		} catch(IllegalArgumentException exc){
+		} catch(NullPointerException exc){
+			throw new ModelException(exc.getMessage());
+		} catch(IllegalArgumentException exc) {
 			throw new ModelException(exc.getMessage());
 		}
 	}
