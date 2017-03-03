@@ -253,11 +253,19 @@ public class Ship {
 		return new double[] {position[0]+velocity[0]*dt,position[1]+velocity[1]*dt};
 	}
 
-
 	/**
 	 * Update this ship's velocity based on its current velocity, its
 	 * direction and the given <code>amount</code>.
+	 * @param amount
+	 * 		  The thrust of this ship.
+	 * @post The thrust is larger than 0.
+	 * 		 |if (amount < 0) amount = 0
+	 * @post the new velocity is slower than the speed of light
+	 * 		 |speed < SPEED_OF_LIGHT
+	 * @post The new velocity of this ship is equal the calculated velocity.
+	 *       | setVelocity(new double[] {velocity[0]+amount*Math.cos(orientation),velocity[1]+amount*Math.sin(orientation)});
 	 */
+	
 	public void thrust(double amount) {
 		//TODO Total implementation
 		if (amount < 0) amount = 0;
@@ -271,7 +279,15 @@ public class Ship {
 	 * Update the direction of this ship by adding <code>angle</code>
 	 * (in radians) to its current direction. <code>angle</code> may be
 	 * negative.
+	 * @param angle
+	 * 		  The ship's angle of deviation from it's original orientation.
+	 * @post  The new orientation of this ship is valid.
+	 *        | isValidOrientation(orientation)
+	 * @post  The new orientation of this ship is equal to the angle added 
+	 * 	      to the initial orientation.
+	 *        | setOrientation(getOrientation()+angle)
 	 */
+	
 	public void turn(double angle) {
 		assert(isValidOrientation(getOrientation()+angle));
 		setOrientation(getOrientation()+angle);
@@ -285,12 +301,31 @@ public class Ship {
 	 * either ship should move such that both ships are adjacent. Note that the
 	 * result must be negative if the ships overlap. The distance between a ship
 	 * and itself is 0.
+	 * @param  ship2
+	 * 		   The ship named ship2.
+	 * @return Return the distance between ship and ship2.
+	 *         | this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius())
 	 */
+	
 	public double getDistanceBetween(Ship ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		if (ship2 == this) return 0;
 		else return (this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius());
 	}
+	
+	
+	/**
+	 * Return the distance between the center of this ship and <code>ship2</code>.
+	 * 
+	 * The absolute value of the result of this method is the minimum distance
+	 * either ship should move such that both ships are adjacent. Note that the
+	 * result must be negative if the ships overlap. The distance between a ship
+	 * and itself is 0.
+	 * @param  ship2
+	 * 		   The ship named ship2.
+	 * @return Return the distance between ship and ship2.
+	 *         | Math.sqrt(dotProduct(positionDifference, positionDifference))        
+	 */
 	
 	public double getDistanceBetweenCenters(Ship ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
@@ -299,21 +334,42 @@ public class Ship {
 		return distance;
 	}
 	
+	/**
+	 * Return the difference in position of this ship and ship2
+	 * @param  ship2
+	 * 		   The ship named ship2.
+	 * @return Return the difference in position between ship and ship2.
+	 *         | ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]}
+	 */
+	
 	public double[] getPositionDifference(Ship ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		return new double[] {ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]};
 	}
+	
+	/**
+	 * Return the difference in velocity between this ship and ship2
+	 * @param  ship2
+	 * 		   The ship named ship2.
+	 * @return Return the difference in velocity between between ship and ship2.
+	 *         | ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]}
+	 *         
+	 */
 	
 	public double[] getVelocityDifference(Ship ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		return new double[] {ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]};
 	}
 	
-
 	/**
 	 * Check whether this ship and <code>ship2</code> overlap. A ship
 	 * always overlaps with itself.
+	 * @param  ship2
+	 * 		   The ship named ship2.
+	 * @return Return whether ship and ship2 overlap
+	 *         | this.getDistanceBetween(ship2) < 0
 	 */
+	
 	public boolean overlap(Ship ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		if (this == ship2) return true;
@@ -325,7 +381,16 @@ public class Ship {
 	 * Return the number of seconds until the first collision between
 	 * this ship and <code>ship2</code>, or Double.POSITIVE_INFINITY if
 	 * they never collide. A ship never collides with itself.
+	 * 
+	 * @param ship2
+	 * 		  The ship named ship2
+	 * @post  The time to collision is a positive number
+	 * 		  | dotProduct(deltaR,deltaV) >= 0
+	 * @return Return  the time to collision between ship and ship2
+	 * 		  | return -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV)
 	 */
+	
+	
 	public double getTimeToCollision(Ship ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		double[] deltaR = getPositionDifference(ship2);
@@ -341,8 +406,11 @@ public class Ship {
 	/**
 	 * Calculates the dot product of the given vectors of length 2
 	 * @param vector1
+	 * 		  A given vector of length 2
 	 * @param vector2
-	 * @return
+	 * 		  A given vector of length 2
+	 * @return Return the dot product of the two vectors
+	 * 		   | return vector1[0]*vector2[0]+vector1[1]*vector2[1]		
 	 */
 	@Raw
 	private double dotProduct(double[] vector1, double[] vector2) {
@@ -357,7 +425,12 @@ public class Ship {
 	 * The result of this method is either null or an array of length 2, where
 	 * the element at index 0 represents the x-coordinate and the element at
 	 * index 1 represents the y-coordinate.
+	 * 
+	 * @param ship2
+	 * 		  The ship named ship2
+	 * @return Return the position at time of collision between ship and ship2
 	 */
+	
 	public double[] getCollisionPosition(Ship ship2) throws IllegalArgumentException {
 		double time = getTimeToCollision(ship2);
 		if (time == Double.POSITIVE_INFINITY) return null;
