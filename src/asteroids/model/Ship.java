@@ -75,7 +75,10 @@ public class Ship {
 	 * Set the position to the given position.
 	 * @param  position
 	 * 		   The x-and y-coordinate of the ship 
-	 * TODO post
+	 * @Pre    The given position is valid.
+	 *         |(Double.isNaN(position[0]) && (Double.isNaN(position[1])
+	 * @post   The new value of the position of the ship equals position.
+	 *         | this.position = position
 	 * @throws IllegalArgumentException
 	 *         The given position is not an array of two values.
 	 *         | position.length != 2
@@ -102,10 +105,12 @@ public class Ship {
 	}
 	
 	/**
-	 * @param velocity
-	 * 		  The x-and y-velocity of the ship
-	 * @post the new velocity is slower than the speed of light
-	 * 		 |speed < SPEED_OF_LIGHT
+	 * @param  velocity
+	 * 		   The x-and y-velocity of the ship
+	 * @Pre    The given value for velocity is valid.
+	 * 		   | (Double.isNaN(velocity[0])) && (Double.isNaN(velocity[1]))
+	 * @post   the new velocity is slower than the speed of light and set to the given velocity
+	 * 		   |speed < SPEED_OF_LIGHT && this.velocity = velocity
 	 */
 	
 	private void setVelocity(double[] velocity) {
@@ -150,6 +155,7 @@ public class Ship {
 	
 	/**
 	 * Return the radius of this ship.
+	 * @Pre    Ship is created.
 	 * @return Returns the radius of this ship.
 	 *         | result == this.radius
 	 */
@@ -161,14 +167,16 @@ public class Ship {
 	/**
 	 * Set the radius to a given value.
 	 * @param  radius
-	 * 		   The radius of the ship	   
+	 * 		   The radius of the ship.
+	 * @Pre    The given radius is valid.
+	 * 		   |if (!isValidRadius(radius)) throw new IllegalArgumentException()	   
 	 * @throws IllegalArgumentException
 	 *         The radius is not valid.
 	 *         | !isValidRadius(radius)
-	 * @post the radius is valid.
+	 * @post   the radius is valid.
 	 * 		   | (!isValidRadius(radius)) throw new IllegalArgumentException()
-	 * @post  The new radius of this ship is equal to the given radius.
-	 *        | this.radius = radius
+	 * @post   The new radius of this ship is equal to the given radius.
+	 *         | this.radius = radius
 	 */
 	
 	private void setRadius(double radius) throws IllegalArgumentException {
@@ -195,6 +203,7 @@ public class Ship {
 	
 	/**
 	 * Return the orientation of this ship as type double between 0 and 2*pi.
+	 * @Pre    Ship is created.
 	 * @return Returns the orientation of this ship.
 	 *         | result == this.orientation
 	 */
@@ -207,10 +216,12 @@ public class Ship {
 	 * Set the orientation of this ship to the given position.
 	 * @param  orientation
 	 * 		   The orientation of the ship
-	 * @post  The new orientation of this ship is valid.
-	 *        | isValidOrientation(orientation)
-	 * @post  The new orientation of this ship is equal to the given orientation.
-	 *        | this.orientation() == orientation
+	 * @Pre    The given orientation is valid.
+	 * 		   | assert(isValidOrientation(orientation))
+	 * @post   The new orientation of this ship is valid.
+	 *         | isValidOrientation(orientation)
+	 * @post   The new orientation of this ship is equal to the given orientation.
+	 *         | this.orientation() == orientation
 	 */
 	
 	private void setOrientation(double orientation) {
@@ -227,10 +238,10 @@ public class Ship {
 	 * seconds at its current velocity.
 	 * @param dt
 	 * 		  The time of movement of this ship.
-	 * @Pre  The time is larger than 0.
-	 * 		 |dt < 0
-	 * @post The position is set to the new position after movement for a period of dt.
-	 * 		 |setPosition(getPositionAfterMovingForAPeriodOf(dt));
+	 * @Pre   The given time is valid.
+	 * 		  | (Double.isNaN(dt))
+	 * @post  The position is set to the new position after movement for a period of dt.
+	 * 		  |setPosition(getPositionAfterMovingForAPeriodOf(dt));
 	 */
 	public void move(double dt) throws IllegalArgumentException {
 		//TODO Defensive implementation
@@ -285,10 +296,10 @@ public class Ship {
 	 * Update the direction of this ship by adding <code>angle</code>
 	 * (in radians) to its current direction. <code>angle</code> may be
 	 * negative.
+	 * @Pre   The given angle is valid.
+	 * 		  | assert(isValidOrientation(getOrientation()+angle))
 	 * @param angle
 	 * 		  The ship's angle of deviation from it's original orientation.
-	 * @Pre   The new orientation of this ship is valid.
-	 *        | isValidOrientation(orientation)
 	 * @post  The new orientation of this ship is equal to the angle added 
 	 * 	      to the initial orientation.
 	 *        | setOrientation(getOrientation()+angle)
@@ -309,6 +320,8 @@ public class Ship {
 	 * and itself is 0.
 	 * @param  ship2
 	 * 		   The ship named ship2.
+	 * @Pre    Ship2 must be created and must be different to ship.
+	 * 		   | if (ship2 == this) return 0 && if (ship2 == null) throw new NullPointerException 
 	 * @return Return the distance between ship and ship2.
 	 *         | this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius())
 	 */
@@ -329,6 +342,8 @@ public class Ship {
 	 * and itself is 0.
 	 * @param  ship2
 	 * 		   The ship named ship2.
+	 * @Pre    Ship2 must be created and must be different to ship.
+	 * 		   | if (ship2 == null) throw new NullPointerException 
 	 * @return Return the distance between ship and ship2.
 	 *         | Math.sqrt(dotProduct(positionDifference, positionDifference))        
 	 */
@@ -344,6 +359,8 @@ public class Ship {
 	 * Return the difference in position of this ship and ship2
 	 * @param  ship2
 	 * 		   The ship named ship2.
+	 * @Pre    Ship2 must be created and must be different to ship.
+	 * 		   | if (ship2 == null) throw new NullPointerException 
 	 * @return Return the difference in position between ship and ship2.
 	 *         | ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]}
 	 */
@@ -357,6 +374,8 @@ public class Ship {
 	 * Return the difference in velocity between this ship and ship2
 	 * @param  ship2
 	 * 		   The ship named ship2.
+	 * @Pre    Ship2 must be created and must be different to ship.
+	 * 		   | if (ship2 == null) throw new NullPointerException 
 	 * @return Return the difference in velocity between between ship and ship2.
 	 *         | ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]}
 	 *         
@@ -372,6 +391,8 @@ public class Ship {
 	 * always overlaps with itself.
 	 * @param  ship2
 	 * 		   The ship named ship2.
+	 * @Pre    Ship2 must be created and must be different to ship.
+	 * 		   | if (ship2 == null) throw new NullPointerException 
 	 * @return Return whether ship and ship2 overlap
 	 *         | this.getDistanceBetween(ship2) < 0
 	 */
@@ -387,13 +408,14 @@ public class Ship {
 	 * Return the number of seconds until the first collision between
 	 * this ship and <code>ship2</code>, or Double.POSITIVE_INFINITY if
 	 * they never collide. A ship never collides with itself.
-	 * 
 	 * @param ship2
 	 * 		  The ship named ship2
-	 * @post  The time to collision is a positive number
-	 * 		  | dotProduct(deltaR,deltaV) < 0
+	 * @Pre    Ship2 must be created and must be different to ship.
+	 * 		   | (ship2 == null) throw new NullPointerException 
+	 * @post   The time to collision is a positive number
+	 * 		   | dotProduct(deltaR,deltaV) < 0
 	 * @return Return  the time to collision between ship and ship2
-	 * 		  | result == -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV)
+	 * 		   | result == -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV)
 	 */
 	
 	
@@ -432,9 +454,10 @@ public class Ship {
 	 * The result of this method is either null or an array of length 2, where
 	 * the element at index 0 represents the x-coordinate and the element at
 	 * index 1 represents the y-coordinate.
-	 * 
-	 * @param ship2
-	 * 		  The ship named ship2
+	 * @param  ship2
+	 * 		   The ship named ship2
+	 * @Pre    The time to collision must be finite.
+	 * 		   | if (time == Double.POSITIVE_INFINITY) return null
 	 * @return result == the position at time of collision between ship and ship2
 	 */
 	
