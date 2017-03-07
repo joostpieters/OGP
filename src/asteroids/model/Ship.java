@@ -47,7 +47,7 @@ public class Ship {
 	 * direction.
 	 * 
 	 * Result is a unit circle centered on <code>(0, 0)</code> facing right. Its
-	 * speed is zero.
+	 * speed is zero.//TODO: @effect?
 	 * @post  The new position of this ship is equal to (0,0).
 	 *        | new.getPosition() == {0,0}
 	 * @post  The new velocity of this ship is equal to (0,0).
@@ -76,17 +76,15 @@ public class Ship {
 	 * Set the position to the given position.
 	 * @param  position
 	 * 		   The x-and y-coordinate of the ship 
-	 * @Pre    The given position is valid.
-	 *         |(Double.isNaN(position[0]) && (Double.isNaN(position[1])
 	 * @post   The new value of the position of the ship equals position.
 	 *         | new.getPosition() == position
 	 * @throws IllegalArgumentException
-	 *         The given position is not an array of two values.
-	 *         | position.length != 2
+	 *         The given position is not an array of two values or the given position is not valid.
+	 *         | position.length != 2 ||(Double.isNaN(position[0]) || (Double.isNaN(position[1])
 	 *
 	 */
 	private void setPosition(double[] position) throws IllegalArgumentException {
-		if (position.length != 2) throw new IllegalArgumentException();
+		if (position.length != 2) throw new IllegalArgumentException();//TODO: extract to checker?
 		if(Double.isNaN(position[0])) throw new IllegalArgumentException("NaN is not allowed as a coordinate of position.");
 		if(Double.isNaN(position[1])) throw new IllegalArgumentException("NaN is not allowed as a coordinate of position.");
 		this.position = position;
@@ -108,7 +106,7 @@ public class Ship {
 	/**
 	 * @param  velocity
 	 * 		   The x-and y-velocity of the ship
-	 * @Pre    The given value for velocity is valid.
+	 * @Pre    The given value for velocity is valid. TODO
 	 * 		   | (Double.isNaN(velocity[0])) && (Double.isNaN(velocity[1]))
 	 * @post   the new velocity is slower than the speed of light and set to the given velocity
 	 * 		   |speed < SPEED_OF_LIGHT && this.velocity = velocity TODO: edit
@@ -232,10 +230,8 @@ public class Ship {
 	 * seconds at its current velocity.
 	 * @param dt
 	 * 		  The time of movement of this ship.
-	 * @Pre   The given time is valid.
-	 * 		  | 
 	 * @post  The position is set to the new position after movement for a period of dt.
-	 * 		  |setPosition(getPositionAfterMovingForAPeriodOf(dt));
+	 * 		  |new.getPosition() == getPositionAfterMovingForAPeriodOf(dt)
 	 * @throws IllegalArgumentException
 	 *         The given time is not valid
 	 *         | Double.isNaN(dt) || dt<0
@@ -243,7 +239,7 @@ public class Ship {
 	 */
 	public void move(double dt) throws IllegalArgumentException {
 		//TODO Defensive implementation
-		if (Double.isNaN(dt)) throw new IllegalArgumentException("NaN is not allowed as a value of time");
+		if (Double.isNaN(dt)) throw new IllegalArgumentException("NaN is not allowed as a value of time");//TODO: extract as checker?
 		if (dt < 0) throw new IllegalArgumentException();
 		setPosition(getPositionAfterMovingForAPeriodOf(dt));
 		
@@ -278,7 +274,7 @@ public class Ship {
 	
 	public void thrust(double amount) {
 		//TODO Total implementation
-		if (amount < 0 || Double.isNaN(amount)) amount = 0;
+		if (amount < 0 || Double.isNaN(amount)) amount = 0;//TODO: extract as checker?
 		double[] velocity = getVelocity();
 		double orientation = getOrientation();
 		setVelocity(new double[] {velocity[0]+amount*Math.cos(orientation),velocity[1]+amount*Math.sin(orientation)});
@@ -297,7 +293,6 @@ public class Ship {
 	 * 	      to the initial orientation.
 	 *        | new.getOrientation() = this.getOrientation()+angle
 	 */
-	
 	public void turn(double angle) {
 		assert(isValidOrientation(getOrientation()+angle));
 		setOrientation(getOrientation()+angle);
@@ -317,13 +312,13 @@ public class Ship {
 	 * 		   | if (ship2 == this) result == 0
 	 * @return Return the distance between ship and ship2.
 	 *         | result == this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius())
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *         Ship2 is not created
 	 *         | ship2 == null
 	 */
 	
 	public double getDistanceBetween(Ship ship2) throws NullPointerException {
-		if (ship2 == null) throw new NullPointerException("The second ship does not exist.");
+		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		if (ship2 == this) return 0;
 		else return (this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius());
 	}
@@ -340,13 +335,13 @@ public class Ship {
 	 * 		   The ship named ship2.
 	 * @return Return the distance between the centers of ship and ship2.
 	 *         | result == Math.sqrt(dotProduct(this.getPositionDifference(ship2), this.getPositionDifference(ship2))
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *         Ship2 is not created
 	 *         | ship2 == null
 	 */
 	
 	public double getDistanceBetweenCenters(Ship ship2) throws NullPointerException {
-		if (ship2 == null) throw new NullPointerException("The second ship does not exist.");
+		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		double[] positionDifference = getPositionDifference(ship2);
 		double distance = Math.sqrt(dotProduct(positionDifference, positionDifference));
 		return distance;
@@ -358,12 +353,12 @@ public class Ship {
 	 * 		   The ship named ship2.
 	 * @return Return the difference in position between ship and ship2.
 	 *         | ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]}
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *         Ship2 is not created
 	 *         | ship2 == null
 	 */
 	
-	public double[] getPositionDifference(Ship ship2) throws NullPointerException {
+	public double[] getPositionDifference(Ship ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new NullPointerException("The second ship does not exist.");
 		return new double[] {ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]};
 	}
@@ -379,8 +374,7 @@ public class Ship {
 	 *         | ship2 == null
 	 *         
 	 */
-	
-	public double[] getVelocityDifference(Ship ship2) throws NullPointerException {
+	public double[] getVelocityDifference(Ship ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new NullPointerException("The second ship does not exist.");
 		return new double[] {ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]};
 	}
@@ -392,13 +386,13 @@ public class Ship {
 	 * 		   The ship named ship2.
 	 * @return Return whether ship and ship2 overlap
 	 *         | result == (this.getDistanceBetween(ship2) < 0)
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *         Ship2 is not created
 	 *         | ship2 == null
 	 */
 	
-	public boolean overlap(Ship ship2) throws NullPointerException {
-		if (ship2 == null) throw new NullPointerException("The second ship does not exist.");
+	public boolean overlap(Ship ship2) throws IllegalArgumentException {
+		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		if (this == ship2) return true;
 		else return (this.getDistanceBetween(ship2) < 0);
 	}
@@ -412,14 +406,14 @@ public class Ship {
 	 * 		  The ship named ship2
 	 * @post   The time to collision is a positive number
 	 * 		   | dotProduct(deltaR,deltaV) < 0
-	 * @return Return  the time to collision between ship and ship2 TODO
+	 * @return Return the time to collision between ship and ship2 TODO
 	 * 		   | result == -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV)
-	 * @throws NullPointerException
-	 *         Ship2 is not created
-	 *         | ship2 == null
+	 * @throws IllegalArgumentException
+	 *         Ship2 is not created or the two ships overlap
+	 *         | ship2 == null || this.overlap(ship2)
 	 */
-	public double getTimeToCollision(Ship ship2) throws NullPointerException, IllegalArgumentException {
-		if (ship2 == null) throw new NullPointerException("The second ship does not exist.");
+	public double getTimeToCollision(Ship ship2) throws IllegalArgumentException {
+		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		if (this.overlap(ship2)) throw new IllegalArgumentException("The ships overlap.");
 		double[] deltaR = getPositionDifference(ship2);
 		double[] deltaV = getVelocityDifference(ship2);
@@ -460,7 +454,7 @@ public class Ship {
 	 * @return result == the position at time of collision between ship and ship2
 	 */
 	
-	public double[] getCollisionPosition(Ship ship2) throws NullPointerException, IllegalArgumentException {
+	public double[] getCollisionPosition(Ship ship2) throws IllegalArgumentException {
 		double time = getTimeToCollision(ship2);
 		if (time == Double.POSITIVE_INFINITY) return null;
 		return getPositionAfterMovingForAPeriodOf(time);
