@@ -32,6 +32,7 @@ public class Ship {
 	 *        | new.getRadius() == radius
 	 * @post  The new orientation of this ship is equal to the given orientation.
 	 *        | new.getOrientation() == orientation
+	 * @throws TODO
 	 */
 	public Ship(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation) throws IllegalArgumentException {
@@ -78,7 +79,7 @@ public class Ship {
 	 * @Pre    The given position is valid.
 	 *         |(Double.isNaN(position[0]) && (Double.isNaN(position[1])
 	 * @post   The new value of the position of the ship equals position.
-	 *         | this.position = position
+	 *         | new.getPosition() == position
 	 * @throws IllegalArgumentException
 	 *         The given position is not an array of two values.
 	 *         | position.length != 2
@@ -110,7 +111,7 @@ public class Ship {
 	 * @Pre    The given value for velocity is valid.
 	 * 		   | (Double.isNaN(velocity[0])) && (Double.isNaN(velocity[1]))
 	 * @post   the new velocity is slower than the speed of light and set to the given velocity
-	 * 		   |speed < SPEED_OF_LIGHT && this.velocity = velocity
+	 * 		   |speed < SPEED_OF_LIGHT && this.velocity = velocity TODO: edit
 	 */
 	
 	private void setVelocity(double[] velocity) {
@@ -127,7 +128,7 @@ public class Ship {
 	/**
 	 * Return the speed of this ship as type double.
 	 * @return Returns the speed of this ship.
-	 *         | result == this.getSpeed()
+	 *         | result == Math.sqrt(dotProduct(this.getVelocity(), this.getVelocity()))
 	 */
 	@Raw
 	public double getSpeed() {
@@ -140,13 +141,11 @@ public class Ship {
 	
 	
 	/**
-	 * Return the validity of this ship as type boolean.
+	 * Return the validity of a potential radius for this ship as type boolean.
 	 * @param radius
-	 * 		  | The radius of this ship
-	 * @post The radius is larger than MIN_RADIUS
-	 * 		  | radius > MIN_RADIUS
-	 * @return Returns the validity of this ship.
-	 *        | result == this.isValidRadius(double radius)
+	 * 		  | A potential radius for this ship
+	 * @return Returns the validity of the potential radius for this ship.
+	 *        | result == (radius > MIN_RADIUS)
 	 */
 	@Raw
 	public boolean isValidRadius(double radius) {
@@ -155,7 +154,6 @@ public class Ship {
 	
 	/**
 	 * Return the radius of this ship.
-	 * @Pre    Ship is created.
 	 * @return Returns the radius of this ship.
 	 *         | result == this.radius
 	 */
@@ -168,15 +166,13 @@ public class Ship {
 	 * Set the radius to a given value.
 	 * @param  radius
 	 * 		   The radius of the ship.
-	 * @Pre    The given radius is valid.
-	 * 		   |if (!isValidRadius(radius)) throw new IllegalArgumentException()	   
-	 * @throws IllegalArgumentException
-	 *         The radius is not valid.
-	 *         | !isValidRadius(radius)
 	 * @post   the radius is valid.
 	 * 		   | (!isValidRadius(radius)) throw new IllegalArgumentException()
 	 * @post   The new radius of this ship is equal to the given radius.
-	 *         | this.radius = radius
+	 *         | new.getRadius() = radius
+	 * @throws IllegalArgumentException
+	 *         The given radius is not valid
+	 *         | !isValidRadius(radius)
 	 */
 	
 	private void setRadius(double radius) throws IllegalArgumentException {
@@ -194,7 +190,7 @@ public class Ship {
 	 * @param orientation
 	 * 		  the orientation of this ship
 	 * @return Returns the validity of the orientation of this ship.
-	 *         | result == this.isValidOrientation(double orientation)
+	 *         | result == (orientation >=0 && orientation < 2*Math.PI)
 	 */
 	@Raw
 	public boolean isValidOrientation(double orientation) {
@@ -217,11 +213,9 @@ public class Ship {
 	 * @param  orientation
 	 * 		   The orientation of the ship
 	 * @Pre    The given orientation is valid.
-	 * 		   | assert(isValidOrientation(orientation))
-	 * @post   The new orientation of this ship is valid.
-	 *         | isValidOrientation(orientation)
+	 * 		   | isValidOrientation(orientation)
 	 * @post   The new orientation of this ship is equal to the given orientation.
-	 *         | this.orientation() == orientation
+	 *         | new.getOrientation() == orientation
 	 */
 	
 	private void setOrientation(double orientation) {
@@ -239,9 +233,13 @@ public class Ship {
 	 * @param dt
 	 * 		  The time of movement of this ship.
 	 * @Pre   The given time is valid.
-	 * 		  | (Double.isNaN(dt))
+	 * 		  | 
 	 * @post  The position is set to the new position after movement for a period of dt.
 	 * 		  |setPosition(getPositionAfterMovingForAPeriodOf(dt));
+	 * @throws IllegalArgumentException
+	 *         The given time is not valid
+	 *         | Double.isNaN(dt) || dt<0
+	 *         
 	 */
 	public void move(double dt) throws IllegalArgumentException {
 		//TODO Defensive implementation
@@ -255,13 +253,8 @@ public class Ship {
 	 * Return the position of this ship as an array of length 2 x-coordinate at 
 	 * index 0 and the y-coordinate at index 1, after moving for the given time dt.
 	 * @param dt
-	 * 		  The time of movement of this ship.
-	 * @post  The new position of the ship equals the calculated position.
-	 *        | position = getPosition()
-	 * @post  The new velocity of this ship is equal the calculated velocity.
-	 *        | velocity = getVelocity()
 	 * @return Returns the position of this ship.
-	 *         | result == position[0]+velocity[0]*dt,position[1]+velocity[1]*dt
+	 *         | result == getPosition()[0]+getVelocity[0]*dt,getPosition[1]+getVelocity[1]*dt
 	 */
 	
 	private double[] getPositionAfterMovingForAPeriodOf(double dt) {
@@ -275,7 +268,7 @@ public class Ship {
 	 * direction and the given <code>amount</code>.
 	 * @param amount
 	 * 		  The thrust of this ship.
-	 * @post The thrust is larger than 0.
+	 * @post The thrust is larger than 0. TODO: may need editing
 	 * 		 |if (amount < 0) amount = 0
 	 * @post the new velocity is slower than the speed of light
 	 * 		 |speed < SPEED_OF_LIGHT
@@ -297,12 +290,12 @@ public class Ship {
 	 * (in radians) to its current direction. <code>angle</code> may be
 	 * negative.
 	 * @Pre   The given angle is valid.
-	 * 		  | assert(isValidOrientation(getOrientation()+angle))
+	 * 		  | isValidOrientation(getOrientation()+angle)
 	 * @param angle
 	 * 		  The ship's angle of deviation from it's original orientation.
 	 * @post  The new orientation of this ship is equal to the angle added 
 	 * 	      to the initial orientation.
-	 *        | setOrientation(getOrientation()+angle)
+	 *        | new.getOrientation() = this.getOrientation()+angle
 	 */
 	
 	public void turn(double angle) {
@@ -320,10 +313,13 @@ public class Ship {
 	 * and itself is 0.
 	 * @param  ship2
 	 * 		   The ship named ship2.
-	 * @Pre    Ship2 must be created and must be different to ship.
-	 * 		   | if (ship2 == this) return 0 && if (ship2 == null) throw new NullPointerException 
+	 * @return Return 0 if this ship and ship2 are identical.
+	 * 		   | if (ship2 == this) result == 0
 	 * @return Return the distance between ship and ship2.
-	 *         | this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius())
+	 *         | result == this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius())
+	 * @throws NullPointerException
+	 *         Ship2 is not created
+	 *         | ship2 == null
 	 */
 	
 	public double getDistanceBetween(Ship ship2) throws NullPointerException {
@@ -342,10 +338,11 @@ public class Ship {
 	 * and itself is 0.
 	 * @param  ship2
 	 * 		   The ship named ship2.
-	 * @Pre    Ship2 must be created and must be different to ship.
-	 * 		   | if (ship2 == null) throw new NullPointerException 
-	 * @return Return the distance between ship and ship2.
-	 *         | Math.sqrt(dotProduct(positionDifference, positionDifference))        
+	 * @return Return the distance between the centers of ship and ship2.
+	 *         | result == Math.sqrt(dotProduct(this.getPositionDifference(ship2), this.getPositionDifference(ship2))
+	 * @throws NullPointerException
+	 *         Ship2 is not created
+	 *         | ship2 == null
 	 */
 	
 	public double getDistanceBetweenCenters(Ship ship2) throws NullPointerException {
@@ -359,10 +356,11 @@ public class Ship {
 	 * Return the difference in position of this ship and ship2
 	 * @param  ship2
 	 * 		   The ship named ship2.
-	 * @Pre    Ship2 must be created and must be different to ship.
-	 * 		   | if (ship2 == null) throw new NullPointerException 
 	 * @return Return the difference in position between ship and ship2.
 	 *         | ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]}
+	 * @throws NullPointerException
+	 *         Ship2 is not created
+	 *         | ship2 == null
 	 */
 	
 	public double[] getPositionDifference(Ship ship2) throws NullPointerException {
@@ -374,10 +372,11 @@ public class Ship {
 	 * Return the difference in velocity between this ship and ship2
 	 * @param  ship2
 	 * 		   The ship named ship2.
-	 * @Pre    Ship2 must be created and must be different to ship.
-	 * 		   | if (ship2 == null) throw new NullPointerException 
 	 * @return Return the difference in velocity between between ship and ship2.
-	 *         | ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]}
+	 *         | result == {ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]}
+	 * @throws NullPointerException
+	 *         Ship2 is not created
+	 *         | ship2 == null
 	 *         
 	 */
 	
@@ -391,10 +390,11 @@ public class Ship {
 	 * always overlaps with itself.
 	 * @param  ship2
 	 * 		   The ship named ship2.
-	 * @Pre    Ship2 must be created and must be different to ship.
-	 * 		   | if (ship2 == null) throw new NullPointerException 
 	 * @return Return whether ship and ship2 overlap
-	 *         | this.getDistanceBetween(ship2) < 0
+	 *         | result == (this.getDistanceBetween(ship2) < 0)
+	 * @throws NullPointerException
+	 *         Ship2 is not created
+	 *         | ship2 == null
 	 */
 	
 	public boolean overlap(Ship ship2) throws NullPointerException {
@@ -410,15 +410,14 @@ public class Ship {
 	 * they never collide. A ship never collides with itself.
 	 * @param ship2
 	 * 		  The ship named ship2
-	 * @Pre    Ship2 must be created and must be different to ship.
-	 * 		   | (ship2 == null) throw new NullPointerException 
 	 * @post   The time to collision is a positive number
 	 * 		   | dotProduct(deltaR,deltaV) < 0
-	 * @return Return  the time to collision between ship and ship2
+	 * @return Return  the time to collision between ship and ship2 TODO
 	 * 		   | result == -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV)
+	 * @throws NullPointerException
+	 *         Ship2 is not created
+	 *         | ship2 == null
 	 */
-	
-	
 	public double getTimeToCollision(Ship ship2) throws NullPointerException, IllegalArgumentException {
 		if (ship2 == null) throw new NullPointerException("The second ship does not exist.");
 		if (this.overlap(ship2)) throw new IllegalArgumentException("The ships overlap.");
@@ -456,8 +455,8 @@ public class Ship {
 	 * index 1 represents the y-coordinate.
 	 * @param  ship2
 	 * 		   The ship named ship2
-	 * @Pre    The time to collision must be finite.
-	 * 		   | if (time == Double.POSITIVE_INFINITY) return null
+	 * @return If the time to collision is not finite, return null
+	 * 		   | if (time == Double.POSITIVE_INFINITY) result == null
 	 * @return result == the position at time of collision between ship and ship2
 	 */
 	
