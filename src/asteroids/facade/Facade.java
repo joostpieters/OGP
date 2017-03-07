@@ -76,7 +76,7 @@ public class Facade implements IFacade {
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
 		try {
 			return ship1.overlap(ship2);
-		} catch(NullPointerException exc){
+		} catch(IllegalArgumentException exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -86,8 +86,6 @@ public class Facade implements IFacade {
 			throws ModelException {
 		try {
 			return ship1.getTimeToCollision(ship2);
-		} catch(NullPointerException exc){
-			throw new ModelException(exc.getMessage());
 		} catch(IllegalArgumentException exc) {
 			throw new ModelException(exc.getMessage());
 		}
@@ -98,8 +96,6 @@ public class Facade implements IFacade {
 			throws ModelException {
 		try {
 			return ship1.getCollisionPosition(ship2);
-		} catch(NullPointerException exc){
-			throw new ModelException(exc.getMessage());
 		} catch(IllegalArgumentException exc) {
 			throw new ModelException(exc.getMessage());
 		}
