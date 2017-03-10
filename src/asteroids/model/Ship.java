@@ -7,7 +7,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author  Sander Leyssens & Sarah Joseph
  *
  */
-public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 38? Make position/velocity into value classes?
+public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make position/velocity into value classes?
 	
 	/**
 	 * Create a new ship with the given position, velocity, radius and
@@ -164,11 +164,11 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 38? Make posit
 	 * @param  radius
 	 * 	       | A potential radius for this ship
 	 * @return Returns the validity of the potential radius for this ship.
-	 *         | result == (radius > MIN_RADIUS)
+	 *         | result == (radius > minRadius)
 	 */
 	@Raw
 	public static boolean isValidRadius(double radius) {
-		return (radius > MIN_RADIUS);
+		return (radius > minRadius);
 	}
 	
 	/**
@@ -201,7 +201,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 38? Make posit
 
 	private double radius;
 	
-	private static final double MIN_RADIUS = 10;
+	private static final double minRadius = 10;
 	
 	/**
 	 * Return the validity of the given orientation for any ship. The orientation is a
