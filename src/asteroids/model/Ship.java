@@ -7,7 +7,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author  Sander Leyssens & Sarah Joseph
  *
  */
-public class Ship {
+public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 38? Make position/velocity into value classes?
 	
 	/**
 	 * Create a new ship with the given position, velocity, radius and
@@ -59,6 +59,8 @@ public class Ship {
 	 *        | new.getRadius() == 1
 	 * @post  The new orientation of this ship is equal to 0 (faces to the right).
 	 *        | new.getOrientation() == 0
+	 * @throws IllegalArgumentException
+	 *         | true
      */
 	public Ship() throws IllegalArgumentException {
 		this(0,0,0,0,1,0);//Note: being a unit circle, the radius is too small and any ship created with this would be invalid.
@@ -83,7 +85,7 @@ public class Ship {
 	 *         | result == !((position.length != 2)||(Double.isNaN(position[0]))||(Double.isNaN(position[1])))
 	 */
 	@Raw
-	private boolean isValidPosition(double[] position){
+	private static boolean isValidPosition(double[] position){
 		if (position.length != 2) return false;
 		if (Double.isNaN(position[0])) return false;
 		if (Double.isNaN(position[1])) return false;
@@ -165,7 +167,7 @@ public class Ship {
 	 *         | result == (radius > MIN_RADIUS)
 	 */
 	@Raw
-	public boolean isValidRadius(double radius) {
+	public static boolean isValidRadius(double radius) {
 		return (radius > MIN_RADIUS);
 	}
 	
@@ -192,7 +194,7 @@ public class Ship {
 	 *         | !isValidRadius(radius)
 	 */
 	@Raw
-	private void setRadius(double radius) throws IllegalArgumentException {
+	private void setRadius(double radius) throws IllegalArgumentException {//TODO: remove to demonstrate knowledge of immutable properties?
 		if (!isValidRadius(radius)) throw new IllegalArgumentException();
 		this.radius = radius;
 	}
@@ -210,7 +212,7 @@ public class Ship {
 	 *         | result == (orientation >=0 && orientation < 2*Math.PI)
 	 */
 	@Raw
-	public boolean isValidOrientation(double orientation) {
+	public static boolean isValidOrientation(double orientation) {
 		return (orientation >=0 && orientation < 2*Math.PI);
 	}
 	
@@ -453,7 +455,7 @@ public class Ship {
 	 * 	       | result.equals(vector1[0]*vector2[0]+vector1[1]*vector2[1])
 	 */
 	@Raw
-	private double dotProduct(double[] vector1, double[] vector2) {
+	private static double dotProduct(double[] vector1, double[] vector2) {
 		return vector1[0]*vector2[0]+vector1[1]*vector2[1];
 	}
 
