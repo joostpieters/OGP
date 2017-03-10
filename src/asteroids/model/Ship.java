@@ -350,10 +350,6 @@ public class Ship {
 	/**
 	 * Return the distance between the center of this ship and <code>ship2</code>.
 	 * 
-	 * The absolute value of the result of this method is the minimum distance
-	 * either ship should move such that both ships are adjacent. Note that the
-	 * result must be negative if the ships overlap. The distance between a ship
-	 * and itself is 0.
 	 * @param  ship2
 	 * 	       The ship named ship2.
 	 * @return Return the distance between the centers of ship and ship2.
