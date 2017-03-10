@@ -41,7 +41,8 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 			double yVelocity, double radius, double orientation) throws IllegalArgumentException {
 		this.setPosition(new double[] {x,y});
 		this.setVelocity(new double[] {xVelocity,yVelocity});
-		this.setRadius(radius);
+		if (!isValidRadius(radius)) throw new IllegalArgumentException();
+		this.radius = radius;
 		this.setOrientation(orientation);
 	}
 	
@@ -177,29 +178,11 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	 *         | result == this.radius
 	 */
 	@Basic @Raw
-	public double getRadius() {
+	public final double getRadius() {
 		return radius;
 	}
-	
-	/**
-	 * Set the radius to a given value.
-	 * @param  radius
-	 * 	       The radius of the ship.
-	 * @post   the radius is valid.
-	 * 	     | (!isValidRadius(radius)) throw new IllegalArgumentException()
-	 * @post   The new radius of this ship is equal to the given radius.
-	 *         | new.getRadius() = radius
-	 * @throws IllegalArgumentException
-	 *         The given radius is not valid
-	 *         | !isValidRadius(radius)
-	 */
-	@Raw
-	private void setRadius(double radius) throws IllegalArgumentException {//TODO: remove to demonstrate knowledge of immutable properties?
-		if (!isValidRadius(radius)) throw new IllegalArgumentException();
-		this.radius = radius;
-	}
 
-	private double radius;
+	private final double radius;
 	
 	private static final double minRadius = 10;
 	
