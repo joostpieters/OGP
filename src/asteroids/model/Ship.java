@@ -25,9 +25,9 @@ public class Ship {
 	 * @param  orientation
 	 *         The orientation of this new ship.
 	 * @post   The new position of this ship is equal to the given position.
-	 *         | new.getPosition() == {x,y}
+	 *         | new.getPosition().equals({x,y})
 	 * @post   The new velocity of this ship is equal to the given velocity.
-	 *         | new.getVelocity() == {xVelocity,yVelocity}
+	 *         | new.getVelocity().equals({xVelocity,yVelocity})
 	 * @post   The new radius of this ship is equal to the given radius.
 	 *         | new.getRadius() == radius
 	 * @post   The new orientation of this ship is equal to the given orientation.
@@ -52,9 +52,9 @@ public class Ship {
 	 * Result is a unit circle centered on <code>(0, 0)</code> facing right. Its
 	 * speed is zero.//TODO: @effect?
 	 * @post  The new position of this ship is equal to (0,0).
-	 *        | new.getPosition() == {0,0}
+	 *        | new.getPosition().equals({0,0})
 	 * @post  The new velocity of this ship is equal to (0,0).
-	 *        | new.getVelocity() == {0,0}
+	 *        | new.getVelocity().equals({0,0})
 	 * @post  The new radius of this ship is equal to 1.
 	 *        | new.getRadius() == 1
 	 * @post  The new orientation of this ship is equal to 0 (faces to the right).
@@ -68,11 +68,11 @@ public class Ship {
 	 * Return the position of this ship as an array of length 2, with the
 	 * x-coordinate at index 0 and the y-coordinate at index 1.
 	 * @return Returns the position of this ship.
-	 *         | result == this.position
+	 *         | result.equals(this.position)
 	 */
 	@Basic @Raw
 	public double[] getPosition() {
-		return position;
+		return position.clone();
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class Ship {
 	 * @param  position
 	 * 	       The x-and y-coordinate of the ship 
 	 * @post   The new value of the position of the ship equals position.
-	 *         | new.getPosition() == position
+	 *         | new.getPosition().equals(position)
 	 * @throws IllegalArgumentException
 	 *         The given position is not valid.
 	 *         | !isValidPosition(position)
@@ -104,7 +104,7 @@ public class Ship {
 	@Raw
 	private void setPosition(double[] position) throws IllegalArgumentException {
 		if(!isValidPosition(position)) throw new IllegalArgumentException("The given position is not valid.");
-		this.position = position;
+		this.position = position.clone();
 	}
 	
 	private double[] position = new double[2];
@@ -113,11 +113,11 @@ public class Ship {
 	 * Return the velocity of this ship as an array of length 2, with the velocity
 	 * along the X-axis at index 0 and the velocity along the Y-axis at index 1.
 	 * @return Returns the velocity of this ship.
-	 *         | result == this.velocity
+	 *         | result.equals(this.velocity)
 	 */
 	@Basic @Raw
 	public double[] getVelocity() {
-		return velocity;
+		return velocity.clone();
 	}
 	
 	/**
@@ -127,10 +127,10 @@ public class Ship {
 	 *         | if (Double.isNaN(velocity[0]))||(Double.isNaN(velocity[1]))||(velocity.length != 2)
 	 * @post   If the given velocity is slower than the speed of light, the new velocity is set to the given velocity.
 	 *         | speed = Math.sqrt(dotProduct(velocity, velocity))
-	 * 	       | if (Math.sqrt(dotProduct(velocity, velocity)) <= SPEED_OF_LIGHT) new.velocity == velocity
+	 * 	       | if (Math.sqrt(dotProduct(velocity, velocity)) <= SPEED_OF_LIGHT) new.velocity.equals(velocity)
 	 * @post   If the given velocity is faster than the speed of light, the new velocity is given the same direction as the given velocity, but the speed of light.
 	 *         | speed = Math.sqrt(dotProduct(velocity, velocity))
-	 *         | new.velocity == {velocity[0]*SPEED_OF_LIGHT/speed,velocity[1]*SPEED_OF_LIGHT/speed}
+	 *         | new.velocity.equals({velocity[0]*SPEED_OF_LIGHT/speed,velocity[1]*SPEED_OF_LIGHT/speed})
 	 */
 	@Raw
 	private void setVelocity(double[] velocity) {
@@ -138,7 +138,7 @@ public class Ship {
 		if (Double.isNaN(velocity[1])) return;
 		if (velocity.length != 2) return;
 		double speed = Math.sqrt(dotProduct(velocity, velocity));
-		if (speed <= SPEED_OF_LIGHT) this.velocity = velocity;
+		if (speed <= SPEED_OF_LIGHT) this.velocity = velocity.clone();
 		else this.velocity = new double[] {velocity[0]*SPEED_OF_LIGHT/speed,velocity[1]*SPEED_OF_LIGHT/speed};
 	}
 	
@@ -258,7 +258,7 @@ public class Ship {
 	 * @param  dt
 	 * 	       The time of movement of this ship.
 	 * @post   The position is set to the new position after movement for a period of dt.
-	 * 	       | new.getPosition() == getPositionAfterMovingForAPeriodOf(dt)
+	 * 	       | new.getPosition().equals(getPositionAfterMovingForAPeriodOf(dt))
 	 * @throws IllegalArgumentException
 	 *         The given time difference is not valid.
 	 *         | !isValidDt(dt)
@@ -273,7 +273,7 @@ public class Ship {
 	 * index 0 and the y-coordinate at index 1, after moving for the given time dt.
 	 * @param  dt
 	 * @return Returns the position of this ship.
-	 *         | result == {getPosition()[0]+getVelocity[0]*dt,getPosition[1]+getVelocity[1]*dt}
+	 *         | result.equals({getPosition()[0]+getVelocity[0]*dt,getPosition[1]+getVelocity[1]*dt})
 	 * @throws IllegalArgumentException
 	 *         The given time difference is not valid.
 	 *         | !isValidDt(dt)
@@ -371,7 +371,7 @@ public class Ship {
 	 * @param  ship2
 	 * 	       The ship named ship2.
 	 * @return Return the difference in position between ship and ship2.
-	 *         | ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]}
+	 *         | result.equals({ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]})
 	 * @throws IllegalArgumentException
 	 *         Ship2 is not created
 	 *         | ship2 == null
@@ -387,7 +387,7 @@ public class Ship {
 	 * @param  ship2
 	 * 	       The ship named ship2.
 	 * @return Return the difference in velocity between between ship and ship2.
-	 *         | result == {ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]}
+	 *         | result.equals({ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]})
 	 * @throws IllegalArgumentException
 	 *         Ship2 is not created
 	 *         | ship2 == null
@@ -450,7 +450,7 @@ public class Ship {
 	 * @param  vector2
 	 * 	       A given vector of length 2
 	 * @return Return the dot product of the two vectors
-	 * 	       | result == vector1[0]*vector2[0]+vector1[1]*vector2[1]		
+	 * 	       | result.equals(vector1[0]*vector2[0]+vector1[1]*vector2[1])
 	 */
 	@Raw
 	private double dotProduct(double[] vector1, double[] vector2) {
@@ -470,7 +470,7 @@ public class Ship {
 	 * @return If the time to collision is not finite, return null
 	 * 	       | if (getTimeToCollision(ship2) == Double.POSITIVE_INFINITY) result == null
 	 * @return Return the position at time of collision between ship and ship2
-	 *         | result == this.getPositionAfterMovingForAPeriodOf(this.getTimeToCollision(ship2))
+	 *         | result.equals(this.getPositionAfterMovingForAPeriodOf(this.getTimeToCollision(ship2)))
 	 */
 	public double[] getCollisionPosition(Ship ship2) throws IllegalArgumentException {
 		double time = this.getTimeToCollision(ship2);
