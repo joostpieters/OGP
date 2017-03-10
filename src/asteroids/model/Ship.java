@@ -24,13 +24,13 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	 *         The radius of this new ship.
 	 * @param  orientation
 	 *         The orientation of this new ship.
-	 * @post   The new position of this ship is equal to the given position.
+	 * @post   The new position of the ship is equal to the given position.
 	 *         | new.getPosition().equals({x,y})
-	 * @post   The new velocity of this ship is equal to the given velocity.
+	 * @post   The new velocity of the ship is equal to the given velocity.
 	 *         | new.getVelocity().equals({xVelocity,yVelocity})
-	 * @post   The new radius of this ship is equal to the given radius.
+	 * @post   The new radius of the ship is equal to the given radius.
 	 *         | new.getRadius() == radius
-	 * @post   The new orientation of this ship is equal to the given orientation.
+	 * @post   The new orientation of the ship is equal to the given orientation.
 	 *         | new.getOrientation() == orientation
 	 * @throws IllegalArgumentException
 	 *         The given initial position or radius is not valid.
@@ -52,13 +52,13 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	 * 
 	 * Result is a unit circle centered on <code>(0, 0)</code> facing right. Its
 	 * speed is zero.//TODO: @effect?
-	 * @post  The new position of this ship is equal to (0,0).
+	 * @post  The new position of the ship is equal to (0,0).
 	 *        | new.getPosition().equals({0,0})
-	 * @post  The new velocity of this ship is equal to (0,0).
+	 * @post  The new velocity of the ship is equal to (0,0).
 	 *        | new.getVelocity().equals({0,0})
-	 * @post  The new radius of this ship is equal to 1.
+	 * @post  The new radius of the ship is equal to 1.
 	 *        | new.getRadius() == 1
-	 * @post  The new orientation of this ship is equal to 0 (faces to the right).
+	 * @post  The new orientation of the ship is equal to 0 (faces to the right).
 	 *        | new.getOrientation() == 0
 	 * @throws IllegalArgumentException
 	 *         | true
@@ -68,9 +68,9 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Return the position of this ship as an array of length 2, with the
+	 * Return the position of the ship as an array of length 2, with the
 	 * x-coordinate at index 0 and the y-coordinate at index 1.
-	 * @return Returns the position of this ship.
+	 * @return Returns the position of the ship.
 	 *         | result.equals(this.position)
 	 */
 	@Basic @Raw
@@ -79,10 +79,10 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Return the validity of a potential position for this ship as type boolean.
+	 * Return the validity of a potential position for the ship as type boolean.
 	 * @param  position
-	 * 	       | A potential position for this ship
-	 * @return Returns the validity of the potential position for this ship.
+	 * 	       | A potential position for the ship
+	 * @return Returns the validity of the potential position for the ship.
 	 *         | result == !((position.length != 2)||(Double.isNaN(position[0]))||(Double.isNaN(position[1])))
 	 */
 	@Raw
@@ -113,9 +113,9 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	private double[] position = new double[2];
 	
 	/**
-	 * Return the velocity of this ship as an array of length 2, with the velocity
+	 * Return the velocity of the ship as an array of length 2, with the velocity
 	 * along the X-axis at index 0 and the velocity along the Y-axis at index 1.
-	 * @return Returns the velocity of this ship.
+	 * @return Returns the velocity of the ship.
 	 *         | result.equals(this.velocity)
 	 */
 	@Basic @Raw
@@ -135,7 +135,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	 *         | speed = Math.sqrt(dotProduct(velocity, velocity))
 	 *         | new.velocity.equals({velocity[0]*SPEED_OF_LIGHT/speed,velocity[1]*SPEED_OF_LIGHT/speed})
 	 */
-	@Raw
+	
 	private void setVelocity(double[] velocity) {
 		if (Double.isNaN(velocity[0])) return;
 		if (Double.isNaN(velocity[1])) return;
@@ -146,8 +146,8 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Return the speed of this ship as type double.
-	 * @return Returns the speed of this ship.
+	 * Return the speed of the ship as type double.
+	 * @return Returns the speed of the ship.
 	 *         | result == Math.sqrt(dotProduct(this.getVelocity(), this.getVelocity()))
 	 */
 	@Raw
@@ -161,10 +161,10 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	
 	
 	/**
-	 * Return the validity of a potential radius for this ship as type boolean.
+	 * Return the validity of a potential radius for any ship as type boolean.
 	 * @param  radius
-	 * 	       | A potential radius for this ship
-	 * @return Returns the validity of the potential radius for this ship.
+	 * 	       | A potential radius for the ship
+	 * @return Returns the validity of the potential radius for the ship.
 	 *         | result == (radius > minRadius)
 	 */
 	@Raw
@@ -173,8 +173,8 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Return the radius of this ship.
-	 * @return Returns the radius of this ship.
+	 * Return the radius of the ship.
+	 * @return Returns the radius of the ship.
 	 *         | result == this.radius
 	 */
 	@Basic @Raw
@@ -200,8 +200,8 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Return the orientation of this ship as type double between 0 and 2*pi.
-	 * @return Returns the orientation of this ship.
+	 * Return the orientation of the ship as type double between 0 and 2*pi.
+	 * @return Returns the orientation of the ship.
 	 *         | result == this.orientation
 	 */
 	@Basic @Raw
@@ -210,12 +210,12 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Set the orientation of this ship to the given position.
+	 * Set the orientation of the ship to the given position.
 	 * @param orientation
 	 * 	      The orientation of the ship
 	 * @Pre   The given orientation is valid.
 	 * 	      | isValidOrientation(orientation)
-	 * @post  The new orientation of this ship is equal to the given orientation.
+	 * @post  The new orientation of the ship is equal to the given orientation.
 	 *        | new.getOrientation() == orientation
 	 */
 	@Raw
@@ -230,7 +230,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	 * Return the validity of the given time difference.
 	 * @param  dt
 	 * 	       The given time difference.
-	 * @return Returns the validity of the given time difference.
+	 * @return Returns true if the time difference is larger than or equal to 0, false otherwise.
 	 *         | result == (dt >= 0)
 	 */
 	private boolean isValidDt(double dt){
@@ -238,10 +238,10 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Update this ship's position, assuming it moves <code>dt</code>
+	 * Update the ship's position, assuming it moves <code>dt</code>
 	 * seconds at its current velocity.
 	 * @param  dt
-	 * 	       The time of movement of this ship.
+	 * 	       The time of movement of the ship.
 	 * @post   The position is set to the new position after movement for a period of dt.
 	 * 	       | new.getPosition().equals(getPositionAfterMovingForAPeriodOf(dt))
 	 * @throws IllegalArgumentException
@@ -254,10 +254,10 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Return the position of this ship as an array of length 2 x-coordinate at 
+	 * Return the position of the ship as an array of length 2 x-coordinate at 
 	 * index 0 and the y-coordinate at index 1, after moving for the given time dt.
 	 * @param  dt
-	 * @return Returns the position of this ship.
+	 * @return Returns the position of the ship.
 	 *         | result.equals({getPosition()[0]+getVelocity[0]*dt,getPosition[1]+getVelocity[1]*dt})
 	 * @throws IllegalArgumentException
 	 *         The given time difference is not valid.
@@ -272,18 +272,17 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 
 	/**
-	 * Update this ship's velocity based on its current velocity, its
+	 * Update the ship's velocity based on its current velocity, its
 	 * direction and the given <code>amount</code>.
 	 * @param  amount
-	 * 	       The thrust of this ship.
+	 * 	       The thrust of the ship.
 	 * @post   The thrust is larger than 0. TODO: may need editing
 	 * 	       | if (amount < 0 || Double.isNaN(amount)) amount = 0
-	 * @effect The new velocity of this ship is set to the calculated velocity.
+	 * @effect The new velocity of the ship is set to the calculated velocity.
 	 *         | setVelocity({this.getVelocity()[0]+amount*Math.cos(this.getOrientation()),this.getVelocity()[1]+amount*Math.sin(this.getOrientation())});
 	 */
 	public void thrust(double amount) {
-		//TODO Total implementation
-		if (amount < 0 || Double.isNaN(amount)) amount = 0;//TODO: extract as checker?
+		if (amount < 0 || Double.isNaN(amount)) amount = 0;
 		double[] velocity = getVelocity();
 		double orientation = getOrientation();
 		setVelocity(new double[] {velocity[0]+amount*Math.cos(orientation),velocity[1]+amount*Math.sin(orientation)});
@@ -291,14 +290,14 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 
 
 	/**
-	 * Update the direction of this ship by adding <code>angle</code>
+	 * Update the direction of the ship by adding <code>angle</code>
 	 * (in radians) to its current direction. <code>angle</code> may be
 	 * negative.
 	 * @Pre   The given angle is valid.
 	 * 	      | isValidOrientation(getOrientation()+angle)
 	 * @param angle
 	 * 	      The ship's angle of deviation from its original orientation.
-	 * @post  The new orientation of this ship is equal to the angle added 
+	 * @post  The new orientation of the ship is equal to the angle added 
 	 * 	      to the initial orientation.
 	 *        | new.getOrientation() = this.getOrientation()+angle
 	 */
@@ -309,7 +308,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 
 
 	/**
-	 * Return the distance between this ship and <code>ship2</code>.
+	 * Return the distance between the ship and <code>ship2</code>.
 	 * 
 	 * The absolute value of the result of this method is the minimum distance
 	 * either ship should move such that both ships are adjacent. Note that the
@@ -317,9 +316,9 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	 * and itself is 0.
 	 * @param  ship2
 	 * 	       The ship named ship2.
-	 * @return Return 0 if this ship and ship2 are identical.
+	 * @return Return 0 if the ship and ship2 are identical.
 	 * 	       | if (ship2 == this) result == 0
-	 * @return Return the distance between the centers of this ship and ship2, subtracted by the radius of both ships.
+	 * @return Return the distance between the centers of the ship and ship2, subtracted by the radius of both ships.
 	 *         | result == this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius())
 	 * @throws IllegalArgumentException
 	 *         Ship2 is not created
@@ -333,7 +332,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	
 	
 	/**
-	 * Return the distance between the center of this ship and <code>ship2</code>.
+	 * Return the distance between the center of the ship and <code>ship2</code>.
 	 * 
 	 * @param  ship2
 	 * 	       The ship named ship2.
@@ -352,7 +351,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Return the difference in position of this ship and ship2
+	 * Return the difference in position of the ship and ship2
 	 * @param  ship2
 	 * 	       The ship named ship2.
 	 * @return Return the difference in position between ship and ship2.
@@ -368,7 +367,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Return the difference in velocity between this ship and ship2
+	 * Return the difference in velocity between the ship and ship2
 	 * @param  ship2
 	 * 	       The ship named ship2.
 	 * @return Return the difference in velocity between between ship and ship2.
@@ -385,7 +384,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 	
 	/**
-	 * Check whether this ship and <code>ship2</code> overlap. A ship
+	 * Check whether the ship and <code>ship2</code> overlap. A ship
 	 * always overlaps with itself.
 	 * @param  ship2
 	 * 	       The ship named ship2.
@@ -404,13 +403,13 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 
 	/**
 	 * Return the number of seconds until the first collision between
-	 * this ship and <code>ship2</code>, or Double.POSITIVE_INFINITY if
+	 * the ship and <code>ship2</code>, or Double.POSITIVE_INFINITY if
 	 * they never collide. A ship never collides with itself.
 	 * @param  ship2
 	 * 	       The ship named ship2
 	 * @return Return the time to collision between ship and ship2 
 	 *         Returns the smallest time dt such that the distance between the ships after moving for a time period of dt is 0
-	 *         | Math.sqrt(dotProduct(ship2.getPositionAfterMovingForAPeriodOf(dt),this.getPositionAfterMovingForAPeriodOf(dt)))=ship2.getRadius()+this.getRadius()
+	 *         | Math.sqrt(dotProduct(ship2.getPositionAfterMovingForAPeriodOf(dt), this.getPositionAfterMovingForAPeriodOf(dt))) == ship2.getRadius() + this.getRadius()
 	 * @throws IllegalArgumentException
 	 *         Ship2 is not created or the two ships overlap
 	 *         | ship2 == null || this.overlap(ship2)
@@ -443,7 +442,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	}
 
 	/**
-	 * Return the first position where this ship and <code>ship2</code>
+	 * Return the first position where the ship and <code>ship2</code>
 	 * collide, or <code>null</code> if they never collide. A ship never
 	 * collides with itself.
 	 * 
