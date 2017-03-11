@@ -155,10 +155,9 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 		return Math.sqrt(dotProduct(this.getVelocity(), this.getVelocity()));
 	}
 	
-	private double[] velocity = new double[2];
-	
 	public static double SPEED_OF_LIGHT = 300000;
-	
+
+	private double[] velocity = new double[2];
 	
 	/**
 	 * Return the validity of a potential radius for any ship as type boolean.
@@ -426,21 +425,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 			return -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV);
 		}
 	}
-
-	/**
-	 * Calculates the dot product of the given vectors of length 2
-	 * @param  vector1
-	 * 	       A given vector of length 2
-	 * @param  vector2
-	 * 	       A given vector of length 2
-	 * @return Return the dot product of the two vectors
-	 * 	       | result.equals(vector1[0]*vector2[0]+vector1[1]*vector2[1])
-	 */
-	@Raw
-	private static double dotProduct(double[] vector1, double[] vector2) {
-		return vector1[0]*vector2[0]+vector1[1]*vector2[1];
-	}
-
+	
 	/**
 	 * Return the first position where the ship and <code>ship2</code>
 	 * collide, or <code>null</code> if they never collide. A ship never
@@ -461,6 +446,22 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 		if (time == Double.POSITIVE_INFINITY) return null;
 		return this.getPositionAfterMovingForAPeriodOf(time);
 	}
+	
+	/**
+	 * Calculates the dot product of the given vectors of length 2
+	 * @param  vector1
+	 * 	       A given vector of length 2
+	 * @param  vector2
+	 * 	       A given vector of length 2
+	 * @return Return the dot product of the two vectors
+	 * 	       | result.equals(vector1[0]*vector2[0]+vector1[1]*vector2[1])
+	 */
+	@Raw
+	private static double dotProduct(double[] vector1, double[] vector2) {
+		return vector1[0]*vector2[0]+vector1[1]*vector2[1];
+	}
+
+
 
 
 }
