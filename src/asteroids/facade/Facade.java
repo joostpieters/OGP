@@ -12,7 +12,6 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	//done
 	public Ship createShip(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation)
 			throws ModelException {
@@ -24,31 +23,26 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	//done
 	public double[] getShipPosition(Ship ship) throws ModelException {
 		return ship.getPosition();
 	}
 
 	@Override
-	//done
 	public double[] getShipVelocity(Ship ship) throws ModelException {
 		return ship.getVelocity();
 	}
 
 	@Override
-	//done
 	public double getShipRadius(Ship ship) throws ModelException {
 		return ship.getRadius();
 	}
 
 	@Override
-	//done
 	public double getShipOrientation(Ship ship) throws ModelException {
 		return ship.getOrientation();
 	}
 
 	@Override
-	//done
 	public void move(Ship ship, double dt) throws ModelException {
 		try {	
 			ship.move(dt);
@@ -58,19 +52,16 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	//done
 	public void thrust(Ship ship, double amount) throws ModelException {
 		ship.thrust(amount);
 	}
 
 	@Override
-	//done
 	public void turn(Ship ship, double angle) throws ModelException {
 		ship.turn(angle);
 	}
 
 	@Override
-	//done
 	public double getDistanceBetween(Ship ship1, Ship ship2)
 			throws ModelException {
 		try {
@@ -82,7 +73,6 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	//done
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
 		try {
 			return ship1.overlap(ship2);
@@ -92,7 +82,6 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	//done
 	public double getTimeToCollision(Ship ship1, Ship ship2)
 			throws ModelException {
 		try {
