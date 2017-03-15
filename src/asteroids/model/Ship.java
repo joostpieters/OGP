@@ -5,9 +5,15 @@ import be.kuleuven.cs.som.annotate.*;
  * A class of ships involving a position, velocity, radius and orientation.
  * @version 1.4
  * @author  Sander Leyssens & Sarah Joseph
+ * 
  *
  */
-public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make position/velocity into value classes?
+
+// Name: Sarah Joseph
+// Course: Informatica
+// Repository: https://github.com/sjoseph22/OGP.git
+
+public class Ship {
 	
 	/**
 	 * Create a new ship with the given position, velocity, radius and
@@ -64,7 +70,7 @@ public class Ship {// TODO: implement coding rules 7, 12, 26, 33, 35, 38? Make p
 	 *         | true
      */
 	public Ship() throws IllegalArgumentException {
-		this(0,0,0,0,1,0);//Note: being a unit circle, the radius is too small and any ship created with this would be invalid.
+		this(0,0,0,0,1,0);
 	}
 	
 	/**
