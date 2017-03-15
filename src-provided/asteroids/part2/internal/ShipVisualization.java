@@ -9,13 +9,14 @@ import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.part2.facade.IFacade;
 import asteroids.util.ModelException;
 
 public class ShipVisualization<F extends IFacade> extends Visualization<F, Ship> {
 
-	public ShipVisualization(Color color, Ship ship, Image image) {
+	public ShipVisualization(Color color, Entity ship, Image image) {
 		super(color, ship, image);
 	}
 

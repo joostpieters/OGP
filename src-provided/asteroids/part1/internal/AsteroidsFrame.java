@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.part1.facade.IFacade;
 import asteroids.util.ModelException;
@@ -61,7 +62,7 @@ public class AsteroidsFrame extends JFrame {
 						handleError(e2);
 					}
 				}
-				for (Ship ship : ships) {
+				for (Entity ship : ships) {
 					try {
 						facade.move(ship, dt);
 					} catch (ModelException e1) {

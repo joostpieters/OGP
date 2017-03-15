@@ -10,6 +10,7 @@ import java.util.*;
 import javax.swing.JFrame;
 
 import asteroids.model.Bullet;
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part2.facade.IFacade;
@@ -71,7 +72,7 @@ public class AsteroidsFrame2<F extends IFacade> extends JFrame {
 		// Set op a world with 1 ship for the player and a random number
 		// of enemy ships.
 		World world;
-		Ship player;
+		Entity player;
 		try {
 			world = facade.createWorld(width, height);
 			player = facade.createShip(width / 2., height / 2., 1, 6, 40, 0, 3e17);

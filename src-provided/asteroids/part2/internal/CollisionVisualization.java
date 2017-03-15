@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import asteroids.model.Bullet;
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part2.facade.IFacade;
@@ -17,7 +18,7 @@ public class CollisionVisualization<F extends IFacade> extends Visualization<F, 
 
 	private Supplier<Boolean> showCollisions;
 
-	public CollisionVisualization(Ship ship, Supplier<Boolean> showCollisions) {
+	public CollisionVisualization(Entity ship, Supplier<Boolean> showCollisions) {
 		super(null, ship, null);
 		this.showCollisions = showCollisions;
 	}
@@ -33,7 +34,7 @@ public class CollisionVisualization<F extends IFacade> extends Visualization<F, 
 			F facade = ctx.getFacade();
 			double min_dt = Double.POSITIVE_INFINITY;
 
-			Ship selected = getObject();
+			Entity selected = getObject();
 			World world = facade.getShipWorld(selected);
 			if (world == null) {
 				return;
@@ -53,7 +54,7 @@ public class CollisionVisualization<F extends IFacade> extends Visualization<F, 
 					continue;
 
 				try {
-					if (!(entity instanceof Ship) || !facade.overlap(selected, (Ship) entity)) {
+					if (!(entity instanceof Ship) || !facade.overlap(selected, (Entity) entity)) {
 						dt = facade.getTimeCollisionEntity(selected, entity);
 						if (dt < min_dt) {
 							min_dt = dt;
@@ -116,7 +117,7 @@ public class CollisionVisualization<F extends IFacade> extends Visualization<F, 
 			// draw cross
 			for (Object entity : ships) {
 				try {
-					if (!(entity instanceof Ship) || !(facade.overlap(selected, (Ship) entity))) {
+					if (!(entity instanceof Ship) || !(facade.overlap(selected, (Entity) entity))) {
 						double[] colPos = facade.getPositionCollisionEntity(selected, entity);
 						if (colPos != null) {
 							int x = (int) Math.round(ctx.worldToScreenX(colPos[0]));
@@ -137,7 +138,7 @@ public class CollisionVisualization<F extends IFacade> extends Visualization<F, 
 
 	protected double[] getPosition(F facade, Object object) throws ModelException {
 		if (object instanceof Ship) {
-			return facade.getShipPosition((Ship) object);
+			return facade.getShipPosition((Entity) object);
 		} else if (object instanceof Bullet) {
 			return facade.getBulletPosition((Bullet) object);
 		}
@@ -147,7 +148,7 @@ public class CollisionVisualization<F extends IFacade> extends Visualization<F, 
 
 	protected double[] getVelocity(F facade, Object object) throws ModelException {
 		if (object instanceof Ship) {
-			return facade.getShipVelocity((Ship) object);
+			return facade.getShipVelocity((Entity) object);
 		} else if (object instanceof Bullet) {
 			return facade.getBulletVelocity((Bullet) object);
 		}
@@ -157,7 +158,7 @@ public class CollisionVisualization<F extends IFacade> extends Visualization<F, 
 
 	protected double getRadius(F facade, Object object) throws ModelException {
 		if (object instanceof Ship) {
-			return facade.getShipRadius((Ship) object);
+			return facade.getShipRadius((Entity) object);
 		} else if (object instanceof Bullet) {
 			return facade.getBulletRadius((Bullet) object);
 		}

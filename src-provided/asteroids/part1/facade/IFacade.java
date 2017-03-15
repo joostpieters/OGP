@@ -1,5 +1,6 @@
 package asteroids.part1.facade;
 
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.util.ModelException;
 
@@ -76,7 +77,7 @@ public interface IFacade {
 	 * Result is a unit circle centered on <code>(0, 0)</code> facing right. Its
 	 * speed is zero.
 	 */
-	public Ship createShip() throws ModelException;
+	public Entity createShip() throws ModelException;
 
 	/**
 	 * Create a new ship with the given position, velocity, radius and
@@ -89,29 +90,29 @@ public interface IFacade {
 	 * Return the position of <code>ship</code> as an array of length 2, with the
 	 * x-coordinate at index 0 and the y-coordinate at index 1.
 	 */
-	public double[] getShipPosition(Ship ship) throws ModelException;
+	public double[] getShipPosition(Entity ship) throws ModelException;
 
 	/**
 	 * Return the velocity of <code>ship</code> as an array of length 2, with the velocity
 	 * along the X-axis at index 0 and the velocity along the Y-axis at index 1.
 	 */
-	public double[] getShipVelocity(Ship ship) throws ModelException;
+	public double[] getShipVelocity(Entity ship) throws ModelException;
 
 	/**
 	 * Return the radius of <code>ship</code>.
 	 */
-	public double getShipRadius(Ship ship) throws ModelException;
+	public double getShipRadius(Entity ship) throws ModelException;
 
 	/**
 	 * Return the orientation of <code>ship</code> (in radians).
 	 */
-	public double getShipOrientation(Ship ship) throws ModelException;
+	public double getShipOrientation(Entity ship) throws ModelException;
 
 	/**
 	 * Update <code>ship</code>'s position, assuming it moves <code>dt</code>
 	 * seconds at its current velocity.
 	 */
-	public void move(Ship ship, double dt) throws ModelException;
+	public void move(Entity ship, double dt) throws ModelException;
 
 	/**
 	 * Update <code>ship</code>'s velocity based on its current velocity, its
@@ -134,20 +135,20 @@ public interface IFacade {
 	 * result must be negative if the ships overlap. The distance between a ship
 	 * and itself is 0.
 	 */
-	public double getDistanceBetween(Ship ship1, Ship ship2) throws ModelException;
+	public double getDistanceBetween(Entity ship1, Entity ship2) throws ModelException;
 
 	/**
 	 * Check whether <code>ship1</code> and <code>ship2</code> overlap. A ship
 	 * always overlaps with itself.
 	 */
-	public boolean overlap(Ship ship1, Ship ship2) throws ModelException;
+	public boolean overlap(Entity ship1, Entity ship2) throws ModelException;
 
 	/**
 	 * Return the number of seconds until the first collision between
 	 * <code>ship1</code> and <code>ship2</code>, or Double.POSITIVE_INFINITY if
 	 * they never collide. A ship never collides with itself.
 	 */
-	public double getTimeToCollision(Ship ship1, Ship ship2) throws ModelException;
+	public double getTimeToCollision(Entity ship1, Entity ship2) throws ModelException;
 
 	/**
 	 * Return the first position where <code>ship1</code> and <code>ship2</code>
@@ -158,5 +159,5 @@ public interface IFacade {
 	 * the element at index 0 represents the x-coordinate and the element at
 	 * index 1 represents the y-coordinate.
 	 */
-	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws ModelException;
+	public double[] getCollisionPosition(Entity ship1, Entity ship2) throws ModelException;
 }

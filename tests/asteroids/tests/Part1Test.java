@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.facade.Facade;
 import asteroids.part1.facade.IFacade;
@@ -25,7 +26,7 @@ public class Part1Test {
 
 	@Test
 	public void testCreateShip() throws ModelException {
-		Ship ship = facade.createShip(100, 200, 10, -10, 20, Math.PI);
+		Entity ship = facade.createShip(100, 200, 10, -10, 20, Math.PI);
 		assertNotNull(ship);
 		double[] position = facade.getShipPosition(ship);
 		assertNotNull(position);
@@ -47,7 +48,7 @@ public class Part1Test {
 
 	@Test
 	public void testMove() throws ModelException { 
-		Ship ship = facade.createShip(100, 100, 30, -15, 20, 0);
+		Entity ship = facade.createShip(100, 100, 30, -15, 20, 0);
 		facade.move(ship, 1);
 		double[] position = facade.getShipPosition(ship);
 		assertNotNull(position);
@@ -67,7 +68,7 @@ public class Part1Test {
 	
 	@Test
 	public void testVelocity() throws ModelException {
-		Ship ship = facade.createShip(0, 0, 10, 20, 20, 0);
+		Entity ship = facade.createShip(0, 0, 10, 20, 20, 0);
 		double [] velocity = facade.getShipVelocity(ship);
 		assertNotNull(velocity);
 		assertEquals(10, velocity[0], EPSILON);
@@ -104,7 +105,7 @@ public class Part1Test {
 	
 	@Test
 	public void testPosition() throws ModelException {
-		Ship ship = facade.createShip(10, 20, 0, 0, 20, 0);
+		Entity ship = facade.createShip(10, 20, 0, 0, 20, 0);
 		double [] position = facade.getShipPosition(ship);
 		assertNotNull(position);
 		assertEquals(10, position[0], EPSILON);
@@ -118,20 +119,20 @@ public class Part1Test {
 	
 	@Test 
 	public void testRadius() throws ModelException {
-		Ship ship = facade.createShip(0, 0, 0, 0, 25, 0);
+		Entity ship = facade.createShip(0, 0, 0, 0, 25, 0);
 		double radius = facade.getShipRadius(ship);
 		assertEquals(25, radius, EPSILON);
 	}
 	
 	@Test (expected = ModelException.class)
 	public void testRadiusLowerLimit() throws ModelException {
-		Ship ship = facade.createShip(0, 0, 0, 0, 5, 0);
+		Entity ship = facade.createShip(0, 0, 0, 0, 5, 0);
 	}
 	
 	@Test
 	public void testgetDistanceBetween() throws ModelException {
-		Ship ship1 = facade.createShip(0, 50, 0, 0, 25, 0);
-		Ship ship2 = facade.createShip(0, 0, 0, 0, 25, 0);
+		Entity ship1 = facade.createShip(0, 50, 0, 0, 25, 0);
+		Entity ship2 = facade.createShip(0, 0, 0, 0, 25, 0);
 		double distance = facade.getDistanceBetween(ship1, ship2);
 		assertNotNull(distance);
 		assertEquals(0, distance, EPSILON);
@@ -139,16 +140,16 @@ public class Part1Test {
 	
 	@Test
 	public void testoverlapTrue() throws ModelException {
-		Ship ship1 = facade.createShip(0, 25, 0, 0, 25, 0);
-		Ship ship2 = facade.createShip(0, 0, 0, 0, 25, 0);
+		Entity ship1 = facade.createShip(0, 25, 0, 0, 25, 0);
+		Entity ship2 = facade.createShip(0, 0, 0, 0, 25, 0);
 		boolean overlap = facade.overlap(ship1, ship2);
 		assertEquals(true, overlap);
 	}
 	
 	@Test
 	public void testoverlapFalse() throws ModelException {
-		Ship ship1 = facade.createShip(0, 100, 0, 0, 25, 0);
-		Ship ship2 = facade.createShip(0, 0, 0, 0, 25, 0);
+		Entity ship1 = facade.createShip(0, 100, 0, 0, 25, 0);
+		Entity ship2 = facade.createShip(0, 0, 0, 0, 25, 0);
 		boolean overlap = facade.overlap(ship1, ship2);
 		assertEquals(false, overlap);
 	}
@@ -156,8 +157,8 @@ public class Part1Test {
 	
 	@Test
 	public void testgetTimeToCollision() throws ModelException {
-		Ship ship1 = facade.createShip(80, 0, 0, 0, 20, 0);
-		Ship ship2 = facade.createShip(0, 0, 20, 0, 20, 0);
+		Entity ship1 = facade.createShip(80, 0, 0, 0, 20, 0);
+		Entity ship2 = facade.createShip(0, 0, 20, 0, 20, 0);
 		double time = facade.getTimeToCollision(ship1, ship2);
 		assertNotNull(time);
 		assertEquals(2, time, EPSILON);
@@ -165,8 +166,8 @@ public class Part1Test {
 	
 	@Test
 	public void testgetTimeToCollisionUpperLimit() throws ModelException {
-		Ship ship1 = facade.createShip(80, 80, 0, 0, 20, 0);
-		Ship ship2 = facade.createShip(0, 0, 20, 0, 20, 0);
+		Entity ship1 = facade.createShip(80, 80, 0, 0, 20, 0);
+		Entity ship2 = facade.createShip(0, 0, 20, 0, 20, 0);
 		double time = facade.getTimeToCollision(ship1, ship2);
 		assertNotNull(time);
 		assertEquals(Double.POSITIVE_INFINITY, time, EPSILON);
@@ -174,15 +175,15 @@ public class Part1Test {
 	
 	@Test(expected = ModelException.class)
 	public void testgetTimeToCollisionLowerLimit() throws ModelException {
-		Ship ship1 = facade.createShip(0, 0, 0, 0, 20, 0);
-		Ship ship2 = facade.createShip(0, 0, 0, 0, 20, 0);
+		Entity ship1 = facade.createShip(0, 0, 0, 0, 20, 0);
+		Entity ship2 = facade.createShip(0, 0, 0, 0, 20, 0);
 		double time = facade.getTimeToCollision(ship1, ship2);
 	}
 	
 	@Test
 	public void testgetCollisionPosition() throws ModelException {
-		Ship ship1 = facade.createShip(80, 0, 0, 0, 20, 0);
-		Ship ship2 = facade.createShip(0, 0, 20, 0, 20, 0);
+		Entity ship1 = facade.createShip(80, 0, 0, 0, 20, 0);
+		Entity ship2 = facade.createShip(0, 0, 20, 0, 20, 0);
 		double[] position = facade.getCollisionPosition(ship1, ship2);
 		assertEquals(80, position[0], EPSILON);
 		assertEquals(0, position[1], EPSILON);

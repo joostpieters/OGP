@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import asteroids.model.Bullet;
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part2.CollisionListener;
@@ -51,7 +52,7 @@ public class WorldView2<F extends IFacade> extends JPanel implements KeyListener
 
 	private boolean showCollisions = false;
 
-	public WorldView2(AsteroidsFrame2<F> game, World world, Ship player, Set<Ship> enemies) throws ModelException {
+	public WorldView2(AsteroidsFrame2<F> game, World world, Entity player, Set<Ship> enemies) throws ModelException {
 		this.game = game;
 		this.facade = game.getFacade();
 		this.world = world;
@@ -63,18 +64,18 @@ public class WorldView2<F extends IFacade> extends JPanel implements KeyListener
 		if (player != null) {
 			visualizations.put(player, createPlayerVisualization(player));
 		}
-		for (Ship enemy : enemies) {
+		for (Entity enemy : enemies) {
 			if (enemy != null)
 				visualizations.put(enemy, createEnemyVisualization(enemy));
 		}
 		addKeyListener(this);
 	}
 	
-	public Ship getPlayer() {
+	public Entity getPlayer() {
 		return player;
 	}
 
-	protected Visualization<F, Ship> createEnemyVisualization(Ship enemy) {
+	protected Visualization<F, Ship> createEnemyVisualization(Entity enemy) {
 		int size = 1;
 		try {
 			size = (int) (2 * facade.getShipRadius(enemy));
@@ -90,7 +91,7 @@ public class WorldView2<F extends IFacade> extends JPanel implements KeyListener
 		return showCollisions;
 	}
 
-	protected Visualization<F, Ship> createPlayerVisualization(Ship player) {
+	protected Visualization<F, Ship> createPlayerVisualization(Entity player) {
 		int size = 1;
 		try {
 			size = (int) (2 * facade.getShipRadius(player));
@@ -105,7 +106,7 @@ public class WorldView2<F extends IFacade> extends JPanel implements KeyListener
 				createCollisionVisualization(player, () -> getShowCollisions()));
 	}
 
-	protected Visualization<F, Ship> createCollisionVisualization(Ship object, Supplier<Boolean> showCollisions) {
+	protected Visualization<F, Ship> createCollisionVisualization(Entity object, Supplier<Boolean> showCollisions) {
 		return new CollisionVisualization<>(object, showCollisions);
 	}
 
@@ -201,7 +202,7 @@ public class WorldView2<F extends IFacade> extends JPanel implements KeyListener
 	}
 
 	protected Visualization<F, Bullet> createBulletVisualization(Bullet bullet) {
-		Ship ship = null;
+		Entity ship = null;
 		try {
 			ship = facade.getBulletShip(bullet);
 		} catch (ModelException e) {
@@ -220,7 +221,7 @@ public class WorldView2<F extends IFacade> extends JPanel implements KeyListener
 			return;
 		}
 
-		for (Ship ship : ships) {
+		for (Entity ship : ships) {
 			getOrCreateVisualization(ship, this::createEnemyVisualization).draw(ctx);
 		}
 	}
@@ -302,7 +303,7 @@ public class WorldView2<F extends IFacade> extends JPanel implements KeyListener
 		try {
 			if (fire && isPlayerActive(player)) {
 				facade.fireBullet(player);
-				for (Ship enemy : facade.getWorldShips(world))
+				for (Entity enemy : facade.getWorldShips(world))
 					if ((enemy != player) && (Math.random() > 0.75))
 						facade.fireBullet(enemy);
 				game.getSound().play("torpedo");
@@ -314,7 +315,7 @@ public class WorldView2<F extends IFacade> extends JPanel implements KeyListener
 		}
 	}
 
-	protected boolean isPlayerActive(Ship ship) {
+	protected boolean isPlayerActive(Entity ship) {
 		try {
 			Set<? extends Ship> ships = facade.getWorldShips(world);
 			return ships != null && ships.contains(ship);

@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asteroids.model.Bullet;
-import asteroids.model.Ship;
+import asteroids.model.Entity;
 import asteroids.model.World;
 import asteroids.facade.Facade;
 import asteroids.part2.facade.IFacade;
@@ -35,7 +35,7 @@ public class Part2TestPartial {
 
 	@Test
 	public void testLoadBulletOnShipOverlappingBullets() throws ModelException {
-		Ship ship = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
+		Entity ship = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
 		Bullet bullet1 = facade.createBullet(100, 120, 10, 5, 50);
 		Bullet bullet2 = facade.createBullet(130, 110, 10, 5, 30);
 		facade.loadBulletOnShip(ship, bullet1);
@@ -46,7 +46,7 @@ public class Part2TestPartial {
 	@Test
 	public void testEvolveShipWithActiveThruster() throws ModelException {
 		World world = facade.createWorld(5000, 5000);
-		Ship ship = facade.createShip(100, 120, 10, 0, 50, Math.PI, 1.1E18);
+		Entity ship = facade.createShip(100, 120, 10, 0, 50, Math.PI, 1.1E18);
 		facade.addShipToWorld(world, ship);
 		facade.setThrusterActive(ship, true);
 		assertEquals(1000.0, facade.getShipAcceleration(ship), EPSILON);

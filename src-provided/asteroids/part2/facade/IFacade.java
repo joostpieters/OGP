@@ -3,6 +3,7 @@ package asteroids.part2.facade;
 import java.util.*;
 
 import asteroids.model.Bullet;
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part2.CollisionListener;
@@ -93,7 +94,7 @@ public interface IFacade extends asteroids.part1.facade.IFacade {
 	 */
 	@Override
 	@Deprecated
-	default Ship createShip() throws ModelException {
+	default Entity createShip() throws ModelException {
 		throw new ModelException("unsupported operation");
 	}
 
@@ -125,39 +126,39 @@ public interface IFacade extends asteroids.part1.facade.IFacade {
 	/**
 	 * Terminate <code>ship</code>.
 	 */
-	public void terminateShip(Ship ship) throws ModelException;
+	public void terminateShip(Entity ship) throws ModelException;
 
 	/**
 	 * Check whether <code>ship</code> is terminated.
 	 */
-	public boolean isTerminatedShip(Ship ship) throws ModelException;
+	public boolean isTerminatedShip(Entity ship) throws ModelException;
 
 	/**
 	 * Return the total mass of <code>ship</code> (i.e., including bullets
 	 * loaded onto the ship).
 	 */
-	public double getShipMass(Ship ship) throws ModelException;
+	public double getShipMass(Entity ship) throws ModelException;
 
 	/**
 	 * Return the world of <code>ship</code>.
 	 */
-	public World getShipWorld(Ship ship) throws ModelException;
+	public World getShipWorld(Entity ship) throws ModelException;
 
 	/**
 	 * Return whether <code>ship</code>'s thruster is active.
 	 */
-	public boolean isShipThrusterActive(Ship ship) throws ModelException;
+	public boolean isShipThrusterActive(Entity ship) throws ModelException;
 
 	/**
 	 * Enables or disables <code>ship</code>'s thruster depending on the value
 	 * of the parameter <code>active</code>.
 	 */
-	public void setThrusterActive(Ship ship, boolean active) throws ModelException;
+	public void setThrusterActive(Entity ship, boolean active) throws ModelException;
 
 	/**
 	 * Return the acceleration of <code>ship</code>.
 	 */
-	public double getShipAcceleration(Ship ship) throws ModelException;
+	public double getShipAcceleration(Entity ship) throws ModelException;
 
 	/**
 	 * This method is deprecated; you should not implement nor use it.
@@ -169,7 +170,7 @@ public interface IFacade extends asteroids.part1.facade.IFacade {
 	 */
 	@Override
 	@Deprecated
-	default void move(Ship ship, double dt) throws ModelException {
+	default void move(Entity ship, double dt) throws ModelException {
 		// do nothing; this behaviour is now triggered by the evolve method.
 	}
 
@@ -231,12 +232,12 @@ public interface IFacade extends asteroids.part1.facade.IFacade {
 	 * 
 	 * This method must return null if a bullet is not positioned on a ship.
 	 */
-	public Ship getBulletShip(Bullet bullet) throws ModelException;
+	public Entity getBulletShip(Bullet bullet) throws ModelException;
 
 	/**
 	 * Return the ship that fired <code>bullet</code>.
 	 */
-	public Ship getBulletSource(Bullet bullet) throws ModelException;
+	public Entity getBulletSource(Bullet bullet) throws ModelException;
 
 	/**************
 	 * WORLD: Basic methods
@@ -277,12 +278,12 @@ public interface IFacade extends asteroids.part1.facade.IFacade {
 	/**
 	 * Add <code>ship</code> to <code>world</code>.
 	 */
-	public void addShipToWorld(World world, Ship ship) throws ModelException;
+	public void addShipToWorld(World world, Entity ship) throws ModelException;
 
 	/**
 	 * Remove <code>ship</code> from <code>world</code>.
 	 */
-	public void removeShipFromWorld(World world, Ship ship) throws ModelException;
+	public void removeShipFromWorld(World world, Entity ship) throws ModelException;
 
 	/**
 	 * Add <code>bullet</code> to <code>world</code>.
@@ -303,34 +304,34 @@ public interface IFacade extends asteroids.part1.facade.IFacade {
 	 * 
 	 * For students working alone, this method may return null.
 	 */
-	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException;
+	public Set<? extends Bullet> getBulletsOnShip(Entity ship) throws ModelException;
 
 	/**
 	 * Return the number of bullets loaded on <code>ship</code>.
 	 */
-	public int getNbBulletsOnShip(Ship ship) throws ModelException;
+	public int getNbBulletsOnShip(Entity ship) throws ModelException;
 
 	/**
 	 * Load <code>bullet</code> on <code>ship</code>.
 	 */
-	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException;
+	public void loadBulletOnShip(Entity ship, Bullet bullet) throws ModelException;
 
 	/**
 	 * Load <code>bullet</code> on <code>ship</code>.
 	 * 
 	 * For students working alone, this method must not do anything.
 	 */
-	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException;
+	public void loadBulletsOnShip(Entity ship, Collection<Bullet> bullets) throws ModelException;
 
 	/**
 	 * Remove <code>ship</code> from <code>ship</code>.
 	 */
-	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException;
+	public void removeBulletFromShip(Entity ship, Bullet bullet) throws ModelException;
 
 	/**
 	 * <code>ship</code> fires a bullet.
 	 */
-	public void fireBullet(Ship ship) throws ModelException;
+	public void fireBullet(Entity ship) throws ModelException;
 
 	/******************
 	 * COLLISIONS

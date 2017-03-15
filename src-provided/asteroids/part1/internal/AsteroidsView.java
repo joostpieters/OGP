@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 import javax.swing.JPanel;
 
+import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.part1.facade.IFacade;
 import asteroids.util.ModelException;
@@ -64,7 +65,7 @@ public class AsteroidsView extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		for (Ship ship : ships) {
+		for (Entity ship : ships) {
 			drawShip(ship, g2d);
 		}
 		if (showCollisions) {
@@ -75,9 +76,9 @@ public class AsteroidsView extends JPanel {
 	private void drawCollision(Graphics2D g2d) {
 
 		double min_dt = Double.POSITIVE_INFINITY;
-		Ship min_ship = null;
+		Entity min_ship = null;
 		// find next collision, if any
-		for (Ship ship : ships) {
+		for (Entity ship : ships) {
 			try {
 				if (!facade.overlap(selected, ship)) {
 					double dt = facade.getTimeToCollision(selected, ship);
@@ -91,7 +92,7 @@ public class AsteroidsView extends JPanel {
 			}
 		}
 		try {
-			Ship first = min_ship;
+			Entity first = min_ship;
 			if (first != null && !facade.overlap(selected, first)) {
 				// draw circles
 				double dt = min_dt; // facade.getTimeToCollision(selected,
@@ -126,7 +127,7 @@ public class AsteroidsView extends JPanel {
 			e.printStackTrace();
 		}
 		// draw cross
-		for (Ship ship : ships) {
+		for (Entity ship : ships) {
 			try {
 				if (!facade.overlap(selected, ship)) {
 					double[] colPos = facade.getCollisionPosition(selected, ship);
@@ -144,7 +145,7 @@ public class AsteroidsView extends JPanel {
 		}
 	}
 
-	protected void drawShip(Ship ship, Graphics2D g2d) {
+	protected void drawShip(Entity ship, Graphics2D g2d) {
 		try {
 			double radius = facade.getShipRadius(ship);
 			double angle = -facade.getShipOrientation(ship);
