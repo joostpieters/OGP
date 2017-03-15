@@ -14,16 +14,11 @@ import asteroids.util.ModelException;
 public class Facade implements IFacade {
 
 	@Override
-	public Ship createShip() throws ModelException {
-		return new Ship();
-	}
-
-	@Override
 	public Ship createShip(double x, double y, double xVelocity,
-			double yVelocity, double radius, double orientation)
+			double yVelocity, double radius, double orientation, double mass)
 			throws ModelException {
 		try {	
-			return new Ship(x,y,xVelocity,yVelocity,radius,orientation);
+			return new Ship(x,y,xVelocity,yVelocity,radius,orientation, mass);
 		} catch(IllegalArgumentException exc){
 			throw new ModelException(exc.getMessage());
 		}
@@ -47,20 +42,6 @@ public class Facade implements IFacade {
 	@Override
 	public double getShipOrientation(Ship ship) throws ModelException {
 		return ship.getOrientation();
-	}
-
-	@Override
-	public void move(Ship ship, double dt) throws ModelException {
-		try {	
-			ship.move(dt);
-		} catch(IllegalArgumentException exc){
-			throw new ModelException(exc.getMessage());
-		}
-	}
-
-	@Override
-	public void thrust(Ship ship, double amount) throws ModelException {
-		ship.thrust(amount);
 	}
 
 	@Override
@@ -109,34 +90,24 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius, double direction,
-			double mass) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void terminateShip(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
+		ship.terminate();
 		
 	}
 
 	@Override
 	public boolean isTerminatedShip(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return ship.isTerminated();
 	}
 
 	@Override
 	public double getShipMass(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return ship.getMass();
 	}
 
 	@Override
 	public World getShipWorld(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return ship.getWorld();
 	}
 
 	@Override
@@ -147,14 +118,15 @@ public class Facade implements IFacade {
 
 	@Override
 	public void setThrusterActive(Ship ship, boolean active) throws ModelException {
-		// TODO Auto-generated method stub
+		if (active) ship.thrustOn();
+		else ship.thrustOff();
 		
 	}
 
 	@Override
 	public double getShipAcceleration(Ship ship) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		return ship.getAcceleration();
 	}
 
 	@Override
@@ -220,50 +192,42 @@ public class Facade implements IFacade {
 
 	@Override
 	public World createWorld(double width, double height) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return new World(width, height);
 	}
 
 	@Override
 	public void terminateWorld(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		world.terminate();
 	}
 
 	@Override
 	public boolean isTerminatedWorld(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return world.isTerminated();
 	}
 
 	@Override
 	public double[] getWorldSize(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getSize();
 	}
 
 	@Override
 	public Set<? extends Ship> getWorldShips(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getShips();
 	}
 
 	@Override
 	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getBullets();
 	}
 
 	@Override
 	public void addShipToWorld(World world, Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		world.addShip(ship);
 	}
 
 	@Override
 	public void removeShipFromWorld(World world, Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		world.removeShip(ship);
 	}
 
 	@Override
@@ -280,44 +244,39 @@ public class Facade implements IFacade {
 
 	@Override
 	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return ship.getBullets();
 	}
 
 	@Override
 	public int getNbBulletsOnShip(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return ship.getNbBullets();
 	}
 
 	@Override
 	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
+		ship.loadBullet(bullet);
 		
 	}
 
 	@Override
 	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		ship.loadBullet((Bullet[])(bullets.toArray()));
 	}
 
 	@Override
 	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		ship.removeBullet(bullet);
 	}
 
 	@Override
 	public void fireBullet(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		ship.fireBullet();
 	}
 
 	@Override
 	public double getTimeCollisionBoundary(Object object) throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		return ((Entity)object).getTimeCollisionBoundary();
 	}
 
 	@Override
@@ -328,14 +287,14 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getTimeCollisionEntity(Object entity1, Object entity2) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (!(entity1 instanceof Entity && entity2 instanceof Entity)) throw new ModelException("The given objects are not entities.");
+		return ((Entity)entity1).getTimeToCollision((Entity)entity2);
 	}
 
 	@Override
 	public double[] getPositionCollisionEntity(Object entity1, Object entity2) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		if (!(entity1 instanceof Entity && entity2 instanceof Entity)) throw new ModelException("The given objects are not entities.");
+		return ((Entity)entity1).getCollisionPosition((Entity)entity2);
 	}
 
 	@Override
@@ -364,8 +323,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public Set<? extends Object> getEntities(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getEntities();
 	}
 
 }

@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import java.util.*;
+
 import be.kuleuven.cs.som.annotate.*;
 /**
  * A class of ships involving a position, velocity, radius and orientation.
@@ -44,39 +46,37 @@ public class Ship extends Entity {
 	 * 
 	 */
 	public Ship(double x, double y, double xVelocity,
-			double yVelocity, double radius, double orientation) throws IllegalArgumentException {
-		this.setPosition(new double[] {x,y});
-		this.setVelocity(new double[] {xVelocity,yVelocity});
-		if (!isValidRadius(radius)) throw new IllegalArgumentException();
-		setRadius(radius);
-		this.setOrientation(orientation);
+			double yVelocity, double radius, double orientation, double mass) throws IllegalArgumentException {
+		super(x,y,xVelocity,yVelocity,radius,orientation);
+		this.setMass(mass);
+		Bullet[] bullets = new Bullet[15];
+		for(int i = 0; i < 15; i++){
+//			Bullet bullet = new Bullet();//TODO
+//			bullets[i] = bullet;
+		}
+		this.loadBullet(bullets);
 	}
 	
-	/**
-	 * Create a new ship with a default position, velocity, radius and
-	 * direction.
-	 * 
-	 * Result is a unit circle centered on <code>(0, 0)</code> facing right. Its
-	 * speed is zero.//TODO: @effect?
-	 * @post  The new position of the ship is equal to (0,0).
-	 *        | new.getPosition().equals({0,0})
-	 * @post  The new velocity of the ship is equal to (0,0).
-	 *        | new.getVelocity().equals({0,0})
-	 * @post  The new radius of the ship is equal to 1.
-	 *        | new.getRadius() == 1
-	 * @post  The new orientation of the ship is equal to 0 (faces to the right).
-	 *        | new.getOrientation() == 0
-	 * @throws IllegalArgumentException
-	 *         | true
-     */
-	public Ship() throws IllegalArgumentException {
-		this(0,0,0,0,1,0);
-	}
-	
+	@Override
 	public boolean isValidRadius(double radius){
 		return (radius > minRadius);
 	}
 
+	private void setMass(double mass) {
+		double minMass = 4/3*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
+		if (mass >= minMass) this.mass = mass;
+		else this.mass = minMass;
+	}
+	
+	private double mass;
+
+	private static final double minDensity = 1.42*Math.pow(10, 12);
+	
+	@Override
+	public double getMass(){
+		return this.mass;
+	}
+	
 	private static final double minRadius = 10;
 
 	
@@ -98,6 +98,21 @@ public class Ship extends Entity {
 	}
 
 
+	public void thrustOn() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void thrustOff() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public double getAcceleration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	/**
 	 * Update the direction of the ship by adding <code>angle</code>
 	 * (in radians) to its current direction. <code>angle</code> may be
@@ -115,6 +130,54 @@ public class Ship extends Entity {
 		setOrientation(getOrientation()+angle);
 	}
 
+	@Override
+	public void terminate() {
+		super.terminate();
+		getWorld().removeShip(this);
+	}
+
+	
+	public Set<Bullet> getBullets() {
+		return this.bullets;
+	}
+
+	private Set<Bullet> bullets = new HashSet<Bullet>();
+
+	public int getNbBullets() {
+		return getBullets().size();
+	}
+
+	public void loadBullet(Bullet bullet) {
+		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("The given bullet is invalid.");
+		bullets.add(bullet);
+		bullet.setShip(this);
+	}
+
+	private boolean canHaveAsBullet(Bullet bullet) {
+		if (bullet.getShip() != null && bullet.getShip() != this) return false;
+		if (bullet.getSource() != null && bullet.getSource() != this) return false;
+		return (this.getDistanceBetweenCenters(bullet) < this.getRadius() - bullet.getRadius());
+	}
+
+	public void loadBullet(Bullet... bullets) {
+		for(Bullet bullet : bullets) this.loadBullet(bullet);
+	}
+
+	public void removeBullet(Bullet bullet) {
+		if (bullet.getShip() != this) throw new IllegalArgumentException();
+		bullets.remove(bullet);
+		bullet.setShip(null);
+	}
+
+	
+	public void fireBullet(){
+		Bullet bullet = bullets.iterator().next();
+		double orientation = this.getOrientation();
+		double distance = (2.5*this.getRadius()+2.5*bullet.getRadius())/2;//TODO
+		double[] startPosition = new double[]{getPosition()[0]+distance*Math.cos(orientation),getPosition()[1]+distance*Math.sin(orientation)};
+		this.removeBullet(bullet);
+		bullet.fire(startPosition,orientation);
+	}
 
 
 
