@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import asteroids.util.ModelException;
+
 public class Bullet extends Entity {
 
 	protected Bullet(double x, double y, double xVelocity, double yVelocity,
@@ -9,35 +11,63 @@ public class Bullet extends Entity {
 	}
 
 	public void setShip(Ship ship) {
-		// TODO Auto-generated method stub
-		
+		if ((this.getWorld() == null) || (ship == null)){
+			this.ship = ship;
+		}
 	}
+	
+	private Ship ship;
+	
 
 	public Ship getShip() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.ship;
 	}
 
 	public Ship getSource() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.source;
 	}
+	
+	public void setSource(Ship ship) {
+		this.source = ship;
+	}
+	
+	private Ship source;
 
-	public void fire(double[] startPosition, double orientation) {
-		// TODO Auto-generated method stub
+	public void fire() {
+		double orientationFire = this.getShip().getOrientation();
+		double distanceBetweenCenters = (this.getRadius() + this.getShip().getRadius());
+		double xPosition = distanceBetweenCenters * Math.cos(orientationFire);
+		double yPosition = distanceBetweenCenters * Math.sin(orientationFire);		
+		this.setPosition(new double[]{xPosition, yPosition});
+		double xVelocity = 250 * Math.cos(orientationFire);
+		double yVelocity = 250 * Math.sin(orientationFire);
+		this.setVelocity(new double[]{xVelocity, yVelocity});
+		this.setSource(this.getShip());
+		this.setWorld(this.getWorld());
+		this.setShip(null);
 		
 	}
 
 	@Override
 	public double getMass() {
-		// TODO Auto-generated method stub
-		return 0;
+		double radius = getRadius();
+		double mass = 3/4 * Math.PI * Math.pow(radius, 3) * minDensity;
+		return mass;
+		
 	}
 
+	public double getDensity(){
+		return minDensity;
+	}
+	
 	@Override
 	public boolean isValidRadius(double radius) {
-		// TODO Auto-generated method stub
-		return false;
+		return (radius > minRadius);
 	}
-
+	
+	
+	private static final double minDensity = 7.8*Math.pow(10, 12);
+	
+	private static final double minRadius = 1;
+	
 }

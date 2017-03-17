@@ -172,11 +172,8 @@ public class Ship extends Entity {
 	
 	public void fireBullet(){
 		Bullet bullet = bullets.iterator().next();
-		double orientation = this.getOrientation();
-		double distance = (2.5*this.getRadius()+2.5*bullet.getRadius())/2;//TODO
-		double[] startPosition = new double[]{getPosition()[0]+distance*Math.cos(orientation),getPosition()[1]+distance*Math.sin(orientation)};
+		bullet.fire();
 		this.removeBullet(bullet);
-		bullet.fire(startPosition,orientation);
 	}
 
 
