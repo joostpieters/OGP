@@ -158,9 +158,10 @@ public class Ship extends Entity {
 	}
 
 	private boolean canHaveAsBullet(Bullet bullet) {
+		if (bullet == null) return false;
 		if (bullet.getShip() != null && bullet.getShip() != this) return false;
 		if (bullet.getSource() != null && bullet.getSource() != this) return false;
-		return (this.getDistanceBetweenCenters(bullet) < this.getRadius() - bullet.getRadius());
+		return (this.getDistanceBetweenCenters(bullet) < 0.99*(this.getRadius() - bullet.getRadius()));
 	}
 
 	public void loadBullet(Bullet... bullets) {

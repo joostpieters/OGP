@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import be.kuleuven.cs.som.annotate.*;
 import asteroids.util.ModelException;
 
 public class Bullet extends Entity {
@@ -10,8 +11,9 @@ public class Bullet extends Entity {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void setShip(Ship ship) {
-		if ((this.getWorld() == null) || (ship == null)){
+	@Raw
+	public void setShip(@Raw Ship ship) {
+		if (this.getShip() == ship || ship == null){
 			this.ship = ship;
 		}
 	}
@@ -34,24 +36,24 @@ public class Bullet extends Entity {
 	private Ship source;
 
 	public void fire() {
-		double orientationFire = this.getShip().getOrientation();
-		double distanceBetweenCenters = (this.getRadius() + this.getShip().getRadius());
+		Ship source = this.getShip();
+		double orientationFire = source.getOrientation();
+		double distanceBetweenCenters = (this.getRadius() + source.getRadius());
 		double xPosition = distanceBetweenCenters * Math.cos(orientationFire);
-		double yPosition = distanceBetweenCenters * Math.sin(orientationFire);		
-		this.setPosition(new double[]{xPosition, yPosition});
+		double yPosition = distanceBetweenCenters * Math.sin(orientationFire);
 		double xVelocity = 250 * Math.cos(orientationFire);
 		double yVelocity = 250 * Math.sin(orientationFire);
+		this.setSource(source);
+		source.removeBullet(this);
+		this.setWorld(source.getWorld());
+		this.setPosition(new double[]{xPosition, yPosition});
 		this.setVelocity(new double[]{xVelocity, yVelocity});
-		this.setSource(this.getShip());
-		this.setWorld(this.getWorld());
-		this.setShip(null);
-		
 	}
 
 	@Override
 	public double getMass() {
 		double radius = getRadius();
-		double mass = 3/4 * Math.PI * Math.pow(radius, 3) * minDensity;
+		double mass = 3/4 * Math.PI * Math.pow(radius, 3) * getDensity();
 		return mass;
 		
 	}

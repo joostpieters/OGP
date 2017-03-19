@@ -2,6 +2,8 @@ package asteroids.model;
 
 import java.util.*;
 
+import asteroids.part2.CollisionListener;
+
 public class World {
 
 	private double width;
@@ -19,8 +21,7 @@ public class World {
 	}
 
 	private boolean canHaveAsShip(Ship ship) {
-		// TODO Auto-generated method stub
-		return false;
+		return (ship.getWorld() == this || ship.getWorld() == null);
 	}
 
 	public Set<Ship> getShips() {
@@ -29,7 +30,7 @@ public class World {
 	
 	private Set<Ship> ships = new HashSet<Ship>();
 	public void removeShip(Ship ship) {
-		if(ship.getWorld() != this) throw new IllegalArgumentException();
+		if(ship.getWorld() != this) throw new IllegalArgumentException("The given ship is not part of this world.");
 		ships.remove(ship);
 		ship.removeWorld();
 	}
@@ -43,6 +44,18 @@ public class World {
 		if(bullet.getWorld() != this) throw new IllegalArgumentException();
 		bullets.remove(bullet);
 		bullet.removeWorld();
+	}
+	
+	public void addBullet(Bullet bullet) {
+		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("This world cannot have the given bullet as bullet.");
+		bullets.add(bullet);
+		bullet.setWorld(this);
+	}
+
+	private boolean canHaveAsBullet(Bullet bullet) {
+		if (bullet.getWorld() == this) return true;
+		if (bullet.getShip() != null) return false; 
+		return (bullet.getWorld() == null);
 	}
 	
 	public void terminate(){
@@ -70,6 +83,29 @@ public class World {
 		entities.addAll(bullets);
 		entities.addAll(ships);
 		return entities;
+	}
+
+	public double getTimeNextCollision() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public double[] getPositionNextCollision() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void evolve(double dt, CollisionListener collisionListener) {
+		double tC = getTimeNextCollision();
+		if(tC <= dt){
+			
+		}
+		
+	}
+
+	public Object getEntityAt(double x, double y) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
