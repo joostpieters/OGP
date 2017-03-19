@@ -86,20 +86,50 @@ public class World {
 	}
 
 	public double getTimeNextCollision() {
-		// TODO Auto-generated method stub
-		return 0;
+		double timeNextCollision = Double.POSITIVE_INFINITY;
+		for (Entity entity1 : getEntities()){
+			timeNextCollision = Math.min(timeNextCollision, entity1.getTimeCollisionBoundary());
+			for (Entity entity2 : getEntities()){
+				timeNextCollision = Math.min(timeNextCollision, entity1.getTimeToCollision(entity2));
+			}
+		}
+		return timeNextCollision;
 	}
 
 	public double[] getPositionNextCollision() {
-		// TODO Auto-generated method stub
-		return null;
+		Entity nextCollidingObject = getNextCollidingObjects()[0];
+		return nextCollidingObject.getPositionAfterMovingForAPeriodOf(getTimeNextCollision());
+	}
+	
+	private Entity[] getNextCollidingObjects() {
+		Entity[] entities = new Entity[2];
+		double timeNextCollision = Double.POSITIVE_INFINITY;
+		for (Entity entity1 : getEntities()){
+			if (timeNextCollision > entity1.getTimeCollisionBoundary()){
+				timeNextCollision = entity1.getTimeCollisionBoundary();
+				entities = new Entity[]{entity1,null};
+			}
+			for (Entity entity2 : getEntities()){
+				if (timeNextCollision > entity1.getTimeToCollision(entity2)){
+					timeNextCollision = entity1.getTimeToCollision(entity2);
+					entities = new Entity[]{entity1,entity2};
+				}
+			}
+		}
+		return entities;
 	}
 
 	public void evolve(double dt, CollisionListener collisionListener) {
 		double tC = getTimeNextCollision();
-		if(tC <= dt){
+		Entity[] entities = getNextCollidingObjects();
+		while (tC <= dt){
+			for(Entity entity: getEntities()) entity.move(dt);
+			//TODO Resolve collisions
 			
+			dt = dt - tC;
+			tC = getTimeNextCollision();
 		}
+		for(Entity entity: getEntities()) entity.move(dt);
 		
 	}
 

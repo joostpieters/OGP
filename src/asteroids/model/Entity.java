@@ -231,7 +231,7 @@ public abstract class Entity {
 	 *         | !isValidDt(dt)
 	 */
 	@Raw
-	private double[] getPositionAfterMovingForAPeriodOf(double dt) {
+	public double[] getPositionAfterMovingForAPeriodOf(double dt) {
 		if (!isValidDt(dt)) throw new IllegalArgumentException("The given time lapse is invalid");
 		double[] position = getPosition();
 		double[] velocity = getVelocity();

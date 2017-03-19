@@ -173,6 +173,14 @@ public class Ship extends Entity {
 		bullets.remove(bullet);
 		bullet.setShip(null);
 	}
+	
+	public void move(double dt){
+		super.move(dt);
+		double[] newVelocity = new double[2];
+		newVelocity[0] = this.getVelocity()[0] + this.getAcceleration()*Math.cos(this.getOrientation())*dt;
+		newVelocity[0] = this.getVelocity()[1] + this.getAcceleration()*Math.sin(this.getOrientation())*dt;
+		setVelocity(newVelocity);
+	}
 
 	
 	public void fireBullet(){

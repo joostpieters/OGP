@@ -1,7 +1,6 @@
 package asteroids.model;
 
 import be.kuleuven.cs.som.annotate.*;
-import asteroids.util.ModelException;
 
 public class Bullet extends Entity {
 
