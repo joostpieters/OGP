@@ -6,11 +6,10 @@ import be.kuleuven.cs.som.annotate.Raw;
 public abstract class Entity {
 
 	protected Entity(double x, double y, double xVelocity,
-			double yVelocity, double radius, double orientation) throws IllegalArgumentException {
+			double yVelocity, double radius) throws IllegalArgumentException {
 		this.setPosition(new double[] {x,y});
 		this.setVelocity(new double[] {xVelocity,yVelocity});
 		this.setRadius(radius);
-		this.setOrientation(orientation);
 	}
 	
 	
@@ -139,47 +138,6 @@ public abstract class Entity {
 	}
 	  
 	/**
-	 * Return the validity of the given orientation for any entity. The orientation is a
-	 * type double between 0 and 2*pi.
-	 * @param  orientation
-	 * 	       The given orientation.
-	 * @return Returns the validity of the given orientation.
-	 *         | result == (orientation >=0 && orientation < 2*Math.PI)
-	 */
-	@Raw
-	public static boolean isValidOrientation(double orientation) {
-		return (orientation >=0 && orientation < 2*Math.PI);
-	}
-
-	private double orientation;
-
-	/**
-	 * Return the orientation of this entity as type double between 0 and 2*pi.
-	 * @return Returns the orientation of this entity.
-	 *         | result == this.orientation
-	 */
-	@Basic
-	@Raw
-	public double getOrientation() {
-		return orientation;
-	}
-
-	/**
-	 * Set the orientation of this entity to the given position.
-	 * @param orientation
-	 * 	      The orientation of this entity
-	 * @Pre   The given orientation is valid.
-	 * 	      | isValidOrientation(orientation)
-	 * @post  The new orientation of this entity is equal to the given orientation.
-	 *        | new.getOrientation() == orientation
-	 */
-	@Raw
-	protected void setOrientation(double orientation) {
-		assert(isValidOrientation(orientation));
-		this.orientation = orientation;
-	}
-
-	/**
 	 * Calculates the dot product of the given vectors of length 2
 	 * @param  vector1
 	 * 	       A given vector of length 2
@@ -189,7 +147,8 @@ public abstract class Entity {
 	 * 	       | result.equals(vector1[0]*vector2[0]+vector1[1]*vector2[1])
 	 */
 	@Raw
-	private static double dotProduct(double[] vector1, double[] vector2) {
+	protected
+	static double dotProduct(double[] vector1, double[] vector2) {
 		return vector1[0]*vector2[0]+vector1[1]*vector2[1];
 	}
 
@@ -439,5 +398,17 @@ public abstract class Entity {
 	public double[] getPositionCollisionBoundary() {
 		return this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
 	}
+
+
+	public void collideBoundary() {
+		double[] position = getPositionCollisionBoundary();
+		double xDistance = Math.min(position[0]-getRadius(), getWorld().getSize()[0]-(position[0]-getRadius()));
+		double yDistance = Math.min(position[1]-getRadius(), getWorld().getSize()[1]-(position[0]-getRadius()));
+		if(xDistance <= yDistance) setPosition(new double[]{-getPosition()[0],getPosition()[1]});
+		if(xDistance <= yDistance) setPosition(new double[]{getPosition()[0],-getPosition()[1]});
+	}
+
+
+	public abstract void collide(Entity entity);
 
 }

@@ -90,7 +90,11 @@ public class World {
 		for (Entity entity1 : getEntities()){
 			timeNextCollision = Math.min(timeNextCollision, entity1.getTimeCollisionBoundary());
 			for (Entity entity2 : getEntities()){
-				timeNextCollision = Math.min(timeNextCollision, entity1.getTimeToCollision(entity2));
+				
+				if (entity1 != entity2) {
+					if (entity1.overlap(entity2)) return 0;
+					timeNextCollision = Math.min(timeNextCollision, entity1.getTimeToCollision(entity2));
+				}
 			}
 		}
 		return timeNextCollision;
@@ -102,7 +106,7 @@ public class World {
 	}
 	
 	private Entity[] getNextCollidingObjects() {
-		Entity[] entities = new Entity[2];
+		Entity[] entities = new Entity[]{null,null};
 		double timeNextCollision = Double.POSITIVE_INFINITY;
 		for (Entity entity1 : getEntities()){
 			if (timeNextCollision > entity1.getTimeCollisionBoundary()){
@@ -110,6 +114,7 @@ public class World {
 				entities = new Entity[]{entity1,null};
 			}
 			for (Entity entity2 : getEntities()){
+				if (entity1.overlap(entity2)) return new Entity[]{entity1,entity2};
 				if (timeNextCollision > entity1.getTimeToCollision(entity2)){
 					timeNextCollision = entity1.getTimeToCollision(entity2);
 					entities = new Entity[]{entity1,entity2};
@@ -121,10 +126,17 @@ public class World {
 
 	public void evolve(double dt, CollisionListener collisionListener) {
 		double tC = getTimeNextCollision();
+		double[] position = getPositionNextCollision();
 		Entity[] entities = getNextCollidingObjects();
 		while (tC <= dt){
 			for(Entity entity: getEntities()) entity.move(dt);
-			//TODO Resolve collisions
+			if(entities[1] == null){
+				entities[0].collideBoundary();
+				
+			}
+			else {
+				entities[0].collide(entities[1]);
+			}
 			
 			dt = dt - tC;
 			tC = getTimeNextCollision();
@@ -134,7 +146,9 @@ public class World {
 	}
 
 	public Object getEntityAt(double x, double y) {
-		// TODO Auto-generated method stub
+		for (Entity entity : getEntities()) {
+			if (entity.getPosition().equals(new double[]{x,y})) return entity;
+		}
 		return null;
 	}
 

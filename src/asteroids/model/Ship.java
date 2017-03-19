@@ -47,11 +47,12 @@ public class Ship extends Entity {
 	 */
 	public Ship(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation, double mass) throws IllegalArgumentException {
-		super(x,y,xVelocity,yVelocity,radius,orientation);
+		super(x,y,xVelocity,yVelocity,radius);
+		this.setOrientation(orientation);
 		this.setMass(mass);
 		Bullet[] bullets = new Bullet[15];
 		for(int i = 0; i < 15; i++){
-			Bullet bullet = new Bullet(x, y, xVelocity, yVelocity, radius/5, orientation);//TODO
+			Bullet bullet = new Bullet(x, y, xVelocity, yVelocity, radius*(1+Math.random()*3)/5);
 			bullets[i] = bullet;
 		}
 		this.loadBullet(bullets);
@@ -60,6 +61,45 @@ public class Ship extends Entity {
 	@Override
 	public boolean isValidRadius(double radius){
 		return (radius > minRadius);
+	}
+
+	/**
+	 * Return the validity of the given orientation for any entity. The orientation is a
+	 * type double between 0 and 2*pi.
+	 * @param  orientation
+	 * 	       The given orientation.
+	 * @return Returns the validity of the given orientation.
+	 *         | result == (orientation >=0 && orientation < 2*Math.PI)
+	 */
+	@Raw
+	public static boolean isValidOrientation(double orientation) {
+		return (orientation >=0 && orientation < 2*Math.PI);
+	}
+
+	/**
+	 * Return the orientation of this entity as type double between 0 and 2*pi.
+	 * @return Returns the orientation of this entity.
+	 *         | result == this.orientation
+	 */
+	@Basic
+	@Raw
+	public double getOrientation() {
+		return orientation;
+	}
+
+	/**
+	 * Set the orientation of this entity to the given position.
+	 * @param orientation
+	 * 	      The orientation of this entity
+	 * @Pre   The given orientation is valid.
+	 * 	      | isValidOrientation(orientation)
+	 * @post  The new orientation of this entity is equal to the given orientation.
+	 *        | new.getOrientation() == orientation
+	 */
+	@Raw
+	protected void setOrientation(double orientation) {
+		assert(isValidOrientation(orientation));
+		this.orientation = orientation;
 	}
 
 	private void setMass(double mass) {
@@ -99,6 +139,10 @@ public class Ship extends Entity {
 		setVelocity(new double[] {velocity[0]+amount*Math.cos(orientation),velocity[1]+amount*Math.sin(orientation)});
 	}
 
+
+	public boolean isThrusterActive() {
+		return thrustEnabled;
+	}
 
 	public void thrustOn() {
 		thrustEnabled = true;
@@ -147,6 +191,8 @@ public class Ship extends Entity {
 
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 
+	private double orientation;
+
 	public int getNbBullets() {
 		return getBullets().size();
 	}
@@ -176,17 +222,39 @@ public class Ship extends Entity {
 	
 	public void move(double dt){
 		super.move(dt);
-		double[] newVelocity = new double[2];
-		newVelocity[0] = this.getVelocity()[0] + this.getAcceleration()*Math.cos(this.getOrientation())*dt;
-		newVelocity[0] = this.getVelocity()[1] + this.getAcceleration()*Math.sin(this.getOrientation())*dt;
-		setVelocity(newVelocity);
+		thrust(getAcceleration()*dt);
 	}
 
 	
 	public void fireBullet(){
-		Bullet bullet = bullets.iterator().next();
+		Bullet bullet = getBullets().iterator().next();
 		bullet.fire();
-		this.removeBullet(bullet);
+	}
+
+	@Override
+	public void collide(Entity entity) {
+		if(entity instanceof Bullet) {
+			Bullet bullet = (Bullet)entity;
+			if (bullet.getSource() == this) this.loadBullet(bullet);
+			else{
+				bullet.terminate();
+				this.terminate();
+			}
+		}
+		if(entity instanceof Ship) {
+			double mi = this.getMass();double mj = entity.getMass();
+			double sigma = this.getRadius() + entity.getRadius();
+			double[] deltaR = this.getPositionDifference(entity);
+			double[] deltaV = this.getVelocityDifference(entity);
+			double j = 2*mi*mj*(dotProduct(deltaV,deltaR))/(sigma*(mi+mj));
+			double jx = j*deltaR[0]/sigma;double jy = j*deltaR[1]/sigma;
+			double[] oldVelocityi = this.getVelocity();
+			double[] oldVelocityj = entity.getVelocity();
+			double[] newVelocityi = new double[]{oldVelocityi[0]+jx/mi,oldVelocityi[1]+jy/mi};
+			double[] newVelocityj = new double[]{oldVelocityj[0]+jx/mj,oldVelocityj[1]+jy/mj};
+			this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj);
+		}
+		
 	}
 
 
