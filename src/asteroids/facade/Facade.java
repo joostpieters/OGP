@@ -112,8 +112,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isShipThrusterActive(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return ship.isThrusterActive();
 	}
 
 	@Override
@@ -132,62 +131,53 @@ public class Facade implements IFacade {
 	@Override
 	public Bullet createBullet(double x, double y, double xVelocity, double yVelocity, double radius)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return new Bullet(x,y,xVelocity,yVelocity,radius);
 	}
 
 	@Override
 	public void terminateBullet(Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		bullet.terminate();
 	}
 
 	@Override
 	public boolean isTerminatedBullet(Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return bullet.isTerminated();
 	}
 
 	@Override
 	public double[] getBulletPosition(Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return bullet.getPosition();
 	}
 
 	@Override
 	public double[] getBulletVelocity(Bullet bullet) throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		return bullet.getVelocity();
 	}
 
 	@Override
 	public double getBulletRadius(Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return bullet.getRadius();
 	}
 
 	@Override
 	public double getBulletMass(Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return bullet.getMass();
 	}
 
 	@Override
 	public World getBulletWorld(Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return bullet.getWorld();
 	}
 
 	@Override
 	public Ship getBulletShip(Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return bullet.getShip();
 	}
 
 	@Override
 	public Ship getBulletSource(Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return bullet.getSource();
 	}
 
 	@Override
@@ -232,14 +222,13 @@ public class Facade implements IFacade {
 
 	@Override
 	public void addBulletToWorld(World world, Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
+		world.addBullet(bullet);
 		
 	}
 
 	@Override
 	public void removeBulletFromWorld(World world, Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		world.removeBullet(bullet);
 	}
 
 	@Override
@@ -254,7 +243,15 @@ public class Facade implements IFacade {
 
 	@Override
 	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException {
+<<<<<<< HEAD
 		ship.loadBullet(bullet);
+=======
+		try{
+			ship.loadBullet(bullet);
+		}catch(IllegalArgumentException e){
+			throw new ModelException(e.getMessage());
+		}
+>>>>>>> refs/remotes/origin/master
 		
 	}
 
@@ -281,8 +278,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getPositionCollisionBoundary(Object object) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return ((Entity)object).getPositionCollisionBoundary();
 	}
 
 	@Override
@@ -299,26 +295,23 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getTimeNextCollision(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return world.getTimeNextCollision();
 	}
 
 	@Override
 	public double[] getPositionNextCollision(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getPositionNextCollision();
 	}
 
 	@Override
 	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException {
-		// TODO Auto-generated method stub
+		world.evolve(dt,collisionListener);
 		
 	}
 
 	@Override
 	public Object getEntityAt(World world, double x, double y) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getEntityAt(x,y);
 	}
 
 	@Override
