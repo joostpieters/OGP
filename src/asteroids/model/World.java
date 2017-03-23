@@ -19,8 +19,8 @@ public class World {
 	}
 
 	private boolean canHaveAsShip(Ship ship) {
-		// TODO Auto-generated method stub
-		return false;
+		if(ship.getWorld() != null) return false;
+		return true;
 	}
 
 	public Set<Ship> getShips() {
@@ -28,8 +28,9 @@ public class World {
 	}
 	
 	private Set<Ship> ships = new HashSet<Ship>();
+	
 	public void removeShip(Ship ship) {
-		if(ship.getWorld() != this) throw new IllegalArgumentException();
+		if(ship.getWorld() != this) throw new IllegalArgumentException("This world does not contain the given ship.");
 		ships.remove(ship);
 		ship.removeWorld();
 	}

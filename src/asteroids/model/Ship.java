@@ -48,7 +48,7 @@ public class Ship extends Entity {
 	public Ship(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation, double mass) throws IllegalArgumentException {
 		super(x,y,xVelocity,yVelocity,radius,orientation);
-		this.setMass(mass);
+		this.setMassShip(mass);
 		Bullet[] bullets = new Bullet[15];
 		for(int i = 0; i < 15; i++){
 //			Bullet bullet = new Bullet();//TODO
@@ -62,7 +62,7 @@ public class Ship extends Entity {
 		return (radius > minRadius);
 	}
 
-	private void setMass(double mass) {
+	private void setMassShip(double mass) {
 		double minMass = 4/3*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
 		if (mass >= minMass) this.mass = mass;
 		else this.mass = minMass;
@@ -72,8 +72,7 @@ public class Ship extends Entity {
 
 	private static final double minDensity = 1.42*Math.pow(10, 12);
 	
-	@Override
-	public double getMass(){
+	public double getMassShip(){
 		return this.mass;
 	}
 	

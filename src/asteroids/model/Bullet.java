@@ -8,6 +8,7 @@ public class Bullet extends Entity {
 			double radius, double orientation) throws IllegalArgumentException {
 		super(x, y, xVelocity, yVelocity, radius, orientation);
 		// TODO Auto-generated constructor stub
+		this.setMassBullet(mass);
 	}
 
 	public void setShip(Ship ship) {
@@ -48,10 +49,18 @@ public class Bullet extends Entity {
 		
 	}
 
-	@Override
-	public double getMass() {
+	
+	public double getMassBullet() {
+		return this.mass;
+		
+	}
+	
+	private double mass;
+	
+	
+	public double setMassBullet(double mass) {
 		double radius = getRadius();
-		double mass = 3/4 * Math.PI * Math.pow(radius, 3) * minDensity;
+		double minMass = 3/4 * Math.PI * Math.pow(radius, 3) * minDensity;
 		return mass;
 		
 	}
