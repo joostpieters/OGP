@@ -6,18 +6,10 @@ import be.kuleuven.cs.som.annotate.Raw;
 public abstract class Entity {
 
 	protected Entity(double x, double y, double xVelocity,
-<<<<<<< HEAD
-			double yVelocity, double radius, double orientation) throws IllegalArgumentException {
-		this.setPosition(new double[] {x,y});
-		this.setVelocity(new double[] {xVelocity,yVelocity});
-		this.setRadius(radius);
-		this.setOrientation(orientation);
-=======
 			double yVelocity, double radius) throws IllegalArgumentException {
 		this.setPosition(new double[] {x,y});
 		this.setVelocity(new double[] {xVelocity,yVelocity});
 		this.setRadius(radius);
->>>>>>> refs/remotes/origin/master
 	}
 	
 	
@@ -222,17 +214,10 @@ public abstract class Entity {
 	 *         Entity2 is not created
 	 *         | entity2 == null
 	 */
-<<<<<<< HEAD
-	public double getDistanceBetween(Entity ship2) throws NullPointerException {
-		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
-		if (ship2 == this) return 0;
-		else return (this.getDistanceBetweenCenters(ship2) - this.getRadius() - ship2.getRadius());
-=======
 	public double getDistanceBetween(Entity entity2) throws NullPointerException {
 		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
 		if (entity2 == this) return 0;
 		else return (this.getDistanceBetweenCenters(entity2) - this.getRadius() - entity2.getRadius());
->>>>>>> refs/remotes/origin/master
 	}
 
 	/**
@@ -247,15 +232,9 @@ public abstract class Entity {
 	 *         | entity2 == null
 	 */
 	@Raw
-<<<<<<< HEAD
-	public double getDistanceBetweenCenters(@Raw Entity ship2) throws NullPointerException {
-		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
-		double[] positionDifference = getPositionDifference(ship2);
-=======
 	public double getDistanceBetweenCenters(@Raw Entity entity2) throws NullPointerException {
 		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
 		double[] positionDifference = getPositionDifference(entity2);
->>>>>>> refs/remotes/origin/master
 		double distance = Math.sqrt(dotProduct(positionDifference, positionDifference));
 		return distance;
 	}
@@ -271,15 +250,9 @@ public abstract class Entity {
 	 *         | entity2 == null
 	 */
 	@Raw
-<<<<<<< HEAD
-	public double[] getPositionDifference(@Raw Entity ship2) throws IllegalArgumentException {
-		if (ship2 == null) throw new NullPointerException("The second ship does not exist.");
-		return new double[] {ship2.getPosition()[0]-this.getPosition()[0],ship2.getPosition()[1]-this.getPosition()[1]};
-=======
 	public double[] getPositionDifference(@Raw Entity entity2) throws IllegalArgumentException {
 		if (entity2 == null) throw new NullPointerException("The second entity does not exist.");
 		return new double[] {entity2.getPosition()[0]-this.getPosition()[0],entity2.getPosition()[1]-this.getPosition()[1]};
->>>>>>> refs/remotes/origin/master
 	}
 
 	/**
@@ -294,15 +267,9 @@ public abstract class Entity {
 	 *         
 	 */
 	@Raw
-<<<<<<< HEAD
-	public double[] getVelocityDifference(@Raw Entity ship2) throws IllegalArgumentException {
-		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
-		return new double[] {ship2.getVelocity()[0]-this.getVelocity()[0],ship2.getVelocity()[1]-this.getVelocity()[1]};
-=======
 	public double[] getVelocityDifference(@Raw Entity entity2) throws IllegalArgumentException {
 		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
 		return new double[] {entity2.getVelocity()[0]-this.getVelocity()[0],entity2.getVelocity()[1]-this.getVelocity()[1]};
->>>>>>> refs/remotes/origin/master
 	}
 
 	/**
@@ -316,17 +283,10 @@ public abstract class Entity {
 	 *         entity2 is not created
 	 *         | entity2 == null
 	 */
-<<<<<<< HEAD
-	public boolean overlap(Entity ship2) throws IllegalArgumentException {
-		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
-		if (this == ship2) return true;
-		else return (this.getDistanceBetween(ship2) < 0);
-=======
 	public boolean overlap(Entity entity2) throws IllegalArgumentException {
 		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
 		if (this == entity2) return true;
 		else return (this.getDistanceBetween(entity2)/(this.getRadius()+entity2.getRadius()) < -0.01);
->>>>>>> refs/remotes/origin/master
 	}
 	
 	/**
@@ -397,47 +357,6 @@ public abstract class Entity {
 
 	public World getWorld() {
 		return world;
-<<<<<<< HEAD
-	}
-
-
-	public void setWorld(World world) {
-		this.world = world;
-	}
-	
-	public void removeWorld(){
-		this.world = null;
-	}
-
-
-	public void terminate() {
-		isTerminated = true;
-	}
-	
-	public boolean isTerminated() {
-		return isTerminated;
-	}
-
-	private boolean isTerminated = false;
-
-	public double getTimeCollisionBoundary() {
-		double xTime = Double.POSITIVE_INFINITY; double yTime = Double.POSITIVE_INFINITY;
-		double[] velocity = getVelocity();
-		double[] position = getPosition();
-		if(velocity[0] > 0) xTime = (getWorld().getSize()[0]-position[0]-getRadius())/velocity[0];
-		if(velocity[0] < 0) xTime = (position[0]+getRadius())/velocity[0];
-		if(velocity[1] > 0) yTime = (getWorld().getSize()[1]-position[1]-getRadius())/velocity[0];
-		if(velocity[1] < 0) yTime = (position[1]+getRadius())/velocity[1];
-		// TODO Auto-generated method stub
-		if (xTime < 0) xTime = Double.POSITIVE_INFINITY;
-		if (yTime < 0) yTime = Double.POSITIVE_INFINITY;
-		return Math.min(xTime, yTime);
-	}
-	
-	public double[] getPositionCollisionBoundary() {
-		return this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
-=======
->>>>>>> refs/remotes/origin/master
 	}
 
 	@Raw

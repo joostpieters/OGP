@@ -47,14 +47,6 @@ public class Ship extends Entity {
 	 */
 	public Ship(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation, double mass) throws IllegalArgumentException {
-<<<<<<< HEAD
-		super(x,y,xVelocity,yVelocity,radius,orientation);
-		this.setMassShip(mass);
-		Bullet[] bullets = new Bullet[15];
-		for(int i = 0; i < 15; i++){
-//			Bullet bullet = new Bullet();//TODO
-//			bullets[i] = bullet;
-=======
 		super(x,y,xVelocity,yVelocity,radius);
 		this.setOrientation(orientation);
 		this.setMass(mass);
@@ -62,7 +54,6 @@ public class Ship extends Entity {
 		for(int i = 0; i < 15; i++){
 			Bullet bullet = new Bullet(x, y, xVelocity, yVelocity, radius*(1+Math.random()*3)/5);
 			bullets[i] = bullet;
->>>>>>> refs/remotes/origin/master
 		}
 		this.loadBullet(bullets);
 	}
@@ -72,20 +63,6 @@ public class Ship extends Entity {
 		return (radius > minRadius);
 	}
 
-<<<<<<< HEAD
-	private void setMassShip(double mass) {
-		double minMass = 4/3*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
-		if (mass >= minMass) this.mass = mass;
-		else this.mass = minMass;
-	}
-	
-	private double mass;
-
-	private static final double minDensity = 1.42*Math.pow(10, 12);
-	
-	public double getMassShip(){
-		return this.mass;
-=======
 	/**
 	 * Return the validity of the given orientation for any entity. The orientation is a
 	 * type double between 0 and 2*pi.
@@ -140,7 +117,6 @@ public class Ship extends Entity {
 		double totalMass = this.mass;
 		for (Bullet bullet : this.getBullets()) totalMass += bullet.getMass();
 		return totalMass;
->>>>>>> refs/remotes/origin/master
 	}
 	
 	private static final double minRadius = 10;
@@ -164,21 +140,6 @@ public class Ship extends Entity {
 	}
 
 
-<<<<<<< HEAD
-	public void thrustOn() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void thrustOff() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public double getAcceleration() {
-		// TODO Auto-generated method stub
-		return 0;
-=======
 	public boolean isThrusterActive() {
 		return thrustEnabled;
 	}
@@ -198,7 +159,6 @@ public class Ship extends Entity {
 		if (!thrustEnabled) return 0;
 		double force = 1.1*Math.pow(10, 21);
 		return getMass()/force;
->>>>>>> refs/remotes/origin/master
 	}
 
 	/**
@@ -231,39 +191,6 @@ public class Ship extends Entity {
 
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 
-<<<<<<< HEAD
-	public int getNbBullets() {
-		return getBullets().size();
-	}
-
-	public void loadBullet(Bullet bullet) {
-		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("The given bullet is invalid.");
-		bullets.add(bullet);
-		bullet.setShip(this);
-	}
-
-	private boolean canHaveAsBullet(Bullet bullet) {
-		if (bullet.getShip() != null && bullet.getShip() != this) return false;
-		if (bullet.getSource() != null && bullet.getSource() != this) return false;
-		return (this.getDistanceBetweenCenters(bullet) < this.getRadius() - bullet.getRadius());
-	}
-
-	public void loadBullet(Bullet... bullets) {
-		for(Bullet bullet : bullets) this.loadBullet(bullet);
-	}
-
-	public void removeBullet(Bullet bullet) {
-		if (bullet.getShip() != this) throw new IllegalArgumentException();
-		bullets.remove(bullet);
-		bullet.setShip(null);
-	}
-
-	
-	public void fireBullet(){
-		Bullet bullet = bullets.iterator().next();
-		bullet.fire();
-		this.removeBullet(bullet);
-=======
 	private double orientation;
 
 	public int getNbBullets() {
@@ -328,7 +255,6 @@ public class Ship extends Entity {
 			this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj);
 		}
 		
->>>>>>> refs/remotes/origin/master
 	}
 
 

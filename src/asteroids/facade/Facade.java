@@ -243,15 +243,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException {
-<<<<<<< HEAD
-		ship.loadBullet(bullet);
-=======
 		try{
 			ship.loadBullet(bullet);
 		}catch(IllegalArgumentException e){
 			throw new ModelException(e.getMessage());
 		}
->>>>>>> refs/remotes/origin/master
 		
 	}
 

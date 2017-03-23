@@ -21,12 +21,7 @@ public class World {
 	}
 
 	private boolean canHaveAsShip(Ship ship) {
-<<<<<<< HEAD
-		if(ship.getWorld() != null) return false;
-		return true;
-=======
 		return (ship.getWorld() == this || ship.getWorld() == null);
->>>>>>> refs/remotes/origin/master
 	}
 
 	public Set<Ship> getShips() {
@@ -34,51 +29,6 @@ public class World {
 	}
 	
 	private Set<Ship> ships = new HashSet<Ship>();
-<<<<<<< HEAD
-	
-	public void removeShip(Ship ship) {
-		if(ship.getWorld() != this) throw new IllegalArgumentException("This world does not contain the given ship.");
-		ships.remove(ship);
-		ship.removeWorld();
-	}
-
-	public Set<Bullet> getBullets() {
-		return bullets;
-	}
-
-	private Set<Bullet> bullets = new HashSet<Bullet>();
-	public void removeBullet(Bullet bullet) {
-		if(bullet.getWorld() != this) throw new IllegalArgumentException();
-		bullets.remove(bullet);
-		bullet.removeWorld();
-	}
-	
-	public void terminate(){
-		for(Ship ship : ships){
-			this.removeShip(ship);
-		}
-		for(Bullet bullet : bullets){
-			this.removeBullet(bullet);
-		}
-		isTerminated = true;
-	}
-
-	private boolean isTerminated = false;
-
-	public boolean isTerminated() {
-		return isTerminated;
-	}
-
-	public double[] getSize() {
-		return new double[]{width,height};
-	}
-
-	public Set<Entity> getEntities() {
-		Set<Entity> entities = new HashSet<Entity>();
-		entities.addAll(bullets);
-		entities.addAll(ships);
-		return entities;
-=======
 	public void removeShip(Ship ship) {
 		if(ship.getWorld() != this) throw new IllegalArgumentException("The given ship is not part of this world.");
 		ships.remove(ship);
@@ -200,7 +150,6 @@ public class World {
 			if (entity.getPosition().equals(new double[]{x,y})) return entity;
 		}
 		return null;
->>>>>>> refs/remotes/origin/master
 	}
 
 	
