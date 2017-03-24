@@ -481,16 +481,16 @@ public abstract class Entity {
 	/**
 	 * Set the negation of the velocity vector in question upon collision with a boundary, thereby bouncing off the boundary.
 	 * @post   If the entity bounces off the vertical border the x-component of the velocity is negated
-	 *         | result == setPosition(new double[]{-getPosition()[0],getPosition()[1]})
+	 *         | result == setVelocity(new double[]{-getVelocity()[0],getVelocity()[1]})
 	 * @post   If the entity bounces off the horizontal border the y-component of the velocity is reversed
-	 *         | result == setPosition(new double[]{getPosition()[0],-getPosition()[1]})
+	 *         | result == setVelocity(new double[]{getVelocity()[0],-getVelocity()[1]})
 	 */
 	public void collideBoundary() {
 		double[] position = getPositionCollisionBoundary();
 		double xDistance = Math.min(position[0]-getRadius(), getWorld().getSize()[0]-(position[0]-getRadius()));
 		double yDistance = Math.min(position[1]-getRadius(), getWorld().getSize()[1]-(position[0]-getRadius()));
-		if(xDistance <= yDistance) setPosition(new double[]{-getPosition()[0],getPosition()[1]});
-		if(xDistance <= yDistance) setPosition(new double[]{getPosition()[0],-getPosition()[1]});
+		if(xDistance <= yDistance) setVelocity(new double[]{-getVelocity()[0],getVelocity()[1]});
+		if(xDistance <= yDistance) setVelocity(new double[]{getVelocity()[0],-getVelocity()[1]});
 	}
 
 

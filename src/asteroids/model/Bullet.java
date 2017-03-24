@@ -46,9 +46,10 @@ public class Bullet extends Entity {
 	public void fire() {
 		Ship source = this.getShip();
 		double orientationFire = source.getOrientation();
+		double[] positionShip = source.getPosition();
 		double distanceBetweenCenters = (this.getRadius() + source.getRadius());
-		double xPosition = distanceBetweenCenters * Math.cos(orientationFire);
-		double yPosition = distanceBetweenCenters * Math.sin(orientationFire);
+		double xPosition = positionShip[0] + distanceBetweenCenters * Math.cos(orientationFire);
+		double yPosition = positionShip[1] + distanceBetweenCenters * Math.sin(orientationFire);
 		double xVelocity = 250 * Math.cos(orientationFire);
 		double yVelocity = 250 * Math.sin(orientationFire);
 		this.setSource(source);

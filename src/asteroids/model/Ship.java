@@ -7,8 +7,6 @@ import be.kuleuven.cs.som.annotate.*;
  * A class of ships involving a position, velocity, radius and orientation.
  * @version 1.4
  * @author  Sander Leyssens & Sarah Joseph
- * 
- *
  */
 
 // Name: Sarah Joseph
@@ -195,7 +193,7 @@ public class Ship extends Entity {
 	public double getAcceleration() {
 		if (!thrustEnabled) return 0;
 		double force = 1.1*Math.pow(10, 21);
-		double acceleration = getMass()/force;
+		double acceleration = force/getMass();
 		return acceleration;
 	}
 
