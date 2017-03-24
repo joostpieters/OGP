@@ -43,7 +43,6 @@ public class Ship extends Entity {
 	 * @throws IllegalArgumentException
 	 *         The given initial position or radius is not valid.
 	 *         | !isValidPosition({x,y})||!isValidRadius(radius)
-	 * 
 	 */
 	public Ship(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation, double mass) throws IllegalArgumentException {
@@ -58,13 +57,22 @@ public class Ship extends Entity {
 		this.loadBullet(bullets);
 	}
 	
+	/**
+	 * Return the validity of the given radius for this ship. The radius is type double and larger than 10
+	 * @param radius
+	 * 	      The ship's radius.
+	 * @return Returns the validity of the given radius
+	 * 		   | result == radius > minRadius
+	 */
 	@Override
 	public boolean isValidRadius(double radius){
 		return (radius > minRadius);
 	}
+	
+	private static final double minRadius = 10;
 
 	/**
-	 * Return the validity of the given orientation for any entity. The orientation is a
+	 * Return the validity of the given orientation for this ship. The orientation is a
 	 * type double between 0 and 2*pi.
 	 * @param  orientation
 	 * 	       The given orientation.
@@ -88,7 +96,7 @@ public class Ship extends Entity {
 	}
 
 	/**
-	 * Set the orientation of this entity to the given position.
+	 * Set the orientation of this ship to the given angle.
 	 * @param orientation
 	 * 	      The orientation of this entity
 	 * @Pre   The given orientation is valid.
@@ -101,7 +109,16 @@ public class Ship extends Entity {
 		assert(isValidOrientation(orientation));
 		this.orientation = orientation;
 	}
-
+	
+	/**
+	 * Set the mass of this ship to the given weight.
+	 * @param mass
+	 * 	      The mass of this entity
+	 * @Pre   The given mass is valid.
+	 * 	      | mass >= minMass
+	 * @post  The new mass of this entity is equal to the given mass.
+	 *        | this.mass = mass
+	 */
 	private void setMass(double mass) {
 		double minMass = 4/3*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
 		if (mass >= minMass) this.mass = mass;
@@ -112,15 +129,17 @@ public class Ship extends Entity {
 
 	private static final double minDensity = 1.42*Math.pow(10, 12);
 	
+	/**
+	 * Return the mass of this ship.
+	 * @return Returns the mass of this ship type object with the loaded bullets
+	 *         | result == totalMass
+	 */
 	@Override
 	public double getMass(){
 		double totalMass = this.mass;
 		for (Bullet bullet : this.getBullets()) totalMass += bullet.getMass();
 		return totalMass;
 	}
-	
-	private static final double minRadius = 10;
-
 	
 	/**
 	 * Update the ship's velocity based on its current velocity, its
@@ -139,26 +158,45 @@ public class Ship extends Entity {
 		setVelocity(new double[] {velocity[0]+amount*Math.cos(orientation),velocity[1]+amount*Math.sin(orientation)});
 	}
 
-
+	/**
+	 * Return thrust status
+	 * @return Returns activity status of the ship's thruster
+	 *         | result == thrusterEnabled
+	 */
 	public boolean isThrusterActive() {
 		return thrustEnabled;
 	}
 
+	/**
+	 * Set the thruster status of type boolean of this ship to on.
+	 * @post   The new status of the thruster is on
+	 *         | thrustEnabled = true
+	 */
 	public void thrustOn() {
 		thrustEnabled = true;
 	}
 
+	/**
+	 * Set the thruster status of type boolean of this ship to off.
+	 * @post   The new status of the thruster is on
+	 *         | thrustEnabled = true
+	 */
 	public void thrustOff() {
 		thrustEnabled = false;
-		
 	}
 	
 	private boolean thrustEnabled;
 
+	/**
+	 * Return the acceleration of the ship as type double.
+	 * @return Returns the acceleration of this ship.
+	 *         | result == acceleration
+	 */
 	public double getAcceleration() {
 		if (!thrustEnabled) return 0;
 		double force = 1.1*Math.pow(10, 21);
-		return getMass()/force;
+		double acceleration = getMass()/force;
+		return acceleration;
 	}
 
 	/**
@@ -178,13 +216,22 @@ public class Ship extends Entity {
 		setOrientation(getOrientation()+angle);
 	}
 
+	/**
+	 * Terminate this ship from the world it is located in.
+	 * @post   The world which the ship was set to does not contain the ship anymore
+	 *         | getWorld().removeShip(this)
+	 */
 	@Override
 	public void terminate() {
 		super.terminate();
 		getWorld().removeShip(this);
 	}
 
-	
+	/**
+	 * Return the bullets loaded on this ship as a hashed set.
+	 * @return Returns the bullets of this ship
+	 *         | result == this.bullets
+	 */
 	public Set<Bullet> getBullets() {
 		return this.bullets;
 	}
@@ -193,44 +240,114 @@ public class Ship extends Entity {
 
 	private double orientation;
 
+	/**
+	 * Return the number of bullets loaded on this ship as type double.
+	 * @return Returns the number of bullets on this ship
+	 *         | result == getBullets().size()
+	 */
 	public int getNbBullets() {
 		return getBullets().size();
 	}
-
+	
+	/**
+	 * Load a bullet on this ship.
+	 * @param bullet
+	 * 	      The given bullet
+	 * @Pre   The given bullet is valid.
+	 * @post  The given bullet is loaded on this ship
+	 *        | bullet.setShip(this)
+	 */
 	public void loadBullet(Bullet bullet) {
 		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("The given bullet is invalid.");
 		bullets.add(bullet);
 		bullet.setShip(this);
 	}
 
+	/**
+	 * Return if this ship can have the given bullet as bullet. The ship must thereby be in significant overlap with the bullet.
+	 * @param bullet
+	 * 	      The given bullet
+	 * @Pre   The given bullet has been created
+	 * 		  | if (bullet == null) result == false
+	 * @Pre   The bullet does not belong to any ship yet
+	 *        | if (bullet.getShip() != null && bullet.getShip() != this) result == false
+	 * @Pre   The bullet has never been fired by any ship yet //can be fired by same ship that reloads?
+	 *        | if (bullet.getSource() != null && bullet.getSource() != this) result == false
+	 * @return Returns if there is significant overlap between the ship and bullet
+	 *         |significantOverlap = (this.getDistanceBetweenCenters(bullet) < 0.99*(this.getRadius() - bullet.getRadius()))
+	 */
 	private boolean canHaveAsBullet(Bullet bullet) {
 		if (bullet == null) return false;
 		if (bullet.getShip() != null && bullet.getShip() != this) return false;
 		if (bullet.getSource() != null && bullet.getSource() != this) return false;
-		return (this.getDistanceBetweenCenters(bullet) < 0.99*(this.getRadius() - bullet.getRadius()));
+		boolean significantOverlap = (this.getDistanceBetweenCenters(bullet) < 0.99*(this.getRadius() - bullet.getRadius()));
+		return significantOverlap;
 	}
 
+	/**
+	 * Load bullets of this ship.
+	 * @param  bullets
+	 * 	       The bullets of this ship
+	 * @post   The bullet that are part of the ship are loaded.
+	 *         | for(Bullet bullet : bullets) this.loadBullet(bullet)
+	 *
+	 */
 	public void loadBullet(Bullet... bullets) {
 		for(Bullet bullet : bullets) this.loadBullet(bullet);
 	}
-
+	
+	/**
+	 * Remove a bullet from this ship.
+	 * @param  bullets
+	 * 	       A given bullet
+	 * @Pre    The given bullet is part of this ship
+	 * @post   The bullet is removed from this ship and does not belong to any ship
+	 *         | bullets.remove(bullet) && bullet.setShip(null)
+	 * @throws IllegalArgumentException
+	 *         The given bullet is not part of this ship
+	 *         | bullet.getShip() != this
+	 */
 	public void removeBullet(Bullet bullet) {
-		if (bullet.getShip() != this) throw new IllegalArgumentException();
+		if (bullet.getShip() != this) throw new IllegalArgumentException("The given bullet is not part of this ship");
 		bullets.remove(bullet);
 		bullet.setShip(null);
 	}
 	
+	/**
+	 * The ship moves <code>dt</code> seconds at its thrust acceleration.
+	 * @param  dt
+	 * 	       The time of movement of this ship.
+	 * @post   The ship accelerates for the given period of dt.
+	 * 	       | thrust(getAcceleration()*dt)   
+	 */
 	public void move(double dt){
 		super.move(dt);
 		thrust(getAcceleration()*dt);
 	}
 
-	
+	/**
+	 * This ship fires a bullet
+	 * @post  A bullet has been fired from this ship
+	 *        | bullet.fire()
+	 */
 	public void fireBullet(){
 		Bullet bullet = getBullets().iterator().next();
 		bullet.fire();
 	}
 
+	
+	/**
+	 * Resolve collisions between this ship and colliding ship or a colliding bullet
+	 * 
+	 * @param  entity
+	 * 	       The entity named entity
+	 * @post   If this ship collides with a bullet and the bullet was fired by the ship, it will be reloaded
+	 * 	       | if (bullet.getSource() == this) this.loadBullet(bullet)
+	 * @post   If this ship collides with a bullet and the bullet was fired by another ship, both entities will be terminated
+	 *         | bullet.terminate() && this.terminate()
+	 * @post   If this ship collides with another ship, they bounce off each other with adjusted velocities
+	 *         | this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj)
+	 */
 	@Override
 	public void collide(Entity entity) {
 		if(entity instanceof Bullet) {

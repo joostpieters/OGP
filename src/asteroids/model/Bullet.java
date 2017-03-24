@@ -4,9 +4,6 @@ import be.kuleuven.cs.som.annotate.*;
 
 public class Bullet extends Entity {
 
-	
-
-
 	public Bullet(double x, double y, double xVelocity, double yVelocity,
 			double radius) throws IllegalArgumentException {
 		super(x, y, xVelocity, yVelocity, radius);

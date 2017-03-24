@@ -5,13 +5,34 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 public abstract class Entity {
 
+	/**
+	 * Create a new entity with the given position, velocity, radius.
+	 * @param  x
+	 *         The x-coordinate of the position of this new ship.
+	 * @param  y
+	 *         The y-coordinate of the position of this new ship.
+	 * @param  xVelocity
+	 *         The x-coordinate of the velocity of this new ship.
+	 * @param  yVelocity
+	 *         The y-coordinate of the velocity of this new ship.
+	 * @param  radius
+	 *         The radius of this new ship.
+	 * @post   The new position of the ship is equal to the given position.
+	 *         | new.getPosition().equals({x,y})
+	 * @post   The new velocity of the ship is equal to the given velocity.
+	 *         | new.getVelocity().equals({xVelocity,yVelocity})
+	 * @post   The new radius of the ship is equal to the given radius.
+	 *         | new.getRadius() == radius
+	 * @throws IllegalArgumentException
+	 *         The given initial position or radius is not valid.
+	 *         | !isValidPosition({x,y})||!isValidRadius(radius)
+	 */
 	protected Entity(double x, double y, double xVelocity,
 			double yVelocity, double radius) throws IllegalArgumentException {
 		this.setPosition(new double[] {x,y});
 		this.setVelocity(new double[] {xVelocity,yVelocity});
 		this.setRadius(radius);
 	}
-	
 	
 	public abstract double getMass();
 	
@@ -48,7 +69,8 @@ public abstract class Entity {
 	/**
 	 * Set the position to the given position.
 	 * @param  position
-	 * 	       The x-and y-coordinate of this entity 
+	 * 	       The x-and y-coordinate of this entity
+	 * @Pre    The given position is valid 
 	 * @post   The new value of the position of this entity equals position.
 	 *         | new.getPosition().equals(position)
 	 * @throws IllegalArgumentException
@@ -120,7 +142,17 @@ public abstract class Entity {
 	public abstract boolean isValidRadius(double radius);
 
 	protected double radius;
-
+	
+	/**
+	 * @param  radius
+	 * 	       The radius of this entity
+	 * @Pre    The given radius is valid
+	 * @post   The new radius is set to the given radius
+	 * 		   | this.radius = radius
+	 * @throws IllegalArgumentException
+	 *         The given radius is not valid.
+	 *         | (!isValidRadius(radius))
+	 */
 	protected void setRadius(double radius){
 		if(!isValidRadius(radius)) throw new IllegalArgumentException("The radius is invalid.");
 		this.radius = radius;
@@ -354,32 +386,71 @@ public abstract class Entity {
 	}
 
 	private World world;
-
+	
+	/**
+	 * Return the world of this entity.
+	 * @return Returns the world of this entity.
+	 *         | result == world
+	 */
 	public World getWorld() {
 		return world;
 	}
 
+	/**
+	 * Set the world of the given entity.
+	 * @param world
+	 * 	      The given world to this entity
+	 * @Pre   Another world should not contain this entity
+	 * @post  The new world of this entity is equal to the given world.
+	 *        | this.world = world
+	 * @throws IllegalArgumentException
+	 * 		   Another world should not contain this entity
+	 * 		   |(!world.getEntities().contains(this))
+	 */
 	@Raw
 	public void setWorld(@Raw World world) {
 		if (!world.getEntities().contains(this)) throw new IllegalArgumentException("This method may only be used in a world's addShip/addBullet method.");
 		this.world = world;
 	}
 	
+	/**
+	 * Remove the world this entity is set in.
+	 * @post  The new world of this entity is equal null
+	 *        | this.world = null
+	 */
 	public void removeWorld(){
 		this.world = null;
 	}
 
-
+	/**
+	 * Terminate this entity
+	 * @post  This entity is terminated
+	 *        | isTerminated = true
+	 */
 	public void terminate() {
 		isTerminated = true;
 	}
 	
+	/**
+	 * Return the termination status of this entity as type boolean
+	 * @return Returns the termination status o this entity
+	 *         | result == isTerminated
+	 */
 	public boolean isTerminated() {
 		return isTerminated;
 	}
 
-	private boolean isTerminated = false;
-
+	private boolean isTerminated = false;	
+	
+	/**
+	 * Return the number of seconds until the first collision between this entity and the nearest boundary within it's trajectory.
+	 * @return Return the time to collision between this entity and the perpendicular boundary
+	 *         Returns the smallest time dt such that the distance between this entity after moving for a time of dt is 0
+	 *         | Math.min(xTime, yTime)
+	 * @throws IllegalArgumentException
+	 *         Ship2 is not created or the two ships overlap
+	 *         | ship2 == null || this.overlap(ship2)
+	 */
 	public double getTimeCollisionBoundary() {
 		if (getWorld()== null) return Double.POSITIVE_INFINITY;
 		double xTime = Double.POSITIVE_INFINITY; double yTime = Double.POSITIVE_INFINITY;
@@ -395,11 +466,25 @@ public abstract class Entity {
 		return Math.min(xTime, yTime);
 	}
 	
+	/**
+	 * Return the position of the entity as an array of length 2 x-coordinate at 
+	 * index 0 and the y-coordinate at index 1, at the point of collision with the nearest boundary within it's trajectory.
+	 * @param  dt
+	 * @return Returns the position of this entity at collision with nearest boundary within it's trajectory
+	 *         | result == positionAtEntityCollisionBoundary
+	 */
 	public double[] getPositionCollisionBoundary() {
-		return this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
+		double [] positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
+		return positionAtEntityCollisionBoundary;
 	}
 
-
+	/**
+	 * Set the negation of the velocity vector in question upon collision with a boundary, thereby bouncing off the boundary.
+	 * @post   If the entity bounces off the vertical border the x-component of the velocity is negated
+	 *         | result == setPosition(new double[]{-getPosition()[0],getPosition()[1]})
+	 * @post   If the entity bounces off the horizontal border the y-component of the velocity is reversed
+	 *         | result == setPosition(new double[]{getPosition()[0],-getPosition()[1]})
+	 */
 	public void collideBoundary() {
 		double[] position = getPositionCollisionBoundary();
 		double xDistance = Math.min(position[0]-getRadius(), getWorld().getSize()[0]-(position[0]-getRadius()));
