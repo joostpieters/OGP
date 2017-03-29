@@ -265,11 +265,11 @@ public class Ship extends Entity {
 	 * Return if this ship can have the given bullet as bullet. The ship must thereby be in significant overlap with the bullet.
 	 * @param bullet
 	 * 	      The given bullet
-	 * @Pre   The given bullet has been created
+	 * @return  The given bullet has been created
 	 * 		  | if (bullet == null) result == false
-	 * @Pre   The bullet does not belong to any ship yet
+	 * @return   The bullet does not belong to any ship yet
 	 *        | if (bullet.getShip() != null && bullet.getShip() != this) result == false
-	 * @Pre   The bullet has never been fired by any ship yet //can be fired by same ship that reloads?
+	 * @return   The bullet has never been fired by any ship yet //can be fired by same ship that reloads?
 	 *        | if (bullet.getSource() != null && bullet.getSource() != this) result == false
 	 * @return Returns if there is significant overlap between the ship and bullet
 	 *         |significantOverlap = (this.getDistanceBetweenCenters(bullet) < 0.99*(this.getRadius() - bullet.getRadius()))
