@@ -366,7 +366,7 @@ public class Ship extends Entity {
 			double[] oldVelocityi = this.getVelocity();
 			double[] oldVelocityj = entity.getVelocity();
 			double[] newVelocityi = new double[]{oldVelocityi[0]+jx/mi,oldVelocityi[1]+jy/mi};
-			double[] newVelocityj = new double[]{oldVelocityj[0]+jx/mj,oldVelocityj[1]+jy/mj};
+			double[] newVelocityj = new double[]{oldVelocityj[0]-jx/mj,oldVelocityj[1]-jy/mj};
 			this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj);
 		}
 		

@@ -315,10 +315,27 @@ public abstract class Entity {
 	 *         entity2 is not created
 	 *         | entity2 == null
 	 */
+	public boolean collidesWith(Entity entity2) throws IllegalArgumentException {
+		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
+		if (this == entity2) return false;
+		else return (Math.abs(this.getDistanceBetween(entity2)/(this.getRadius()+entity2.getRadius())) < 0.01);
+	}
+	
+	/**
+	 * Check whether this entity and <code>entity2</code> overlap. An entity
+	 * always overlaps with itself.
+	 * @param  entity2
+	 * 	       The entity named entity2.
+	 * @return Return whether entity and entity2 overlap
+	 *         | result == (this.getDistanceBetween(entity2) < 0)
+	 * @throws IllegalArgumentException
+	 *         entity2 is not created
+	 *         | entity2 == null
+	 */
 	public boolean overlap(Entity entity2) throws IllegalArgumentException {
 		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
 		if (this == entity2) return true;
-		else return (this.getDistanceBetween(entity2)/(this.getRadius()+entity2.getRadius()) < -0.01);
+		else return (this.getDistanceBetween(entity2)/(this.getRadius()+entity2.getRadius()) <= -0.01);
 	}
 	
 	/**
@@ -357,7 +374,7 @@ public abstract class Entity {
 		double[] deltaR = this.getPositionDifference(ship2);
 		double[] deltaV = this.getVelocityDifference(ship2);
 		if (dotProduct(deltaR,deltaV) >= 0) return Double.POSITIVE_INFINITY;
-		double d = Math.pow(dotProduct(deltaV,deltaR), 2) - (dotProduct(deltaV,deltaV))*(dotProduct(deltaR,deltaR)-Math.pow(this.getRadius()+ship2.getRadius(), 2));
+		double d = Math.pow(dotProduct(deltaV,deltaR), 2) - (dotProduct(deltaV,deltaV))*(dotProduct(deltaR,deltaR)-Math.pow(1.01*(this.getRadius()+ship2.getRadius()), 2));
 		if (d <= 0) return Double.POSITIVE_INFINITY;
 		else {
 			return -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV);

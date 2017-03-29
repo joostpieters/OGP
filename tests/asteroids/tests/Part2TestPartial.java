@@ -55,5 +55,32 @@ public class Part2TestPartial {
 		assertEquals(-990, facade.getShipVelocity(ship)[0], EPSILON);
 		assertEquals(0, facade.getShipVelocity(ship)[1], EPSILON);
 	}
+	
+	@Test
+	public void testOverlap() throws ModelException {
+		World world = facade.createWorld(5000, 5000);
+		Ship ship = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
+		Ship ship2 = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
+		System.out.println(ship.overlap(ship2));
+	}
+	
+	@Test
+	public void testgetTimeNextCollision() throws ModelException {
+		World world = facade.createWorld(5000, 5000);
+		Ship ship = facade.createShip(1000, 1000, 0, 0, 500, 0, 1.0E20);
+		Ship ship2 = facade.createShip(2000, 1000, -100, 0, 500, Math.PI, 1.0E20);
+		world.addShip(ship);
+		world.addShip(ship2);
+		System.out.println(ship.getTimeToCollision(ship2));
+	}
 
 }
+
+
+
+
+
+
+
+
+
