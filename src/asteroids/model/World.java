@@ -251,7 +251,15 @@ public class World {
 		return entities;
 	}
 
-	
+	/**
+	 * All entities are moved to their predicted position after time dt dependent on other objects in the world
+	 * @param  dt
+	 * 	       The time of movement of this ship.
+	 * @param  collisionListener
+	 *         Invoked when the entity is about to collide with a boundary or other entity
+	 * @post   All entities are moved to their predicted position after time dt
+	 * 	       | for(Entity entity: getEntities()) entity.move(dt)   
+	 */
 	public void evolve(double dt, CollisionListener collisionListener) {
 		double tC = getTimeNextCollision();
 		double[] position = getPositionNextCollision();
