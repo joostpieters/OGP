@@ -49,7 +49,13 @@ public class World {
 	 *        | if ship.getWorld() == this result == true
 	 */
 	private boolean canHaveAsShip(Ship ship) {
-		return (ship.getWorld() == this || ship.getWorld() == null);
+		if (!(ship.getWorld() == this || ship.getWorld() == null))
+			return false;
+		for (Entity entity: getEntities()){
+			if (ship.overlap(entity))
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -135,9 +141,14 @@ public class World {
 	 *        | if ((bullet.getWorld() == null) then result == false
      */
 	private boolean canHaveAsBullet(Bullet bullet) {
-		if (bullet.getWorld() == this) return true;
 		if (bullet.getShip() != null) return false; 
-		return (bullet.getWorld() == null);
+		if (!(bullet.getWorld() == this || bullet.getWorld() == null))
+			return false;
+		for (Entity entity: getEntities()){
+			if (bullet.overlap(entity))
+				return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -222,8 +233,9 @@ public class World {
 	 *         | result == nextCollidingObject.getPositionAfterMovingForAPeriodOf(getTimeNextCollision())
 	 */
 	public double[] getPositionNextCollision() {
-		Entity nextCollidingObject = getNextCollidingObjects()[0];
-		return nextCollidingObject.getPositionAfterMovingForAPeriodOf(getTimeNextCollision());
+		Entity[] nextCollidingObjects = getNextCollidingObjects();
+		if (nextCollidingObjects[1] == null) return nextCollidingObjects[0].getPositionCollisionBoundary();
+		else return nextCollidingObjects[0].getCollisionPosition(nextCollidingObjects[1]);
 	}
 	
 	/**
@@ -241,11 +253,15 @@ public class World {
 				entities = new Entity[]{entity1,null};
 			}
 			for (Entity entity2 : getEntities()){
-				if (entity1.overlap(entity2)) return new Entity[]{entity1,entity2};
-				if (timeNextCollision > entity1.getTimeToCollision(entity2)){
-					timeNextCollision = entity1.getTimeToCollision(entity2);
-					entities = new Entity[]{entity1,entity2};
+				if (entity1 != entity2) {
+					if (entity1.overlap(entity2)) return new Entity[]{entity1,entity2};
+					
+					if (timeNextCollision > entity1.getTimeToCollision(entity2)){
+						timeNextCollision = entity1.getTimeToCollision(entity2);
+						entities = new Entity[]{entity1,entity2};
+					}
 				}
+				
 			}
 		}
 		return entities;
@@ -265,17 +281,20 @@ public class World {
 		double[] position = getPositionNextCollision();
 		Entity[] entities = getNextCollidingObjects();
 		while (tC <= dt){
-			for(Entity entity: getEntities()) entity.move(dt);
+			for(Entity entity: getEntities()) entity.move(tC);
 			if(entities[1] == null){
 				entities[0].collideBoundary();
-				
+				collisionListener.boundaryCollision(entities[0], position[0], position[1]);
 			}
 			else {
 				entities[0].collide(entities[1]);
+				collisionListener.objectCollision(entities[0], entities[1], position[0], position[1]);
 			}
 			
 			dt = dt - tC;
 			tC = getTimeNextCollision();
+			position = getPositionNextCollision();
+			entities = getNextCollidingObjects();
 		}
 		for(Entity entity: getEntities()) entity.move(dt);
 		

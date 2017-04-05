@@ -146,23 +146,14 @@ public class Bullet extends Entity {
 		return minDensity;
 	}
 	
-	/**
-	 * Return the validity of the given radius for this bullet. The radius is type double and larger than 1.
-	 * @param radius
-	 * 	      The bullet's radius.
-	 * @return Returns the validity of the given radius
-	 * 		   | result == radius > minRadius
-	 */
-	@Override
-	public boolean isValidRadius(double radius) {
-		return (radius > minRadius);
-	}
 	
+	public double getMinRadius(){
+		return minRadius;
+	}
 	
 	private static final double minDensity = 7.8*Math.pow(10, 12);
 	
 	private static final double minRadius = 1;
-
 
 	/**
 	 * Resolve collisions between this bullet and another entity
@@ -173,8 +164,14 @@ public class Bullet extends Entity {
 	 */
 	@Override
 	public void collide(Entity entity) {
-		entity.terminate();
-		this.terminate();
+		if (this.getSource() == entity) {
+			this.setPosition(entity.getPosition());
+			((Ship)entity).loadBullet(this);
+		}
+		else {
+			entity.terminate();
+			this.terminate();
+		}
 	}
 	
 	/**
@@ -185,7 +182,18 @@ public class Bullet extends Entity {
 	public void collideBoundary() {
 		super.collideBoundary();
 		this.removeABounce();
-		if(this.getRemainingBounces() < 0) this.terminate();
+		if (this.getRemainingBounces() < 0) this.terminate();
+	}
+
+	/**
+	 * Terminate this ship from the world it is located in.
+	 * @post   The world which the ship was set to does not contain the ship anymore
+	 *         | getWorld().removeShip(this)
+	 */
+	@Override
+	public void terminate() {
+		super.terminate();
+		getWorld().removeBullet(this);
 	}
 	
 }

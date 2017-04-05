@@ -1,8 +1,14 @@
 package asteroids.model;
 
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Raw;
-
+import be.kuleuven.cs.som.annotate.*;
+/**
+ * A class of entities involving a position, velocity and radius
+ * @Invar  isValidPosition(getPosition())
+ * @Invar  isValidRadius(getRadius())
+ * 
+ * @version 2.5
+ * @author  Sander Leyssens & Sarah Joseph
+ */
 public abstract class Entity {
 
 	/**
@@ -85,7 +91,13 @@ public abstract class Entity {
 	}
 
 	public static double SPEED_OF_LIGHT = 300000;
+	
+	public double getMaxSpeed(){
+		return SPEED_OF_LIGHT;
+	}
 
+	public abstract double getMinRadius();
+	
 	/**
 	 * Return the velocity of this entity as an array of length 2, with the velocity
 	 * along the X-axis at index 0 and the velocity along the Y-axis at index 1.
@@ -105,18 +117,18 @@ public abstract class Entity {
 	 *         | if (Double.isNaN(velocity[0]))||(Double.isNaN(velocity[1]))||(velocity.length != 2)
 	 * @post   If the given velocity is slower than the speed of light, the new velocity is set to the given velocity.
 	 *         | speed = Math.sqrt(dotProduct(velocity, velocity))
-	 * 	       | if (Math.sqrt(dotProduct(velocity, velocity)) <= SPEED_OF_LIGHT) new.velocity.equals(velocity)
+	 * 	       | if (Math.sqrt(dotProduct(velocity, velocity)) <= getMaxSpeed()) new.velocity.equals(velocity)
 	 * @post   If the given velocity is faster than the speed of light, the new velocity is given the same direction as the given velocity, but the speed of light.
 	 *         | speed = Math.sqrt(dotProduct(velocity, velocity))
-	 *         | new.velocity.equals({velocity[0]*SPEED_OF_LIGHT/speed,velocity[1]*SPEED_OF_LIGHT/speed})
+	 *         | new.velocity.equals({velocity[0]*getMaxSpeed()/speed,velocity[1]*getMaxSpeed()/speed})
 	 */
 	protected void setVelocity(double[] velocity) {
 		if (Double.isNaN(velocity[0])) return;
 		if (Double.isNaN(velocity[1])) return;
 		if (velocity.length != 2) return;
 		double speed = Math.sqrt(dotProduct(velocity, velocity));
-		if (speed <= SPEED_OF_LIGHT) this.velocity = velocity.clone();
-		else this.velocity = new double[] {velocity[0]*SPEED_OF_LIGHT/speed,velocity[1]*SPEED_OF_LIGHT/speed};
+		if (speed <= getMaxSpeed()) this.velocity = velocity.clone();
+		else this.velocity = new double[] {velocity[0]*getMaxSpeed()/speed,velocity[1]*getMaxSpeed()/speed};
 	}
 
 	/**
@@ -131,15 +143,17 @@ public abstract class Entity {
 
 	private double[] velocity = new double[2];
 
+	
 	/**
-	 * Return the validity of a potential radius for any entity as type boolean.
-	 * @param  radius
-	 * 	       | A potential radius for an entity
-	 * @return Returns the validity of the potential radius for an entity.
-	 *         | result == (radius > minRadius)
+	 * Return the validity of the given radius for this ship. The radius is type double and larger than 10
+	 * @param radius
+	 * 	      The ship's radius.
+	 * @return Returns the validity of the given radius
+	 * 		   | result == radius > minRadius
 	 */
-	@Raw
-	public abstract boolean isValidRadius(double radius);
+	public boolean isValidRadius(double radius){
+		return (radius > getMinRadius());
+	}
 
 	protected double radius;
 	
@@ -362,8 +376,8 @@ public abstract class Entity {
 	 * @param  ship2
 	 * 	       The ship named ship2
 	 * @return Return the time to collision between ship and ship2 
-	 *         Returns the smallest time dt such that the distance between the ships after moving for a time period of dt is 0
-	 *         | Math.sqrt(dotProduct(ship2.getPositionAfterMovingForAPeriodOf(dt), this.getPositionAfterMovingForAPeriodOf(dt))) == ship2.getRadius() + this.getRadius()
+	 *         Returns the smallest time such that the distance between the ships after moving for a time is 0
+	 *         | result == min({dt | Math.sqrt(dotProduct(ship2.getPositionAfterMovingForAPeriodOf(dt), this.getPositionAfterMovingForAPeriodOf(dt))) == ship2.getRadius() + this.getRadius()})
 	 * @throws IllegalArgumentException
 	 *         Ship2 is not created or the two ships overlap
 	 *         | ship2 == null || this.overlap(ship2)
@@ -399,7 +413,13 @@ public abstract class Entity {
 	public double[] getCollisionPosition(Entity ship2) throws IllegalArgumentException {
 		double time = this.getTimeToCollision(ship2);
 		if (time == Double.POSITIVE_INFINITY) return null;
-		return this.getPositionAfterMovingForAPeriodOf(time);
+		double[] thisPosition = this.getPositionAfterMovingForAPeriodOf(time);
+		double[] otherPosition = ship2.getPositionAfterMovingForAPeriodOf(time);
+		double[] positionDifference = new double[]{otherPosition[0]-thisPosition[0],otherPosition[1]-thisPosition[1]};
+		double radiusRatio = this.getRadius()/(this.getRadius()+ship2.getRadius());
+		double[] collisionPosition = new double[]{thisPosition[0]+positionDifference[0]*radiusRatio,thisPosition[1]+positionDifference[1]*radiusRatio};
+		
+		return collisionPosition;
 	}
 
 	private World world;
@@ -474,9 +494,9 @@ public abstract class Entity {
 		double[] velocity = getVelocity();
 		double[] position = getPosition();
 		if(velocity[0] > 0) xTime = (getWorld().getSize()[0]-position[0]-getRadius())/velocity[0];
-		if(velocity[0] < 0) xTime = (position[0]+getRadius())/velocity[0];
-		if(velocity[1] > 0) yTime = (getWorld().getSize()[1]-position[1]-getRadius())/velocity[0];
-		if(velocity[1] < 0) yTime = (position[1]+getRadius())/velocity[1];
+		if(velocity[0] < 0) xTime = -(position[0]-getRadius())/velocity[0];
+		if(velocity[1] > 0) yTime = (getWorld().getSize()[1]-position[1]-getRadius())/velocity[1];
+		if(velocity[1] < 0) yTime = -(position[1]-getRadius())/velocity[1];
 		// TODO Auto-generated method stub
 		if (xTime < 0) xTime = Double.POSITIVE_INFINITY;
 		if (yTime < 0) yTime = Double.POSITIVE_INFINITY;
@@ -491,8 +511,34 @@ public abstract class Entity {
 	 *         | result == positionAtEntityCollisionBoundary
 	 */
 	public double[] getPositionCollisionBoundary() {
-		double [] positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
-		return positionAtEntityCollisionBoundary;
+		double[] positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
+		if(positionAtEntityCollisionBoundary == null) return null;
+		double[] velocity = this.getVelocity();
+		double xBoundary;
+		double yBoundary;
+		double xDistance;
+		double yDistance;
+		if (velocity[0] > 0) {
+			xBoundary = getWorld().getSize()[0];
+			xDistance = xBoundary - positionAtEntityCollisionBoundary[0];
+		} else {
+			xBoundary = 0;
+			xDistance = positionAtEntityCollisionBoundary[0];
+		}
+		if (velocity[1] > 0) {
+			yBoundary = getWorld().getSize()[1];
+			yDistance = yBoundary - positionAtEntityCollisionBoundary[1];
+		} else {
+			yBoundary = 0;
+			yDistance = positionAtEntityCollisionBoundary[1];
+		}
+		double[] collisionPosition;
+//		if(xDistance < 0) xDistance = Double.POSITIVE_INFINITY;
+//		if(yDistance < 0) yDistance = Double.POSITIVE_INFINITY;
+//		if(xDistance == Double.POSITIVE_INFINITY && yDistance == Double.POSITIVE_INFINITY) return null;
+		if(xDistance <= yDistance) collisionPosition = new double[]{xBoundary,positionAtEntityCollisionBoundary[1]};
+		else collisionPosition = new double[]{positionAtEntityCollisionBoundary[0],yBoundary};
+		return collisionPosition;
 	}
 
 	/**
@@ -504,10 +550,8 @@ public abstract class Entity {
 	 */
 	public void collideBoundary() {
 		double[] position = getPositionCollisionBoundary();
-		double xDistance = Math.min(position[0]-getRadius(), getWorld().getSize()[0]-(position[0]-getRadius()));
-		double yDistance = Math.min(position[1]-getRadius(), getWorld().getSize()[1]-(position[0]-getRadius()));
-		if(xDistance <= yDistance) setVelocity(new double[]{-getVelocity()[0],getVelocity()[1]});
-		if(xDistance <= yDistance) setVelocity(new double[]{getVelocity()[0],-getVelocity()[1]});
+		if(position[0] == 0 || position[0] == getWorld().getSize()[0]) setVelocity(new double[]{-getVelocity()[0],getVelocity()[1]});
+		if(position[1] == 0 || position[1] == getWorld().getSize()[1]) setVelocity(new double[]{getVelocity()[0],-getVelocity()[1]});
 	}
 
 

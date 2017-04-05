@@ -5,7 +5,8 @@ import java.util.*;
 import be.kuleuven.cs.som.annotate.*;
 /**
  * A class of ships involving a position, velocity, radius and orientation.
- * @version 1.4
+ * @Invar  isValidOrientation(getOrientation())
+ * @version 2.5
  * @author  Sander Leyssens & Sarah Joseph
  */
 
@@ -47,24 +48,10 @@ public class Ship extends Entity {
 		super(x,y,xVelocity,yVelocity,radius);
 		this.setOrientation(orientation);
 		this.setMass(mass);
-		Bullet[] bullets = new Bullet[15];
-		for(int i = 0; i < 15; i++){
-			Bullet bullet = new Bullet(x, y, xVelocity, yVelocity, radius*(1+Math.random()*3)/5);
-			bullets[i] = bullet;
-		}
-		this.loadBullet(bullets);
 	}
 	
-	/**
-	 * Return the validity of the given radius for this ship. The radius is type double and larger than 10
-	 * @param radius
-	 * 	      The ship's radius.
-	 * @return Returns the validity of the given radius
-	 * 		   | result == radius > minRadius
-	 */
-	@Override
-	public boolean isValidRadius(double radius){
-		return (radius > minRadius);
+	public double getMinRadius(){
+		return minRadius;
 	}
 	
 	private static final double minRadius = 10;
@@ -258,6 +245,7 @@ public class Ship extends Entity {
 	public void loadBullet(Bullet bullet) {
 		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("The given bullet is invalid.");
 		bullets.add(bullet);
+		if(bullet.getWorld() != null) bullet.getWorld().removeBullet(bullet);
 		bullet.setShip(this);
 	}
 
@@ -350,7 +338,10 @@ public class Ship extends Entity {
 	public void collide(Entity entity) {
 		if(entity instanceof Bullet) {
 			Bullet bullet = (Bullet)entity;
-			if (bullet.getSource() == this) this.loadBullet(bullet);
+			if (bullet.getSource() == this) {
+				bullet.setPosition(this.getPosition());
+				this.loadBullet(bullet);
+			}
 			else{
 				bullet.terminate();
 				this.terminate();

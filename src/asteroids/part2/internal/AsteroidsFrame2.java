@@ -89,7 +89,7 @@ public class AsteroidsFrame2<F extends IFacade> extends JFrame {
 				handleError(e);
 			}
 		}
-		int nbEnemyShips = (int) (5);
+		int nbEnemyShips = (int) (1);
 		Set<Ship> enemies = new HashSet<>();
 		for (int j = 0; j < nbEnemyShips; j++) {
 			try {
