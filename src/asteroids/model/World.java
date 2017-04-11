@@ -48,7 +48,7 @@ public class World {
 	 *        | if ship.getWorld() == null result == true
 	 *        | if ship.getWorld() == this result == true
 	 */
-	private boolean canHaveAsShip(Ship ship) {
+	private boolean canHaveAsShip(Ship ship) {//TODO edge
 		if (!(ship.getWorld() == this || ship.getWorld() == null))
 			return false;
 		for (Entity entity: getEntities()){
@@ -122,7 +122,7 @@ public class World {
 	 *        The given bullet is not part of this world
 	 *        | bullet.getWorld() != this
 	 */
-	public void addBullet(Bullet bullet) {
+	public void addBullet(Bullet bullet) throws IllegalArgumentException {
 		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("This world cannot have the given bullet as bullet.");
 		bullets.add(bullet);
 		bullet.setWorld(this);
@@ -140,7 +140,7 @@ public class World {
 	 * @return The bullet does not belong to any world
 	 *        | if ((bullet.getWorld() == null) then result == false
      */
-	private boolean canHaveAsBullet(Bullet bullet) {
+	private boolean canHaveAsBullet(Bullet bullet) {//TODO edge
 		if (bullet.getShip() != null) return false; 
 		if (!(bullet.getWorld() == this || bullet.getWorld() == null))
 			return false;

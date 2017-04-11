@@ -209,7 +209,7 @@ public class Ship extends Entity {
 	@Override
 	public void terminate() {
 		super.terminate();
-		getWorld().removeShip(this);
+		if(this.getWorld() != null) getWorld().removeShip(this);
 	}
 
 	/**
@@ -326,6 +326,7 @@ public class Ship extends Entity {
 	 * @effect The bullet is fired from this ship and its velocity is set to the calculated velocity     
 	 */
 	public void fireBullet(){
+		if (this.getWorld() == null) return;
 		Bullet bullet = getBullets().iterator().next();
 		double orientationFire = this.getOrientation();
 		double[] positionShip = this.getPosition();
@@ -338,7 +339,16 @@ public class Ship extends Entity {
 		this.removeBullet(bullet);
 		bullet.setPosition(new double[]{xPosition, yPosition});
 		bullet.setVelocity(new double[]{xVelocity, yVelocity});
-		this.getWorld().addBullet(bullet);
+		try{
+			this.getWorld().addBullet(bullet);
+		}catch (IllegalArgumentException exc){
+			for (Entity entity: this.getWorld().getEntities()){
+				if (entity.overlap(bullet)) {
+					bullet.collide(entity);
+					
+				}
+			}
+		}
 	}
 
 	
