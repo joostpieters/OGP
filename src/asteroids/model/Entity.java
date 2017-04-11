@@ -167,7 +167,7 @@ public abstract class Entity {
 	 *         The given radius is not valid.
 	 *         | (!isValidRadius(radius))
 	 */
-	protected void setRadius(double radius){
+	protected void setRadius(double radius) throws IllegalArgumentException {
 		if(!isValidRadius(radius)) throw new IllegalArgumentException("The radius is invalid.");
 		this.radius = radius;
 	}
@@ -512,7 +512,7 @@ public abstract class Entity {
 	 */
 	public double[] getPositionCollisionBoundary() {
 		double[] positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
-		if(positionAtEntityCollisionBoundary == null) return null;
+		if(positionAtEntityCollisionBoundary == null) return new double[]{Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};//TODO
 		double[] velocity = this.getVelocity();
 		double xBoundary;
 		double yBoundary;

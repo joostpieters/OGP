@@ -115,7 +115,7 @@ public class Bullet extends Entity {
 	 *         | result == minDensity
 	 */
 	public double getDensity(){
-		return minDensity;
+		return density;
 	}
 	
 	
@@ -123,7 +123,7 @@ public class Bullet extends Entity {
 		return minRadius;
 	}
 	
-	private static final double minDensity = 7.8*Math.pow(10, 12);
+	private static final double density = 7.8*Math.pow(10, 12);
 	
 	private static final double minRadius = 1;
 

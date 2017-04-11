@@ -99,15 +99,16 @@ public class Ship extends Entity {
 	 * Set the mass of this ship to the given weight.
 	 * @param mass
 	 * 	      The mass of this entity
-	 * @Pre   The given mass is valid.
-	 * 	      | mass >= minMass
+	 * @post   If the given mass is smaller than the minimum mass, the new mass of this entity is equal to the minimum mass.
+	 *        | double minMass = 4/3*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
+	 * 	      | if (mass < minMass) new.getMass() == minMass
 	 * @post  The new mass of this entity is equal to the given mass.
-	 *        | this.mass = mass
+	 *        | new.getMass() == mass
 	 */
 	private void setMass(double mass) {
 		double minMass = 4/3*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
-		if (mass >= minMass) this.mass = mass;
-		else this.mass = minMass;
+		if (mass < minMass) this.mass = minMass;
+		else this.mass = mass;
 	}
 	
 	private double mass;
@@ -201,6 +202,8 @@ public class Ship extends Entity {
 		setOrientation(getOrientation()+angle);
 	}
 
+	private double orientation;
+
 	/**
 	 * Terminate this ship from the world it is located in.
 	 * @post   The world which the ship was set to does not contain the ship anymore
@@ -223,8 +226,6 @@ public class Ship extends Entity {
 
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 
-	private double orientation;
-
 	/**
 	 * Return the number of bullets loaded on this ship as type double.
 	 * @return Returns the number of bullets on this ship
@@ -241,12 +242,18 @@ public class Ship extends Entity {
 	 * @Pre   The given bullet is valid.
 	 * @post  The given bullet is loaded on this ship
 	 *        | bullet.setShip(this)
+	 * @post  The position of his bullet is equal to the position of this ship
+	 *        | new.bullet.getPosition() == this.getPosition()
+	 * @throws IllegalArgumentException
+	 *         The given bullet is invalid for this ship.
+	 *         | !this.canHaveAsBullet(bullet)
 	 */
-	public void loadBullet(Bullet bullet) {
+	public void loadBullet(Bullet bullet) throws IllegalArgumentException {
 		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("The given bullet is invalid.");
 		bullets.add(bullet);
 		if(bullet.getWorld() != null) bullet.getWorld().removeBullet(bullet);
 		bullet.setShip(this);
+		bullet.setPosition(this.getPosition());
 	}
 
 	/**
@@ -276,9 +283,13 @@ public class Ship extends Entity {
 	 * 	       The bullets of this ship
 	 * @post   The bullet that are part of the ship are loaded.
 	 *         | for(Bullet bullet : bullets) this.loadBullet(bullet)
+	 * @throws IllegalArgumentException
+	 *         At least one of the bullets is invalid for this ship.
+	 *         | for some bullet in bullets: !this.canHaveAsBullet(bullet)
 	 *
 	 */
-	public void loadBullet(Bullet... bullets) {
+	public void loadBullet(Bullet... bullets) throws IllegalArgumentException {
+		for(Bullet bullet : bullets) if (!canHaveAsBullet(bullet)) throw new IllegalArgumentException("One of the bullets is invalid.");
 		for(Bullet bullet : bullets) this.loadBullet(bullet);
 	}
 	
@@ -293,7 +304,7 @@ public class Ship extends Entity {
 	 *         The given bullet is not part of this ship
 	 *         | bullet.getShip() != this
 	 */
-	public void removeBullet(Bullet bullet) {
+	public void removeBullet(Bullet bullet) throws IllegalArgumentException {
 		if (bullet.getShip() != this) throw new IllegalArgumentException("The given bullet is not part of this ship");
 		bullets.remove(bullet);
 		bullet.setShip(null);
