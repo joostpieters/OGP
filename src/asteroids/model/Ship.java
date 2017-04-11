@@ -336,9 +336,9 @@ public class Ship extends Entity {
 		double yVelocity = 250 * Math.sin(orientationFire);
 		bullet.setSource(this);
 		this.removeBullet(bullet);
-		this.getWorld().addBullet(bullet);
 		bullet.setPosition(new double[]{xPosition, yPosition});
 		bullet.setVelocity(new double[]{xVelocity, yVelocity});
+		this.getWorld().addBullet(bullet);
 	}
 
 	

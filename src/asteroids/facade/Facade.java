@@ -212,7 +212,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void addShipToWorld(World world, Ship ship) throws ModelException {
-		world.addShip(ship);
+		try{
+			world.addShip(ship);
+		}catch(IllegalArgumentException e){
+			throw new ModelException(e.getMessage());
+		}
 	}
 
 	@Override
@@ -222,7 +226,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void addBulletToWorld(World world, Bullet bullet) throws ModelException {
-		world.addBullet(bullet);
+		try{
+			world.addBullet(bullet);
+		}catch(IllegalArgumentException e){
+			throw new ModelException(e.getMessage());
+		}
 		
 	}
 
