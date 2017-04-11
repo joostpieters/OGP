@@ -313,12 +313,32 @@ public class Ship extends Entity {
 
 	/**
 	 * This ship fires a bullet
-	 * @post  A bullet has been fired from this ship
-	 *        | bullet.fire()
+	 * @post   The bullet is removed from this ship
+	 * 		   | this.removeBullet(bullet)
+	 * @post   The source of the bullet is set to this ship
+	 *         | bullet.setSource(this)
+	 * @post   The bullet is set in the world which contains this ship
+	 *         | this.getWorld().addBullet(bullet)
+	 * @post   The bullet has a new velocity set to the calculated velocity
+	 *         | bullet.setVelocity(new double[]{xVelocity, yVelocity})
+	 * @post   The bullet has a new position set to the calculated position
+	 *         | bullet.setPosition(new double[]{xPosition, yPosition})
+	 * @effect The bullet is fired from this ship and its velocity is set to the calculated velocity     
 	 */
 	public void fireBullet(){
 		Bullet bullet = getBullets().iterator().next();
-		bullet.fire();
+		double orientationFire = this.getOrientation();
+		double[] positionShip = this.getPosition();
+		double distanceBetweenCenters = (bullet.getRadius() + this.getRadius());
+		double xPosition = positionShip[0] + distanceBetweenCenters * Math.cos(orientationFire);
+		double yPosition = positionShip[1] + distanceBetweenCenters * Math.sin(orientationFire);
+		double xVelocity = 250 * Math.cos(orientationFire);
+		double yVelocity = 250 * Math.sin(orientationFire);
+		bullet.setSource(this);
+		this.removeBullet(bullet);
+		this.getWorld().addBullet(bullet);
+		bullet.setPosition(new double[]{xPosition, yPosition});
+		bullet.setVelocity(new double[]{xVelocity, yVelocity});
 	}
 
 	

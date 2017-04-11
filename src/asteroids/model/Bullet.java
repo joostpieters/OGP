@@ -97,34 +97,6 @@ public class Bullet extends Entity {
 	private Ship source;
 
 	/**
-	 * This bullet is fired from its ship
-	 * @post   The bullet is removed from its previous ship now set as source
-	 * 		   | source.removeBullet(this);
-	 * @post   The bullet is set in the world which contains its source
-	 *         | source.getWorld().addBullet(this);
-	 * @post   The bullet has a new velocity set to the calculated velocity
-	 *         | this.setVelocity(new double[]{xVelocity, yVelocity})
-	 * @post   The bullet has a new position set to the calculated position
-	 *         | this.setPosition(new double[]{xPosition, yPosition})
-	 * @effect The bullet is fired from its ship and its velocity is set to the calculated velocity     
-	 */
-	public void fire() {
-		Ship source = this.getShip();
-		double orientationFire = source.getOrientation();
-		double[] positionShip = source.getPosition();
-		double distanceBetweenCenters = (this.getRadius() + source.getRadius());
-		double xPosition = positionShip[0] + distanceBetweenCenters * Math.cos(orientationFire);
-		double yPosition = positionShip[1] + distanceBetweenCenters * Math.sin(orientationFire);
-		double xVelocity = 250 * Math.cos(orientationFire);
-		double yVelocity = 250 * Math.sin(orientationFire);
-		this.setSource(source);
-		source.removeBullet(this);
-		source.getWorld().addBullet(this);
-		this.setPosition(new double[]{xPosition, yPosition});
-		this.setVelocity(new double[]{xVelocity, yVelocity});
-	}
-
-	/**
 	 * Return the mass of this bullet.
 	 * @return Returns the mass of this 
 	 *         | result == mass
