@@ -244,7 +244,7 @@ public class World {
 	 *         between two entities of this world or an entity and a boundary of this world 
 	 *         | result == entities
 	 */
-	private Entity[] getNextCollidingObjects() {
+	public Entity[] getNextCollidingObjects() {
 		Entity[] entities = new Entity[]{null,null};
 		double timeNextCollision = Double.POSITIVE_INFINITY;
 		for (Entity entity1 : getEntities()){
