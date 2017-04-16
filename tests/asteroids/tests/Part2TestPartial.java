@@ -1,5 +1,6 @@
 package asteroids.tests;
 
+
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -301,10 +302,20 @@ public class Part2TestPartial {
 		ship.fireBullet();
 		double time = bullet1.getTimeToCollision(ship2);
 		
+		CollisionListener collisions = new CollisionListener(){
+			  public void boundaryCollision(Object entity, double x, double y){	  
+			  }
+			  public void objectCollision(Object entity1, Object entity2, double x, double y){	  
+			  }
+		};
 		
-		//world.evolve(time, collisionListener);
-		System.out.println("time to collision: " + time);
-		System.out.println("position of bullet1 at collision: " + bullet1.getPositionAfterMovingForAPeriodOf(1));
+		world.evolve(time, collisions);
+		assertEquals(bullet1.isTerminated(), true);
+		assertEquals(ship2.isTerminated(), true);
+
+	
+		//System.out.println("time to collision: " + time);
+		//System.out.println("position of bullet1 at collision: " + bullet1.getPositionAfterMovingForAPeriodOf(1));
 	}
 }
 
