@@ -76,7 +76,6 @@ public abstract class Entity {
 	 * Set the position to the given position.
 	 * @param  position
 	 * 	       The x-and y-coordinate of this entity
-	 * @Pre    The given position is valid 
 	 * @post   The new value of the position of this entity equals position.
 	 *         | new.getPosition().equals(position)
 	 * @throws IllegalArgumentException
@@ -149,7 +148,7 @@ public abstract class Entity {
 	 * @param radius
 	 * 	      The ship's radius.
 	 * @return Returns the validity of the given radius
-	 * 		   | result == radius > minRadius
+	 * 		   | result == radius > getMinRadius()
 	 */
 	public boolean isValidRadius(double radius){
 		return (radius > getMinRadius());
@@ -160,7 +159,6 @@ public abstract class Entity {
 	/**
 	 * @param  radius
 	 * 	       The radius of this entity
-	 * @Pre    The given radius is valid
 	 * @post   The new radius is set to the given radius
 	 * 		   | this.radius = radius
 	 * @throws IllegalArgumentException
@@ -412,7 +410,7 @@ public abstract class Entity {
 	 */
 	public double[] getCollisionPosition(Entity ship2) throws IllegalArgumentException {
 		double time = this.getTimeToCollision(ship2);
-		if (time == Double.POSITIVE_INFINITY) return null;
+		if (time == Double.POSITIVE_INFINITY) return new double[]{Double.POSITIVE_INFINITY*Math.signum(this.getVelocity()[0]),Double.POSITIVE_INFINITY*Math.signum(this.getVelocity()[1])};
 		double[] thisPosition = this.getPositionAfterMovingForAPeriodOf(time);
 		double[] otherPosition = ship2.getPositionAfterMovingForAPeriodOf(time);
 		double[] positionDifference = new double[]{otherPosition[0]-thisPosition[0],otherPosition[1]-thisPosition[1]};
@@ -483,7 +481,7 @@ public abstract class Entity {
 	 * Return the number of seconds until the first collision between this entity and the nearest boundary within it's trajectory.
 	 * @return Return the time to collision between this entity and the perpendicular boundary
 	 *         Returns the smallest time dt such that the distance between this entity after moving for a time of dt is 0
-	 *         | Math.min(xTime, yTime)
+	 *         | min(xTime, yTime)
 	 * @throws IllegalArgumentException
 	 *         Ship2 is not created or the two ships overlap
 	 *         | ship2 == null || this.overlap(ship2)
@@ -512,7 +510,8 @@ public abstract class Entity {
 	 */
 	public double[] getPositionCollisionBoundary() {
 		double[] positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
-		if(positionAtEntityCollisionBoundary == null) return new double[]{Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};//TODO
+		if(positionAtEntityCollisionBoundary == null || !Double.isFinite(positionAtEntityCollisionBoundary[0]) || !Double.isFinite(positionAtEntityCollisionBoundary[1])) 
+			return new double[]{Double.POSITIVE_INFINITY*Math.signum(this.getVelocity()[0]),Double.POSITIVE_INFINITY*Math.signum(this.getVelocity()[1])};
 		double[] velocity = this.getVelocity();
 		double xBoundary;
 		double yBoundary;
@@ -544,9 +543,11 @@ public abstract class Entity {
 	/**
 	 * Set the negation of the velocity vector in question upon collision with a boundary, thereby bouncing off the boundary.
 	 * @post   If the entity bounces off the vertical border the x-component of the velocity is negated
-	 *         | result == setVelocity(new double[]{-getVelocity()[0],getVelocity()[1]})
+	 *         | if(getPositionCollisionBoundary()[0] == 0 || getPositionCollisionBoundary()[0] == getWorld().getSize()[0])
+	 *         |   new.getVelocity()[0] == -getVelocity()[0]
 	 * @post   If the entity bounces off the horizontal border the y-component of the velocity is reversed
-	 *         | result == setVelocity(new double[]{getVelocity()[0],-getVelocity()[1]})
+	 *         | if(getPositionCollisionBoundary()[1] == 0 || getPositionCollisionBoundary()[1] == getWorld().getSize()[1])
+	 *         |   new.getVelocity()[1] == -getVelocity()[1]
 	 */
 	public void collideBoundary() {
 		double[] position = getPositionCollisionBoundary();

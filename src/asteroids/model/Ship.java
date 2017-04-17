@@ -239,7 +239,6 @@ public class Ship extends Entity {
 	 * Load a bullet on this ship.
 	 * @param bullet
 	 * 	      The given bullet
-	 * @Pre   The given bullet is valid.
 	 * @post  The given bullet is loaded on this ship
 	 *        | bullet.setShip(this)
 	 * @post  The position of his bullet is equal to the position of this ship
@@ -252,29 +251,29 @@ public class Ship extends Entity {
 		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("The given bullet is invalid.");
 		bullets.add(bullet);
 		if(bullet.getWorld() != null) bullet.getWorld().removeBullet(bullet);
-		bullet.setShip(this);
 		bullet.setPosition(this.getPosition());
+		bullet.setShip(this);
 	}
 
 	/**
 	 * Return if this ship can have the given bullet as bullet. The ship must thereby be in significant overlap with the bullet.
 	 * @param bullet
 	 * 	      The given bullet
-	 * @return  The given bullet has been created
+	 * @return  Returns false if the given bullet is null
 	 * 		  | if (bullet == null) result == false
-	 * @return   The bullet does not belong to any ship yet
+	 * @return  Returns false if the bullet belongs to a different ship
 	 *        | if (bullet.getShip() != null && bullet.getShip() != this) result == false
-	 * @return   The bullet has never been fired by any ship yet //can be fired by same ship that reloads?
+	 * @return  Returns false if the bullet originates from a different ship.
 	 *        | if (bullet.getSource() != null && bullet.getSource() != this) result == false
 	 * @return Returns if there is significant overlap between the ship and bullet
 	 *         |significantOverlap = (this.getDistanceBetweenCenters(bullet) < 0.99*(this.getRadius() - bullet.getRadius()))
 	 */
 	private boolean canHaveAsBullet(Bullet bullet) {
 		if (bullet == null) return false;
+		if (bullet.isTerminated()) return false;
 		if (bullet.getShip() != null && bullet.getShip() != this) return false;
 		if (bullet.getSource() != null && bullet.getSource() != this) return false;
-		boolean significantOverlap = (this.getDistanceBetweenCenters(bullet) < 0.99*(this.getRadius() - bullet.getRadius()));
-		return significantOverlap;
+		return true;
 	}
 
 	/**
@@ -297,8 +296,7 @@ public class Ship extends Entity {
 	 * Remove a bullet from this ship.
 	 * @param  bullets
 	 * 	       A given bullet
-	 * @Pre    The given bullet is part of this ship
-	 * @post   The bullet is removed from this ship and does not belong to any ship
+	 * @effect The bullet is removed from this ship and this ship is removed from the bullet.
 	 *         | bullets.remove(bullet) && bullet.setShip(null)
 	 * @throws IllegalArgumentException
 	 *         The given bullet is not part of this ship
@@ -314,7 +312,7 @@ public class Ship extends Entity {
 	 * The ship moves <code>dt</code> seconds at its thrust acceleration.
 	 * @param  dt
 	 * 	       The time of movement of this ship.
-	 * @post   The ship accelerates for the given period of dt.
+	 * @effect The ship accelerates for the given period of dt.
 	 * 	       | thrust(getAcceleration()*dt)   
 	 */
 	public void move(double dt){
@@ -324,17 +322,16 @@ public class Ship extends Entity {
 
 	/**
 	 * This ship fires a bullet
-	 * @post   The bullet is removed from this ship
+	 * @effect The bullet is removed from this ship
 	 * 		   | this.removeBullet(bullet)
-	 * @post   The source of the bullet is set to this ship
+	 * @effect The source of the bullet is set to this ship
 	 *         | bullet.setSource(this)
-	 * @post   The bullet is set in the world which contains this ship
+	 * @effect The bullet is set in the world which contains this ship
 	 *         | this.getWorld().addBullet(bullet)
-	 * @post   The bullet has a new velocity set to the calculated velocity
+	 * @effect The bullet has a new velocity set to the calculated velocity
 	 *         | bullet.setVelocity(new double[]{xVelocity, yVelocity})
-	 * @post   The bullet has a new position set to the calculated position
-	 *         | bullet.setPosition(new double[]{xPosition, yPosition})
-	 * @effect The bullet is fired from this ship and its velocity is set to the calculated velocity     
+	 * @effect The bullet has a new position set to the calculated position
+	 *         | bullet.setPosition(new double[]{xPosition, yPosition}) 
 	 */
 	public void fireBullet(){
 		if (this.getWorld() == null) return;
@@ -352,7 +349,7 @@ public class Ship extends Entity {
 		bullet.setVelocity(new double[]{xVelocity, yVelocity});
 		try{
 			this.getWorld().addBullet(bullet);
-		}catch (IllegalArgumentException exc){
+		} catch (IllegalArgumentException exc){
 			for (Entity entity: this.getWorld().getEntities()){
 				if (entity.overlap(bullet)) {
 					bullet.collide(entity);
@@ -360,6 +357,11 @@ public class Ship extends Entity {
 				}
 			}
 		}
+		double distanceToEdge = getWorld().getSize()[0] - bullet.getPosition()[0];
+		distanceToEdge = Math.min(distanceToEdge, bullet.getPosition()[0]);
+		distanceToEdge = Math.min(distanceToEdge, getWorld().getSize()[1] - bullet.getPosition()[1]);
+		distanceToEdge = Math.min(distanceToEdge, bullet.getPosition()[1]);
+		if(distanceToEdge < 0) bullet.terminate();
 	}
 
 	
@@ -368,11 +370,11 @@ public class Ship extends Entity {
 	 * 
 	 * @param  entity
 	 * 	       The entity named entity
-	 * @post   If this ship collides with a bullet and the bullet was fired by the ship, it will be reloaded
+	 * @effect If this ship collides with a bullet and the bullet was fired by the ship, it will be reloaded
 	 * 	       | if (bullet.getSource() == this) this.loadBullet(bullet)
-	 * @post   If this ship collides with a bullet and the bullet was fired by another ship, both entities will be terminated
+	 * @effect If this ship collides with a bullet and the bullet was fired by another ship, both entities will be terminated
 	 *         | bullet.terminate() && this.terminate()
-	 * @post   If this ship collides with another ship, they bounce off each other with adjusted velocities
+	 * @effect If this ship collides with another ship, they bounce off each other with adjusted velocities
 	 *         | this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj)
 	 */
 	@Override

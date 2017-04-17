@@ -31,7 +31,7 @@ public class Bullet extends Entity {
 	/**
 	 * Return the remaining bounces the bullet can have with a boundary
 	 * @return Returns the remaining bounces
-	 *         | result = this.remainingBounces
+	 *         | result == this.remainingBounces
 	 */
 	public int getRemainingBounces(){
 		return this.remainingBounces;
@@ -40,7 +40,7 @@ public class Bullet extends Entity {
 	/**
 	 * Decrement the remaining bounces by one. 
 	 * @post   The new value of the remaining bounces is the old value minus one
-	 *         | remainingBounces--
+	 *         | new.getRemainingBounces() == getRemainingBounces() - 1
 	 */
 	private void removeABounce(){
 		remainingBounces--;
@@ -52,10 +52,8 @@ public class Bullet extends Entity {
 	 * Set the ship of this bullet to the given ship.
 	 * @param ship
 	 * 	      The ship this bullet belongs to
-	 * @Pre   The given orientation is valid.
-	 * 	      | isValidOrientation(orientation)
-	 * @post  The given ship contains this bullet
-	 *        | this.ship = ship
+	 * @post  If the given ship contains the bullet or the given ship is null, the ship is set to the given ship.
+	 *        | if (ship == null || ship.getBullets().contains(this)) new.getShip == ship
 	 */
 	@Raw
 	public void setShip(@Raw Ship ship) {
@@ -87,8 +85,8 @@ public class Bullet extends Entity {
 	
 	/**
 	 * Set the source for the given ship
-	 * @post sets the source of this bullet to the given ship
-	 *       | this.source = ship
+	 * @post The new source of this bullet is the given ship
+	 *       | new.getSource() == ship
 	 */
 	public void setSource(Ship ship) {
 		this.source = ship;
@@ -98,8 +96,8 @@ public class Bullet extends Entity {
 
 	/**
 	 * Return the mass of this bullet.
-	 * @return Returns the mass of this 
-	 *         | result == mass
+	 * @return Returns the mass of this bullet. 
+	 *         | result == 3/4 * PI * pow(getRadius(), 3) * getDensity()
 	 */
 	@Override
 	public double getMass() {
@@ -112,7 +110,7 @@ public class Bullet extends Entity {
 	/**
 	 * Return the density of this bullet.
 	 * @return Returns the density of this bullet.
-	 *         | result == minDensity
+	 *         | result == density
 	 */
 	public double getDensity(){
 		return density;
@@ -131,15 +129,14 @@ public class Bullet extends Entity {
 	 * Resolve collisions between this bullet and another entity
 	 * @param  entity
 	 * 	       The given entity
-	 * @post   If this bullet collides with another entity both will be terminated
-	 * 	       | entity.terminate() && this.terminate()
+	 * @effect If this bullet collides with its source, it is reloaded onto its source
+	 *         | if (this.getSource() == entity) entity.loadBullet(this);
+	 * @effect If this bullet collides with another entity both will be terminated
+	 * 	       | else entity.terminate() && this.terminate()
 	 */
 	@Override
 	public void collide(Entity entity) {
-		if (this.getSource() == entity) {
-			this.setPosition(entity.getPosition());
-			((Ship)entity).loadBullet(this);
-		}
+		if (this.getSource() == entity) ((Ship)entity).loadBullet(this);
 		else {
 			entity.terminate();
 			this.terminate();
@@ -147,8 +144,8 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * Resolves collisions between this bullet and one of it's world's boundaries
-	 * @post  The boundary is terminated if remainingBounces is lower than zero
+	 * Resolves collisions between this bullet and one of the boundaries of its world
+	 * @effect The bullet is terminated if remainingBounces is lower than zero
 	 *        | if(this.getRemainingBounces() < 0) this.terminate()
 	 */
 	public void collideBoundary() {
@@ -159,8 +156,8 @@ public class Bullet extends Entity {
 
 	/**
 	 * Terminate this ship from the world it is located in.
-	 * @post   The world which the ship was set to does not contain the ship anymore
-	 *         | getWorld().removeShip(this)
+	 * @effect The world which the ship was set to does not contain the ship anymore
+	 *         | getWorld().removeBullet(this)
 	 */
 	@Override
 	public void terminate() {

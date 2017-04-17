@@ -4,6 +4,15 @@ import java.util.*;
 
 import asteroids.part2.CollisionListener;
 
+/**
+ * A class of worlds with a given width and height.
+ * @Invar  for each bullet in getBullets(): bullet.getWorld() == this
+ * @Invar  for each ship in getShip(): ship.getWorld() == this
+ * @version 2.5
+ * @author  Sander Leyssens & Sarah Joseph
+ */
+
+
 public class World {
 
 	private double width;
@@ -31,7 +40,7 @@ public class World {
 	 * @param ship
 	 * 	      The given ship
 	 * @Pre   The given ship is valid.
-	 * @post  The given ship is part of this world
+	 * @effect  The given ship is part of this world
 	 *        | ship.setWorld(this)
 	 */
 	public void addShip(Ship ship) {
@@ -44,14 +53,21 @@ public class World {
 	 * Return if this world can have the given ship as ship. The ship must thereby be part of no other world or this world.
 	 * @param ship
 	 * 	      The given ship
-	 * @Pre   The this does not belong to any world yet or belongs to this world
-	 *        | if ship.getWorld() == null result == true
-	 *        | if ship.getWorld() == this result == true
+	 * @return Returns false if the ship belongs to any world other than this world.
+	 *        | if (!(ship.getWorld() == null || ship.getWorld() != this)) result == false
+	 *        Returns false if either the ship or this world are terminated.
+	 *        | if (ship.isTerminated() || this.isTerminated()) result == false
+	 *        Returns false if the ship overlaps with any entities of this world.
+	 *        | if (for some entity in this.getEntities() ship.overlap(entity)) result == false
+	 *        Returns true otherwise.
+	 *        | result == true
 	 */
 	private boolean canHaveAsShip(Ship ship) {//TODO edge
 		if (!(ship.getWorld() == this || ship.getWorld() == null))
 			return false;
-		for (Entity entity: getEntities()){
+		if (ship.isTerminated() || this.isTerminated())
+			return false;
+		for (Entity entity: this.getEntities()){
 			if (ship.overlap(entity))
 				return false;
 		}
@@ -99,7 +115,7 @@ public class World {
 	/**
 	 * Terminate the given bullet from this world
 	 * @Pre    The given bullet is part of this world
-	 * @post   The given bullet is removed from the hashed set bullets and removed from this world
+	 * @effect   The given bullet is removed from the hashed set bullets and removed from this world
 	 *         | bullets.remove(bullet) && bullet.removeWorld();
 	 * @throws IllegalArgumentException
 	 *         The given bullet is not part of this world.
@@ -116,7 +132,7 @@ public class World {
 	 * @param bullet
 	 * 	      The given bullet
 	 * @Pre   The given bullet is valid.
-	 * @post  The given bullet is added to this world.
+	 * @effect  The given bullet is added to this world.
 	 *        | bullet.setShip(this)
 	 * @throws IllegalArgumentException
 	 *        The given bullet is not part of this world
@@ -124,8 +140,17 @@ public class World {
 	 */
 	public void addBullet(Bullet bullet) throws IllegalArgumentException {
 		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("This world cannot have the given bullet as bullet.");
-		bullets.add(bullet);
-		bullet.setWorld(this);
+		double[] position = bullet.getPosition();
+		double radius = bullet.getRadius();
+		double distance = position[0]-radius;
+		distance = Math.min(distance, this.getSize()[0]-position[0]-radius);
+		distance = Math.min(distance, position[1]-radius);
+		distance = Math.min(distance, this.getSize()[1]-position[1]-radius);
+		if(distance < 0) bullet.terminate();
+		else{
+			bullets.add(bullet);
+			bullet.setWorld(this);
+		}
 	}
 
 	/**
@@ -133,17 +158,22 @@ public class World {
 	 *        or this world and the bullet must be loaded onto a ship.
 	 * @param bullet
 	 * 	      The given bullet
-	 * @return The given bullet is part of this world
-	 * 		  | if (bullet.getWorld() == this) then result == true
-	 * @return The bullet belongs to a ship
-	 *        | if (bullet.getShip() != null) the result == false
-	 * @return The bullet does not belong to any world
-	 *        | if ((bullet.getWorld() == null) then result == false
-     */
+	 * @return Returns false if the bullet does belongs to any ship.
+	 *        | if (bullet.getShip() != null) result == false;
+	 *        Returns false if the bullet belongs to any world other than this world.
+	 *        | if (!(bullet.getWorld() == null || bullet.getWorld() != this)) result == false
+	 *        Returns false if either the bullet or this world are terminated.
+	 *        | if (bullet.isTerminated() || this.isTerminated()) result == false
+	 *        Returns false if the bullet overlaps with any entities of this world.
+	 *        | if (for some entity in this.getEntities() bullet.overlap(entity)) result == false
+	 *        Returns true otherwise.
+	 *        | result == true
+	 */
 	private boolean canHaveAsBullet(Bullet bullet) {//TODO edge
 		if (bullet.getShip() != null) return false; 
 		if (!(bullet.getWorld() == this || bullet.getWorld() == null))
 			return false;
+		if (bullet.isTerminated() || this.isTerminated()) return false;
 		for (Entity entity: getEntities()){
 			if (bullet.overlap(entity))
 				return false;
@@ -153,18 +183,18 @@ public class World {
 	
 	/**
 	 * Remove all ships and all bullets of this world.
-	 * @post   All ships are removed from this world
-	 *         | for(Ship ship : ships) { this.removeShip(ship)
-	 * @post   All bullets are removed from this world
-	 *         | for(Bullet bullet: bullets) { this.removeBullet(bullet)
-	 * @post   The boolean isTerminated is set to true
-	 *         |  isTerminated = true
+	 * @effect All ships are removed from this world
+	 *         | for each ship in getShips(): this.removeShip(ship)
+	 * @effect All bullets are removed from this world
+	 *         | for each bullet in getBullets(): this.removeBullet(bullet)
+	 * @effect The boolean isTerminated is set to true
+	 *         | isTerminated = true
 	 */
 	public void terminate(){
-		for(Ship ship : ships){
+		for(Ship ship : getShips()){
 			this.removeShip(ship);
 		}
-		for(Bullet bullet : bullets){
+		for(Bullet bullet : getBullets()){
 			this.removeBullet(bullet);
 		}
 		isTerminated = true;
@@ -184,21 +214,21 @@ public class World {
 	/**
 	 * Return the width and height of this world as array of type double.
 	 * @return Returns the size of this world
-	 *         | result == new double[]{width,height}
+	 *         | result == new double[]{this.width,this.height}
 	 */
 	public double[] getSize() {
-		return new double[]{width,height};
+		return new double[]{this.width,this.height};
 	}
 	
 	/**
 	 * Return all the entities part of this world.
 	 * @return Returns all the ships and all the bullets of this world
-	 *         | result == entities
+	 *         | result == {entity | entity in getBullets() || entity in getShips()} 
 	 */
 	public Set<Entity> getEntities() {
 		Set<Entity> entities = new HashSet<Entity>();
-		entities.addAll(bullets);
-		entities.addAll(ships);
+		entities.addAll(getBullets());
+		entities.addAll(getShips());
 		return entities;
 	}
 
@@ -206,11 +236,13 @@ public class World {
 	/**
 	 * Return the number of seconds until the next collision between two different objects
 	 * of this world.
-	 * @Pre    If the collision is between entities, it is between two different entities
-	 *         | (entity1 != entity2)
-	 * @return Return the collision for which the time to collision is the smallest between 
+	 * @return Return 0 if two entities overlap.
+	 *         if (for some entity1, entity2 in getEntities() with entity1 != entity2: entity1.overlaps(entity2) result == 0
+	 * 	       Return the time for which the time to collision is the smallest between 
 	 *         two entities of this world or an entity and a boundary of this world
-	 *         | timeNextCollision = Math.min(timeNextCollision, entity1.getTimeToCollision(entity2));
+	 *         | minTimeObjectCollision == min{entity1.getTimeToCollision(entity1) | for each entity1, entity2 in getEntities() with entity1 != entity2}
+	 *         | minTimeBoundaryCollision == min{entity.getTimeCollisionBoundary() | for each entity in getEntities()}
+	 *         | result == min(minTimeObjectCollision, minTimeBoundaryCollision)
 	 */
 	public double getTimeNextCollision() {
 		double timeNextCollision = Double.POSITIVE_INFINITY;
@@ -229,11 +261,16 @@ public class World {
 
 	/**
 	 * Return the position with the smallest time to collision between two objects of this world.
-	 * @return Return the position at time of collision between two objects of this world
-	 *         | result == nextCollidingObject.getPositionAfterMovingForAPeriodOf(getTimeNextCollision())
+	 * @return Return an infinite position if the next collision never happens. 
+	 *         if(getNextCollidingObjects()[0] == null) result == {Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY};
+	 * @return Return the next boundary collision if only one colliding object is found.
+	 *         if (getNextCollidingObjects()[1] == null) result ==  getNextCollidingObjects()[0].getPositionCollisionBoundary();
+	 * @return Return the position at time of collision between two objects of this world.
+	 *         | result == getNextCollidingObjects()[0].getCollisionPosition(getNextCollidingObjects()[1])
 	 */
 	public double[] getPositionNextCollision() {
 		Entity[] nextCollidingObjects = getNextCollidingObjects();
+		if(nextCollidingObjects[0] == null) return new double[]{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY};
 		if (nextCollidingObjects[1] == null) return nextCollidingObjects[0].getPositionCollisionBoundary();
 		else return nextCollidingObjects[0].getCollisionPosition(nextCollidingObjects[1]);
 	}
@@ -242,7 +279,8 @@ public class World {
 	 * Return the next collision between two different object of this world.
 	 * @return Return the colliding objects for which the time to collision is the smallest, 
 	 *         between two entities of this world or an entity and a boundary of this world 
-	 *         | result == entities
+	 *         | see implementation
+	 * 
 	 */
 	public Entity[] getNextCollidingObjects() {
 		Entity[] entities = new Entity[]{null,null};
@@ -273,22 +311,28 @@ public class World {
 	 * 	       The time of movement of this ship.
 	 * @param  collisionListener
 	 *         Invoked when the entity is about to collide with a boundary or other entity
-	 * @post   All entities are moved to their predicted position after time dt
-	 * 	       | for(Entity entity: getEntities()) entity.move(dt)   
+	 * @effect  All entities are moved to their predicted position after time dt
+	 * 	       | for each entity in getEntities(): entity.move(dt)
+	 *   
+	 * @Throws IllegalArgumentException
+	 *         | dt < 0 or Double.isNaN(dt)
 	 */
+	
 	public void evolve(double dt, CollisionListener collisionListener) {
+		if(dt < 0) throw new IllegalArgumentException("dt has to be positive");
+		if (Double.isNaN(dt)) throw new IllegalArgumentException("dt has to be a number");
 		double tC = getTimeNextCollision();
 		double[] position = getPositionNextCollision();
 		Entity[] entities = getNextCollidingObjects();
 		while (tC <= dt){
 			for(Entity entity: getEntities()) entity.move(tC);
 			if(entities[1] == null){
+				if(collisionListener != null) collisionListener.boundaryCollision(entities[0], position[0], position[1]);
 				entities[0].collideBoundary();
-				collisionListener.boundaryCollision(entities[0], position[0], position[1]);
 			}
 			else {
+				if(collisionListener != null) collisionListener.objectCollision(entities[0], entities[1], position[0], position[1]);
 				entities[0].collide(entities[1]);
-				collisionListener.objectCollision(entities[0], entities[1], position[0], position[1]);
 			}
 			
 			dt = dt - tC;
@@ -301,14 +345,14 @@ public class World {
 	}
 	
 	/**
-	 * Return an entity as the given position.
+	 * Return an entity at the given position if one exists, null otherwise.
 	 * @param  x
 	 * 	       | the given x coordinate
 	 * @param  y
 	 * 	       | the given y coordinate
-	 * @return Returns the entity at the given position
-	 *         | result == entity
-	 * @return Returns no entity at the given position
+	 * @return Returns the entity at the given position if one exists.
+	 *         | if (for some entity in getEntities(): entity.getPosition().equals({x,y})) result == entity
+	 * @return Returns null if no entity exists at the given position.
 	 * 		   | result == null
 	 */
 	public Object getEntityAt(double x, double y) {
