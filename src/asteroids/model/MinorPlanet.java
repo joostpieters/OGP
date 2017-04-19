@@ -1,6 +1,6 @@
 package asteroids.model;
 
-public class MinorPlanet extends Entity {
+public abstract class MinorPlanet extends Entity {
 
 	@Override
 	public double getMass() {
