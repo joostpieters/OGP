@@ -212,7 +212,7 @@ public class Ship extends Entity {
 	@Override
 	public void terminate() {
 		super.terminate();
-		if(this.getWorld() != null) getWorld().removeShip(this);
+		if(this.getWorld() != null) getWorld().removeEntity(this);
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class Ship extends Entity {
 	public void loadBullet(Bullet bullet) throws IllegalArgumentException {
 		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("The given bullet is invalid.");
 		bullets.add(bullet);
-		if(bullet.getWorld() != null) bullet.getWorld().removeBullet(bullet);
+		if(bullet.getWorld() != null) bullet.getWorld().removeEntity(bullet);
 		bullet.setPosition(this.getPosition());
 		bullet.setShip(this);
 	}
@@ -403,6 +403,16 @@ public class Ship extends Entity {
 			double[] newVelocityj = new double[]{oldVelocityj[0]-jx/mj,oldVelocityj[1]-jy/mj};
 			this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj);
 		}
+		
+	}
+
+	public Program getProgram() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void loadProgram(Program program) {
+		// TODO Auto-generated method stub
 		
 	}
 

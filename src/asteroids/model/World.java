@@ -35,19 +35,6 @@ public class World {
 		this.height = height;
 	}
 
-	/**
-	 * Add a ship to this world.
-	 * @param ship
-	 * 	      The given ship
-	 * @Pre   The given ship is valid.
-	 * @effect  The given ship is part of this world
-	 *        | ship.setWorld(this)
-	 */
-	public void addShip(Ship ship) {
-		if(!canHaveAsShip(ship)) throw new IllegalArgumentException("This world cannot have the given ship as ship.");
-		ships.add(ship);
-		ship.setWorld(this);
-	}
 
 	/**
 	 * Return if this world can have the given ship as ship. The ship must thereby be part of no other world or this world.
@@ -62,17 +49,19 @@ public class World {
 	 *        Returns true otherwise.
 	 *        | result == true
 	 */
-	private boolean canHaveAsShip(Ship ship) {//TODO edge
-		if (!(ship.getWorld() == this || ship.getWorld() == null))
+	private boolean canHaveAsEntity(Entity entity) {//TODO edge
+		if (!(entity.getWorld() == this || entity.getWorld() == null))
 			return false;
-		if (ship.isTerminated() || this.isTerminated())
+		if (entity.isTerminated() || this.isTerminated())
 			return false;
-		for (Entity entity: this.getEntities()){
-			if (ship.overlap(entity))
+		for (Entity entity2: this.getEntities()){
+			if (entity.overlap(entity2))
 				return false;
 		}
 		return true;
 	}
+	
+	private Set<Entity> entities = new HashSet<Entity>();
 
 	/**
 	 * Return all the ships on this world as a hashed set.
@@ -80,25 +69,36 @@ public class World {
 	 *         | result == ships
 	 */
 	public Set<Ship> getShips() {
+		Set<Ship> ships = new HashSet<Ship>();
+		for(Entity entity: entities) if (entity instanceof Ship) ships.add((Ship) entity);
 		return ships;
 	}
 	
-	private Set<Ship> ships = new HashSet<Ship>();
+	/**
+	 * Return all the asteroids on this world.
+	 */
+	public Set<Asteroid> getAsteroids() {
+		Set<Asteroid> asteroids = new HashSet<Asteroid>();
+		for(Entity entity: entities) if (entity instanceof Asteroid) asteroids.add((Asteroid) entity);
+		return asteroids;
+	}
 	
 	/**
-	 * Terminate this ship from this world.
-	 * @Pre    The ship is part of this world
-	 * @post   The world which the ship was set to does not contain the ship anymore and the ship
-	 *         to which this world was set to does not contain this world anymore
-	 *         | ships.remove(ship) && ship.removeWorld();
-	 * @throws IllegalArgumentException
-	 *         The given ship is not part of this world.
-	 *         | ship.getWorld() != this
+	 * Add an asteroid to this world.
 	 */
-	public void removeShip(Ship ship) {
-		if(ship.getWorld() != this) throw new IllegalArgumentException("The given ship is not part of this world.");
-		ships.remove(ship);
-		ship.removeWorld();
+	public void addEntity(Entity entity) {
+		if(!canHaveAsEntity(entity)) throw new IllegalArgumentException("This world cannot have the given entity.");
+		entities.add(entity);
+		entity.setWorld(this);
+	}
+	
+	/**
+	 * Return all the planetoids on this world.
+	 */
+	public Set<Planetoid> getPlanetoids() {
+		Set<Planetoid> planetoids = new HashSet<Planetoid>();
+		for(Entity entity: entities) if (entity instanceof Planetoid) planetoids.add((Planetoid) entity);
+		return planetoids;
 	}
 
 	/**
@@ -107,24 +107,24 @@ public class World {
 	 *         | result == bullets
 	 */
 	public Set<Bullet> getBullets() {
+		Set<Bullet> bullets = new HashSet<Bullet>();
+		for(Entity entity: entities) if (entity instanceof Bullet) bullets.add((Bullet) entity);
 		return bullets;
 	}
-
-	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	/**
-	 * Terminate the given bullet from this world
-	 * @Pre    The given bullet is part of this world
-	 * @effect   The given bullet is removed from the hashed set bullets and removed from this world
-	 *         | bullets.remove(bullet) && bullet.removeWorld();
+	 * Terminate the given entity from this world
+	 * @Pre    The given entity is part of this world
+	 * @effect   The given entity is removed from the hashed set entity and removed from this world
+	 *         | entity.remove(bullet) && entity.removeWorld();
 	 * @throws IllegalArgumentException
-	 *         The given bullet is not part of this world.
-	 *         | bullet.getWorld() != this
+	 *         The given entity is not part of this world.
+	 *         | entity.getWorld() != this
 	 */
-	public void removeBullet(Bullet bullet) {
-		if(bullet.getWorld() != this) throw new IllegalArgumentException();
-		bullets.remove(bullet);
-		bullet.removeWorld();
+	public void removeEntity(Entity entity) {
+		if(entity.getWorld() != this) throw new IllegalArgumentException();
+		entities.remove(entity);
+		entity.removeWorld();
 	}
 	
 	/**
@@ -148,7 +148,7 @@ public class World {
 		distance = Math.min(distance, this.getSize()[1]-position[1]-radius);
 		if(distance < 0) bullet.terminate();
 		else{
-			bullets.add(bullet);
+			entities.add(bullet);
 			bullet.setWorld(this);
 		}
 	}
@@ -191,11 +191,8 @@ public class World {
 	 *         | isTerminated = true
 	 */
 	public void terminate(){
-		for(Ship ship : getShips()){
-			this.removeShip(ship);
-		}
-		for(Bullet bullet : getBullets()){
-			this.removeBullet(bullet);
+		for(Entity entity : getEntities()){
+			this.removeEntity(entity);
 		}
 		isTerminated = true;
 	}
@@ -226,9 +223,6 @@ public class World {
 	 *         | result == {entity | entity in getBullets() || entity in getShips()} 
 	 */
 	public Set<Entity> getEntities() {
-		Set<Entity> entities = new HashSet<Entity>();
-		entities.addAll(getBullets());
-		entities.addAll(getShips());
 		return entities;
 	}
 

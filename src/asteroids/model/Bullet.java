@@ -162,7 +162,7 @@ public class Bullet extends Entity {
 	@Override
 	public void terminate() {
 		super.terminate();
-		if(this.getWorld() != null) getWorld().removeBullet(this);
+		if(this.getWorld() != null) getWorld().removeEntity(this);
 	}
 	
 }
