@@ -137,7 +137,7 @@ public class World {
 	 *        The given bullet is not part of this world
 	 *        | bullet.getWorld() != this
 	 */
-	public void addBullet(Bullet bullet) throws IllegalArgumentException {
+	public void addEntity(Bullet bullet) throws IllegalArgumentException {
 		if(!canHaveAsEntity(bullet)) throw new IllegalArgumentException("This world cannot have the given bullet as bullet.");
 		double[] position = bullet.getPosition();
 		double radius = bullet.getRadius();
