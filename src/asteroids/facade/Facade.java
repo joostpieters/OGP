@@ -25,7 +25,7 @@ public class Facade implements IFacade {
 		try {	
 			return new Ship(x,y,xVelocity,yVelocity,radius,orientation, mass);
 		} catch(IllegalArgumentException exc){
-			throw new ModelException(exc.getMessage());
+			throw new ModelException(exc);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class Facade implements IFacade {
 		try {
 			return ship1.getDistanceBetween(ship2);
 		} catch(IllegalArgumentException exc){
-			throw new ModelException(exc.getMessage());
+			throw new ModelException(exc);
 		}
 		
 	}
@@ -70,7 +70,7 @@ public class Facade implements IFacade {
 		try {
 			return ship1.overlap(ship2);
 		} catch(IllegalArgumentException exc){
-			throw new ModelException(exc.getMessage());
+			throw new ModelException(exc);
 		}
 	}
 
@@ -80,7 +80,7 @@ public class Facade implements IFacade {
 		try {
 			return ship1.getTimeToCollision(ship2);
 		} catch(IllegalArgumentException exc) {
-			throw new ModelException(exc.getMessage());
+			throw new ModelException(exc);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class Facade implements IFacade {
 		try {
 			return ship1.getCollisionPosition(ship2);
 		} catch(IllegalArgumentException exc) {
-			throw new ModelException(exc.getMessage());
+			throw new ModelException(exc);
 		}
 	}
 
@@ -220,21 +220,25 @@ public class Facade implements IFacade {
 		try{
 			world.addEntity(ship);
 		}catch(IllegalArgumentException e){
-			throw new ModelException(e.getMessage());
+			throw new ModelException(e);
 		}
 	}
 
 	@Override
 	public void removeShipFromWorld(World world, Ship ship) throws ModelException {
-		world.removeEntity(ship);
+		try{
+			world.removeEntity(ship);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
 	public void addBulletToWorld(World world, Bullet bullet) throws ModelException {
 		try{
 			world.addBullet(bullet);
-		}catch(IllegalArgumentException e){
-			throw new ModelException(e.getMessage());
+		} catch(IllegalArgumentException e){
+			throw new ModelException(e);
 		}
 		
 	}
@@ -259,19 +263,29 @@ public class Facade implements IFacade {
 		try{
 			ship.loadBullet(bullet);
 		}catch(IllegalArgumentException e){
-			throw new ModelException(e.getMessage());
+			throw new ModelException(e);
 		}
 		
 	}
 
 	@Override
 	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException {
-		ship.loadBullet((Bullet[])(bullets.toArray()));
+		Bullet[] bulletsAsArray = new Bullet[bullets.size()];
+		bullets.toArray(bulletsAsArray);
+		try{
+			ship.loadBullet(bulletsAsArray);
+		} catch (IllegalArgumentException e){
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
 	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException {
-		ship.removeBullet(bullet);
+		try{
+			ship.removeBullet(bullet);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
@@ -314,8 +328,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException {
-		world.evolve(dt,collisionListener);
-		
+		try{
+			world.evolve(dt,collisionListener);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException(e);
+		}
 	}
 
 	@Override

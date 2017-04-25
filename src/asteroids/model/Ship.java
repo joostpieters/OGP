@@ -6,7 +6,7 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * A class of ships involving a position, velocity, radius and orientation.
  * @Invar  isValidOrientation(getOrientation())
- * @version 2.5
+ * @version 3.1
  * @author  Sander Leyssens & Sarah Joseph
  */
 
@@ -101,20 +101,25 @@ public class Ship extends Entity {
 	 * 	      The mass of this entity
 	 * @post   If the given mass is smaller than the minimum mass, the new mass of this entity is equal to the minimum mass.
 	 *        | double minMass = 4/3*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
-	 * 	      | if (mass < minMass) new.getMass() == minMass
+	 * 	      | if (mass >= minMass) new.getMass() == mass
 	 * @post  The new mass of this entity is equal to the given mass.
-	 *        | new.getMass() == mass
+	 *        | new.getMass() == minMass
 	 */
 	private void setMass(double mass) {
-		double minMass = 4/3*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
-		if (mass < minMass) this.mass = minMass;
-		else this.mass = mass;
+		double minMass = 4/3.*Math.PI*Math.pow(this.getRadius(),3)*minDensity;
+		if (mass >= minMass) this.mass = mass;
+		else this.mass = minMass;
 	}
 	
 	private double mass;
 
-	private static final double minDensity = 1.42*Math.pow(10, 12);
+	private static final double minDensity = 1.42E12;
 	
+	@Override
+	public double getDensity() {
+		return getMass()/(4/3.*Math.pow(getRadius(), 3));
+	}
+
 	/**
 	 * Return the mass of this ship.
 	 * @return Returns the mass of this ship type object with the loaded bullets
@@ -122,9 +127,7 @@ public class Ship extends Entity {
 	 */
 	@Override
 	public double getMass(){
-		double totalMass = this.mass;
-		for (Bullet bullet : this.getBullets()) totalMass += bullet.getMass();
-		return totalMass;
+		return getBullets().isEmpty() ? this.mass : this.mass + this.getBullets().stream().map(t -> t.getMass()).reduce((u, t) -> u + t).get();
 	}
 	
 	/**
@@ -180,7 +183,7 @@ public class Ship extends Entity {
 	 */
 	public double getAcceleration() {
 		if (!thrustEnabled) return 0;
-		double force = 1.1*Math.pow(10, 21);
+		double force = 1.1E18;
 		double acceleration = force/getMass();
 		return acceleration;
 	}
@@ -205,23 +208,12 @@ public class Ship extends Entity {
 	private double orientation;
 
 	/**
-	 * Terminate this ship from the world it is located in.
-	 * @post   The world which the ship was set to does not contain the ship anymore
-	 *         | getWorld().removeShip(this)
-	 */
-	@Override
-	public void terminate() {
-		super.terminate();
-		if(this.getWorld() != null) getWorld().removeEntity(this);
-	}
-
-	/**
 	 * Return the bullets loaded on this ship as a hashed set.
 	 * @return Returns the bullets of this ship
 	 *         | result == this.bullets
 	 */
 	public Set<Bullet> getBullets() {
-		return this.bullets;
+		return new HashSet<Bullet>(bullets);
 	}
 
 	private Set<Bullet> bullets = new HashSet<Bullet>();

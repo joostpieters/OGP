@@ -6,7 +6,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @Invar  isValidPosition(getPosition())
  * @Invar  isValidRadius(getRadius())
  * 
- * @version 2.5
+ * @version 3.1
  * @author  Sander Leyssens & Sarah Joseph
  */
 public abstract class Entity {
@@ -40,9 +40,18 @@ public abstract class Entity {
 		this.setRadius(radius);
 	}
 	
-	public abstract double getMass();
+	/**
+	 * Return the mass of this entity.
+	 * @return Returns the mass of this entity. 
+	 *         | result == 4/3. * PI * pow(getRadius(), 3) * getDensity()
+	 */
+	public double getMass() {
+		return 4/3.*Math.PI*Math.pow(getRadius(), 3)*getDensity();
+	}
 	
 	
+	public abstract double getDensity();
+
 	/**
 	 * Return the validity of a potential position for an entity as type boolean.
 	 * @param  position
@@ -151,7 +160,7 @@ public abstract class Entity {
 	 * 		   | result == radius > getMinRadius()
 	 */
 	public boolean isValidRadius(double radius){
-		return (radius > getMinRadius());
+		return (radius >= getMinRadius());
 	}
 
 	protected double radius;
@@ -177,7 +186,7 @@ public abstract class Entity {
 	 */
 	@Basic
 	@Raw
-	public final double getRadius() {
+	public double getRadius() {
 		return radius;
 	}
 	  
@@ -386,11 +395,9 @@ public abstract class Entity {
 		double[] deltaR = this.getPositionDifference(ship2);
 		double[] deltaV = this.getVelocityDifference(ship2);
 		if (dotProduct(deltaR,deltaV) >= 0) return Double.POSITIVE_INFINITY;
-		double d = Math.pow(dotProduct(deltaV,deltaR), 2) - (dotProduct(deltaV,deltaV))*(dotProduct(deltaR,deltaR)-Math.pow(1.01*(this.getRadius()+ship2.getRadius()), 2));
+		double d = Math.pow(dotProduct(deltaV,deltaR), 2) - (dotProduct(deltaV,deltaV))*(dotProduct(deltaR,deltaR)-Math.pow(this.getRadius()+ship2.getRadius(), 2));
 		if (d <= 0) return Double.POSITIVE_INFINITY;
-		else {
-			return -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV);
-		}
+		else return -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV);
 	}
 
 	/**
@@ -410,7 +417,7 @@ public abstract class Entity {
 	 */
 	public double[] getCollisionPosition(Entity ship2) throws IllegalArgumentException {
 		double time = this.getTimeToCollision(ship2);
-		if (time == Double.POSITIVE_INFINITY) return new double[]{Double.POSITIVE_INFINITY*Math.signum(this.getVelocity()[0]),Double.POSITIVE_INFINITY*Math.signum(this.getVelocity()[1])};
+		if (time == Double.POSITIVE_INFINITY) return null;
 		double[] thisPosition = this.getPositionAfterMovingForAPeriodOf(time);
 		double[] otherPosition = ship2.getPositionAfterMovingForAPeriodOf(time);
 		double[] positionDifference = new double[]{otherPosition[0]-thisPosition[0],otherPosition[1]-thisPosition[1]};
@@ -424,9 +431,8 @@ public abstract class Entity {
 	
 	/**
 	 * Return the world of this entity.
-	 * @return Returns the world of this entity.
-	 *         | result == world
 	 */
+	@Raw @Basic
 	public World getWorld() {
 		return world;
 	}
@@ -435,23 +441,22 @@ public abstract class Entity {
 	 * Set the world of the given entity.
 	 * @param world
 	 * 	      The given world to this entity
-	 * @Pre   Another world should not contain this entity
 	 * @post  The new world of this entity is equal to the given world.
-	 *        | this.world = world
+	 *        | new.getWorld() == world
 	 * @throws IllegalArgumentException
-	 * 		   Another world should not contain this entity
+	 * 		   This entity belongs to a world
 	 * 		   |(!world.getEntities().contains(this))
 	 */
 	@Raw
 	public void setWorld(@Raw World world) {
-		if (!world.getEntities().contains(this)) throw new IllegalArgumentException("This method may only be used in a world's addShip/addBullet method.");
+		if (!world.getEntities().contains(this)) throw new IllegalArgumentException("This method may only be used in a world's addEntity method.");
 		this.world = world;
 	}
 	
 	/**
 	 * Remove the world this entity is set in.
 	 * @post  The new world of this entity is equal null
-	 *        | this.world = null
+	 *        | new.getWorld() == null
 	 */
 	public void removeWorld(){
 		this.world = null;
@@ -464,6 +469,7 @@ public abstract class Entity {
 	 */
 	public void terminate() {
 		isTerminated = true;
+		if(this.getWorld() != null) getWorld().removeEntity(this);
 	}
 	
 	/**
@@ -511,32 +517,17 @@ public abstract class Entity {
 	public double[] getPositionCollisionBoundary() {
 		double[] positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
 		if(positionAtEntityCollisionBoundary == null || !Double.isFinite(positionAtEntityCollisionBoundary[0]) || !Double.isFinite(positionAtEntityCollisionBoundary[1])) 
-			return new double[]{Double.POSITIVE_INFINITY*Math.signum(this.getVelocity()[0]),Double.POSITIVE_INFINITY*Math.signum(this.getVelocity()[1])};
+			return null;
 		double[] velocity = this.getVelocity();
-		double xBoundary;
-		double yBoundary;
-		double xDistance;
-		double yDistance;
-		if (velocity[0] > 0) {
-			xBoundary = getWorld().getSize()[0];
-			xDistance = xBoundary - positionAtEntityCollisionBoundary[0];
-		} else {
-			xBoundary = 0;
-			xDistance = positionAtEntityCollisionBoundary[0];
-		}
-		if (velocity[1] > 0) {
-			yBoundary = getWorld().getSize()[1];
-			yDistance = yBoundary - positionAtEntityCollisionBoundary[1];
-		} else {
-			yBoundary = 0;
-			yDistance = positionAtEntityCollisionBoundary[1];
-		}
-		double[] collisionPosition;
+		double xBoundary = velocity[0] > 0 ? getWorld().getSize()[0] : 0;
+		double yBoundary = velocity[1] > 0 ? getWorld().getSize()[1] : 0;
+		double xDistance = velocity[0] > 0 ? xBoundary - positionAtEntityCollisionBoundary[0] : positionAtEntityCollisionBoundary[0];
+		double yDistance = velocity[1] > 0 ? yBoundary - positionAtEntityCollisionBoundary[1] : positionAtEntityCollisionBoundary[1];;
+		
+		double[] collisionPosition = xDistance <= yDistance ? new double[]{xBoundary,positionAtEntityCollisionBoundary[1]} : new double[]{positionAtEntityCollisionBoundary[0],yBoundary};
 //		if(xDistance < 0) xDistance = Double.POSITIVE_INFINITY;
 //		if(yDistance < 0) yDistance = Double.POSITIVE_INFINITY;
 //		if(xDistance == Double.POSITIVE_INFINITY && yDistance == Double.POSITIVE_INFINITY) return null;
-		if(xDistance <= yDistance) collisionPosition = new double[]{xBoundary,positionAtEntityCollisionBoundary[1]};
-		else collisionPosition = new double[]{positionAtEntityCollisionBoundary[0],yBoundary};
 		return collisionPosition;
 	}
 

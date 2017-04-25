@@ -1,6 +1,7 @@
 package asteroids.model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import asteroids.part2.CollisionListener;
 
@@ -8,7 +9,7 @@ import asteroids.part2.CollisionListener;
  * A class of worlds with a given width and height.
  * @Invar  for each bullet in getBullets(): bullet.getWorld() == this
  * @Invar  for each ship in getShip(): ship.getWorld() == this
- * @version 2.5
+ * @version 3.1
  * @author  Sander Leyssens & Sarah Joseph
  */
 
@@ -25,14 +26,14 @@ public class World {
 	 *         The width of this new world
 	 * @param  height
 	 *         The height of this new world.
-	 * @post   The new width of the world is equal to the given width.
-	 *         | this.width = width
-	 * @post   The new height of this world is equal to the given height.
-	 *         | this.height = height
+	 * @post   The new width of the world is equal to the given width if the given width is greater than or equal to 0, and 0 otherwise.
+	 *         | new.getWidth = width >= 0 ? width : 0
+	 * @post   The new height of this world is equal to the given height if the given height is greater than or equal to 0, and 0 otherwise.
+	 *         | this.height = height >= 0 ? height : 0
 	 */
 	public World(double width, double height) {
-		this.width = width;
-		this.height = height;
+		this.width = width >= 0 ? (Double.isFinite(width) ? width : Double.MAX_VALUE) : 0;
+		this.height = height >= 0 ? (Double.isFinite(height) ? height : Double.MAX_VALUE) : 0;
 	}
 
 
@@ -40,7 +41,11 @@ public class World {
 	 * Return if this world can have the given ship as ship. The ship must thereby be part of no other world or this world.
 	 * @param ship
 	 * 	      The given ship
-	 * @return Returns false if the ship belongs to any world other than this world.
+ 	 * @return Returns false if the entity is a null pointer.
+ 	 *        | if (entity == null) return false
+ 	 *        Returns false if the entity is a bullet which belongs to any ship.
+	 *        | if (entity instanceof Bullet && ((Bullet)entity).getShip() != null) result == false
+	 *        Returns false if the ship belongs to any world other than this world.
 	 *        | if (!(ship.getWorld() == null || ship.getWorld() != this)) result == false
 	 *        Returns false if either the ship or this world are terminated.
 	 *        | if (ship.isTerminated() || this.isTerminated()) result == false
@@ -50,6 +55,8 @@ public class World {
 	 *        | result == true
 	 */
 	private boolean canHaveAsEntity(Entity entity) {//TODO edge
+		if (entity == null) return false;
+		if (entity instanceof Bullet && ((Bullet)entity).getShip() != null) return false;
 		if (!(entity.getWorld() == this || entity.getWorld() == null))
 			return false;
 		if (entity.isTerminated() || this.isTerminated())
@@ -69,18 +76,14 @@ public class World {
 	 *         | result == ships
 	 */
 	public Set<Ship> getShips() {
-		Set<Ship> ships = new HashSet<Ship>();
-		for(Entity entity: entities) if (entity instanceof Ship) ships.add((Ship) entity);
-		return ships;
+		return getEntities().stream().filter(t -> t instanceof Ship).map(t->(Ship)t).collect(Collectors.toSet());
 	}
 	
 	/**
 	 * Return all the asteroids on this world.
 	 */
 	public Set<Asteroid> getAsteroids() {
-		Set<Asteroid> asteroids = new HashSet<Asteroid>();
-		for(Entity entity: entities) if (entity instanceof Asteroid) asteroids.add((Asteroid) entity);
-		return asteroids;
+		return getEntities().stream().filter(t -> t instanceof Asteroid).map(t->(Asteroid)t).collect(Collectors.toSet());
 	}
 	
 	/**
@@ -96,9 +99,7 @@ public class World {
 	 * Return all the planetoids on this world.
 	 */
 	public Set<Planetoid> getPlanetoids() {
-		Set<Planetoid> planetoids = new HashSet<Planetoid>();
-		for(Entity entity: entities) if (entity instanceof Planetoid) planetoids.add((Planetoid) entity);
-		return planetoids;
+		return getEntities().stream().filter(t -> t instanceof Planetoid).map(t->(Planetoid)t).collect(Collectors.toSet());
 	}
 
 	/**
@@ -107,9 +108,7 @@ public class World {
 	 *         | result == bullets
 	 */
 	public Set<Bullet> getBullets() {
-		Set<Bullet> bullets = new HashSet<Bullet>();
-		for(Entity entity: entities) if (entity instanceof Bullet) bullets.add((Bullet) entity);
-		return bullets;
+		return getEntities().stream().filter(t -> t instanceof Bullet).map(t->(Bullet)t).collect(Collectors.toSet());
 	}
 	
 	/**
@@ -118,11 +117,11 @@ public class World {
 	 * @effect   The given entity is removed from the hashed set entity and removed from this world
 	 *         | entity.remove(bullet) && entity.removeWorld();
 	 * @throws IllegalArgumentException
-	 *         The given entity is not part of this world.
-	 *         | entity.getWorld() != this
+	 *         The given entity is null or is not part of this world.
+	 *         | entity == null || entity.getWorld() != this
 	 */
 	public void removeEntity(Entity entity) {
-		if(entity.getWorld() != this) throw new IllegalArgumentException();
+		if(entity == null || entity.getWorld() != this) throw new IllegalArgumentException();
 		entities.remove(entity);
 		entity.removeWorld();
 	}
@@ -139,7 +138,7 @@ public class World {
 	 *        | bullet.getWorld() != this
 	 */
 	public void addBullet(Bullet bullet) throws IllegalArgumentException {
-		if(!canHaveAsBullet(bullet)) throw new IllegalArgumentException("This world cannot have the given bullet as bullet.");
+		if(!canHaveAsEntity(bullet)) throw new IllegalArgumentException("This world cannot have the given bullet as bullet.");
 		double[] position = bullet.getPosition();
 		double radius = bullet.getRadius();
 		double distance = position[0]-radius;
@@ -152,41 +151,11 @@ public class World {
 			bullet.setWorld(this);
 		}
 	}
-
-	/**
-	 * Return if this world can have the given bullet as bullet. The bullet must thereby be part of no world
-	 *        or this world and the bullet must be loaded onto a ship.
-	 * @param bullet
-	 * 	      The given bullet
-	 * @return Returns false if the bullet does belongs to any ship.
-	 *        | if (bullet.getShip() != null) result == false;
-	 *        Returns false if the bullet belongs to any world other than this world.
-	 *        | if (!(bullet.getWorld() == null || bullet.getWorld() != this)) result == false
-	 *        Returns false if either the bullet or this world are terminated.
-	 *        | if (bullet.isTerminated() || this.isTerminated()) result == false
-	 *        Returns false if the bullet overlaps with any entities of this world.
-	 *        | if (for some entity in this.getEntities() bullet.overlap(entity)) result == false
-	 *        Returns true otherwise.
-	 *        | result == true
-	 */
-	private boolean canHaveAsBullet(Bullet bullet) {//TODO edge
-		if (bullet.getShip() != null) return false; 
-		if (!(bullet.getWorld() == this || bullet.getWorld() == null))
-			return false;
-		if (bullet.isTerminated() || this.isTerminated()) return false;
-		for (Entity entity: getEntities()){
-			if (bullet.overlap(entity))
-				return false;
-		}
-		return true;
-	}
 	
 	/**
-	 * Remove all ships and all bullets of this world.
-	 * @effect All ships are removed from this world
-	 *         | for each ship in getShips(): this.removeShip(ship)
-	 * @effect All bullets are removed from this world
-	 *         | for each bullet in getBullets(): this.removeBullet(bullet)
+	 * Remove all entities of this world.
+	 * @effect All entities are removed from this world
+	 *         | for each entity in getEntities(): this.removeEntity(ship)
 	 * @effect The boolean isTerminated is set to true
 	 *         | isTerminated = true
 	 */
@@ -223,7 +192,7 @@ public class World {
 	 *         | result == {entity | entity in getBullets() || entity in getShips()} 
 	 */
 	public Set<Entity> getEntities() {
-		return entities;
+		return new HashSet<Entity>(entities);
 	}
 
 
@@ -350,9 +319,8 @@ public class World {
 	 * 		   | result == null
 	 */
 	public Object getEntityAt(double x, double y) {
-		for (Entity entity : getEntities()) {
-			if (entity.getPosition().equals(new double[]{x,y})) return entity;
-		}
+		for (Entity entity : getEntities())
+			if (entity.getPosition()[0] == x && entity.getPosition()[1] == y) return entity;
 		return null;
 	}
 

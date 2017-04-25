@@ -8,4 +8,10 @@ public class Asteroid extends MinorPlanet {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public double getDensity() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

@@ -95,19 +95,6 @@ public class Bullet extends Entity {
 	private Ship source;
 
 	/**
-	 * Return the mass of this bullet.
-	 * @return Returns the mass of this bullet. 
-	 *         | result == 3/4 * PI * pow(getRadius(), 3) * getDensity()
-	 */
-	@Override
-	public double getMass() {
-		double radius = getRadius();
-		double mass = 3/4 * Math.PI * Math.pow(radius, 3) * getDensity();
-		return mass;
-		
-	}
-
-	/**
 	 * Return the density of this bullet.
 	 * @return Returns the density of this bullet.
 	 *         | result == density
@@ -121,7 +108,7 @@ public class Bullet extends Entity {
 		return minRadius;
 	}
 	
-	private static final double density = 7.8*Math.pow(10, 12);
+	private static final double density = 7.8E12;
 	
 	private static final double minRadius = 1;
 
@@ -153,16 +140,10 @@ public class Bullet extends Entity {
 		this.removeABounce();
 		if (this.getRemainingBounces() < 0) this.terminate();
 	}
-
-	/**
-	 * Terminate this ship from the world it is located in.
-	 * @effect The world which the ship was set to does not contain the ship anymore
-	 *         | getWorld().removeBullet(this)
-	 */
-	@Override
-	public void terminate() {
+	
+	public void terminate(){
 		super.terminate();
-		if(this.getWorld() != null) getWorld().removeEntity(this);
+		if (this.getShip() != null) ship.removeBullet(this);
 	}
 	
 }
