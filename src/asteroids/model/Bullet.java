@@ -123,7 +123,10 @@ public class Bullet extends Entity {
 	 */
 	@Override
 	public void collide(Entity entity) {
-		if (this.getSource() == entity) ((Ship)entity).loadBullet(this);
+		if (this.getSource() == entity) {
+			this.setPosition(entity.getPosition());
+			((Ship)entity).loadBullet(this);
+		}
 		else {
 			entity.terminate();
 			this.terminate();

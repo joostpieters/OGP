@@ -371,31 +371,23 @@ public class Ship extends Entity {
 	 */
 	@Override
 	public void collide(Entity entity) {
-		if(entity instanceof Bullet) {
-			Bullet bullet = (Bullet)entity;
-			if (bullet.getSource() == this) {
-				bullet.setPosition(this.getPosition());
-				this.loadBullet(bullet);
-			}
-			else{
-				bullet.terminate();
-				this.terminate();
-			}
-		}
-		if(entity instanceof Ship) {
-			double mi = this.getMass();double mj = entity.getMass();
-			double sigma = this.getRadius() + entity.getRadius();
-			double[] deltaR = this.getPositionDifference(entity);
-			double[] deltaV = this.getVelocityDifference(entity);
-			double j = 2*mi*mj*(dotProduct(deltaV,deltaR))/(sigma*(mi+mj));
-			double jx = j*deltaR[0]/sigma;double jy = j*deltaR[1]/sigma;
-			double[] oldVelocityi = this.getVelocity();
-			double[] oldVelocityj = entity.getVelocity();
-			double[] newVelocityi = new double[]{oldVelocityi[0]+jx/mi,oldVelocityi[1]+jy/mi};
-			double[] newVelocityj = new double[]{oldVelocityj[0]-jx/mj,oldVelocityj[1]-jy/mj};
-			this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj);
-		}
+		entity.collide(this);
 		
+	}
+	
+	
+	public void collide(Ship ship) {
+		double mi = this.getMass();double mj = ship.getMass();
+		double sigma = this.getRadius() + ship.getRadius();
+		double[] deltaR = this.getPositionDifference(ship);
+		double[] deltaV = this.getVelocityDifference(ship);
+		double j = 2*mi*mj*(dotProduct(deltaV,deltaR))/(sigma*(mi+mj));
+		double jx = j*deltaR[0]/sigma;double jy = j*deltaR[1]/sigma;
+		double[] oldVelocityi = this.getVelocity();
+		double[] oldVelocityj = ship.getVelocity();
+		double[] newVelocityi = new double[]{oldVelocityi[0]+jx/mi,oldVelocityi[1]+jy/mi};
+		double[] newVelocityj = new double[]{oldVelocityj[0]-jx/mj,oldVelocityj[1]-jy/mj};
+		this.setVelocity(newVelocityi);ship.setVelocity(newVelocityj);
 	}
 
 	public Program getProgram() {

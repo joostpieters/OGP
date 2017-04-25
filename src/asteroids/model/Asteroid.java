@@ -13,5 +13,9 @@ public class Asteroid extends MinorPlanet {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public void collide(Ship ship){
+		// TODO Auto-generated method stub
+	}
 
 }
