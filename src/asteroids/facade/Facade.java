@@ -511,8 +511,7 @@ public class Facade implements IFacade {
 	@Override
 	public List<Object> executeProgram(Ship ship, double dt)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return ship.executeProgram(dt);
 	}
 
 	@Override

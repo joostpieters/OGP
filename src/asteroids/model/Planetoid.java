@@ -51,12 +51,16 @@ public class Planetoid extends MinorPlanet {
 			world.addEntity(new Asteroid(position[0]-radius/2*Math.sin(direction),position[1]-radius/2*Math.cos(direction),-speed*Math.sin(direction),-speed*Math.cos(direction),radius/2));
 		}
 	}
-	
-	public void collide(Ship ship) {
-		double shipRadius = ship.getRadius();
-		double[] newPosition = new double[]{shipRadius + Math.random()*(getWorld().getSize()[0]-2*shipRadius),shipRadius + Math.random()*(getWorld().getSize()[1]-2*shipRadius)};
-		ship.setPosition(newPosition);
-		for (Entity entity: getWorld().getEntities()) if(entity.overlap(ship)) ship.terminate();
+
+	@Override
+	public void collide(Entity entity) {
+		if (entity instanceof Ship) {
+			double shipRadius = entity.getRadius();
+			double[] newPosition = new double[]{shipRadius + Math.random()*(getWorld().getSize()[0]-2*shipRadius),shipRadius + Math.random()*(getWorld().getSize()[1]-2*shipRadius)};
+			entity.setPosition(newPosition);
+			for (Entity entityOther: getWorld().getEntities()) if(entityOther != entity && entityOther.overlap(entity)) entity.terminate();
+		}
+		else super.collide(entity);
 	}
 
 }

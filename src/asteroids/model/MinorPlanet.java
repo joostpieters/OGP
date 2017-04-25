@@ -18,27 +18,22 @@ public abstract class MinorPlanet extends Entity {
 	}
 	
 	public void collide(Entity entity) {
-		this.terminate();
-		entity.terminate();
-	}
-	
-	public void collide(Bullet bullet) {
-		this.terminate();
-		bullet.terminate();
-	}
-	
-	public void collide(MinorPlanet minorPlanet) {
-		double mi = this.getMass();double mj = minorPlanet.getMass();
-		double sigma = this.getRadius() + minorPlanet.getRadius();
-		double[] deltaR = this.getPositionDifference(minorPlanet);
-		double[] deltaV = this.getVelocityDifference(minorPlanet);
-		double j = 2*mi*mj*(dotProduct(deltaV,deltaR))/(sigma*(mi+mj));
-		double jx = j*deltaR[0]/sigma;double jy = j*deltaR[1]/sigma;
-		double[] oldVelocityi = this.getVelocity();
-		double[] oldVelocityj = minorPlanet.getVelocity();
-		double[] newVelocityi = new double[]{oldVelocityi[0]+jx/mi,oldVelocityi[1]+jy/mi};
-		double[] newVelocityj = new double[]{oldVelocityj[0]-jx/mj,oldVelocityj[1]-jy/mj};
-		this.setVelocity(newVelocityi);minorPlanet.setVelocity(newVelocityj);
+		if (entity instanceof MinorPlanet) {
+			double mi = this.getMass();double mj = entity.getMass();
+			double[] deltaR = this.getPositionDifference(entity);
+			double[] deltaV = this.getVelocityDifference(entity);
+			double sigma = dotProduct(deltaR,deltaR);
+			double j = 2*mi*mj*(dotProduct(deltaV,deltaR))/(sigma*(mi+mj));
+			double jx = j*deltaR[0]/sigma;double jy = j*deltaR[1]/sigma;
+			double[] oldVelocityi = this.getVelocity();
+			double[] oldVelocityj = entity.getVelocity();
+			double[] newVelocityi = new double[]{oldVelocityi[0]+jx/mi,oldVelocityi[1]+jy/mi};
+			double[] newVelocityj = new double[]{oldVelocityj[0]-jx/mj,oldVelocityj[1]-jy/mj};
+			this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj);
+		} else if (entity instanceof Bullet) {
+			this.terminate();
+			entity.terminate();
+		}
 	}
 
 }

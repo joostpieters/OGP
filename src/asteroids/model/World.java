@@ -87,12 +87,15 @@ public class World {
 	}
 	
 	/**
-	 * Add an asteroid to this world.
+	 * Add an entity to this world.
 	 */
 	public void addEntity(Entity entity) {
-		if(!canHaveAsEntity(entity)) throw new IllegalArgumentException("This world cannot have the given entity.");
-		entities.add(entity);
-		entity.setWorld(this);
+		if (entity instanceof Bullet) addBullet((Bullet)entity);
+		else {
+			if(!canHaveAsEntity(entity)) throw new IllegalArgumentException("This world cannot have the given entity.");
+			entities.add(entity);
+			entity.setWorld(this);
+		}
 	}
 	
 	/**
@@ -137,7 +140,7 @@ public class World {
 	 *        The given bullet is not part of this world
 	 *        | bullet.getWorld() != this
 	 */
-	public void addEntity(Bullet bullet) throws IllegalArgumentException {
+	public void addBullet(Bullet bullet) throws IllegalArgumentException {
 		if(!canHaveAsEntity(bullet)) throw new IllegalArgumentException("This world cannot have the given bullet as bullet.");
 		double[] position = bullet.getPosition();
 		double radius = bullet.getRadius();
@@ -295,7 +298,7 @@ public class World {
 			}
 			else {
 				if(collisionListener != null) collisionListener.objectCollision(entities[0], entities[1], position[0], position[1]);
-				entities[0].collide(entities[1]);
+				entities[0].collide((entities[1].getClass().cast(entities[1])));
 			}
 			
 			dt = dt - tC;
