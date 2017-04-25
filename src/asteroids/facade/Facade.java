@@ -14,6 +14,7 @@ import asteroids.model.Planetoid;
 import asteroids.model.Program;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.model.World;
+import asteroids.model.programs.ProgramFactory;
 import asteroids.util.ModelException;
 
 public class Facade implements IFacade {
@@ -518,7 +519,7 @@ public class Facade implements IFacade {
 	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory()
 			throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		return new ProgramFactory();
 	}
 
 }
