@@ -1106,7 +1106,7 @@ public class Part3TestFull {
     score += 15;
   }
 
-  @Test @Ignore
+  @Test
   public void testEvolveAfterShipAsteroidCollision() throws ModelException {
     max_score += 12;
     World world = facade.createWorld(5000, 5000);
@@ -1141,7 +1141,7 @@ public class Part3TestFull {
     score += 5;
   }
 
-  @Test @Ignore
+  @Test
   public void testEvolveAfterAsteroidAsteroidCollision() throws ModelException {
     max_score += 7;
     World world = facade.createWorld(5000, 5000);

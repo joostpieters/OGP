@@ -397,7 +397,7 @@ public abstract class Entity {
 		if (dotProduct(deltaR,deltaV) >= 0) return Double.POSITIVE_INFINITY;
 		double d = Math.pow(dotProduct(deltaV,deltaR), 2) - (dotProduct(deltaV,deltaV))*(dotProduct(deltaR,deltaR)-Math.pow(this.getRadius()+ship2.getRadius(), 2));
 		if (d <= 0) return Double.POSITIVE_INFINITY;
-		else return -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV);
+		else return Math.max(0, -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV));
 	}
 
 	/**

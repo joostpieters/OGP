@@ -379,7 +379,11 @@ public class Facade implements IFacade {
 	@Override
 	public void addPlanetoidToWorld(World world, Planetoid planetoid)
 			throws ModelException {
-		world.addEntity(planetoid);
+		try{
+			world.addEntity(planetoid);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException(e);
+		}
 		
 	}
 

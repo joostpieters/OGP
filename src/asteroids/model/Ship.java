@@ -375,7 +375,7 @@ public class Ship extends Entity {
 			double mi = this.getMass();double mj = entity.getMass();
 			double[] deltaR = this.getPositionDifference(entity);
 			double[] deltaV = this.getVelocityDifference(entity);
-			double sigma = dotProduct(deltaR,deltaR);
+			double sigma = Math.sqrt(dotProduct(deltaR,deltaR));
 			double j = 2*mi*mj*(dotProduct(deltaV,deltaR))/(sigma*(mi+mj));
 			double jx = j*deltaR[0]/sigma;double jy = j*deltaR[1]/sigma;
 			double[] oldVelocityi = this.getVelocity();
