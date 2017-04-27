@@ -5,7 +5,7 @@ import asteroids.part3.programs.SourceLocation;
 public abstract class ActionStatement extends Statement {
 
 	public ActionStatement(SourceLocation location) {
-		// TODO Auto-generated constructor stub
+		super(location);
 	}
 	
 	public abstract Action returnAction();

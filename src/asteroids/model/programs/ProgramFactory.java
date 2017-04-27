@@ -95,14 +95,14 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	public Expression createChangeSignExpression(Expression expression,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
-		return null;
+		return new ChangeSignExpression(expression, sourceLocation);
 	}
 
 	@Override
 	public Expression createNotExpression(Expression expression,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
-		return new NotExpression(e, sourceLocation);
+		return new NotExpression(expression, sourceLocation);
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return new EntityExpression(){
+		return new EntityExpression(location){
 
 			@Override
 			public Entity evaluate() {
@@ -128,7 +128,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createSelfExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return new EntityExpression(){
+		return new EntityExpression(location){
 			
 		};
 	}
@@ -136,7 +136,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createShipExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return new EntityExpression(){
+		return new EntityExpression(location){
 			
 		};
 	}
@@ -144,7 +144,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createAsteroidExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return new EntityExpression(){
+		return new EntityExpression(location){
 			
 		};
 	}
@@ -152,7 +152,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createPlanetoidExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return new EntityExpression(){
+		return new EntityExpression(location){
 			
 		};
 	}
@@ -160,7 +160,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createBulletExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return new EntityExpression(){
+		return new EntityExpression(location){
 			
 		};
 	}
@@ -168,7 +168,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createPlanetExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return new EntityExpression(){
+		return new EntityExpression(location){
 			
 		};
 	}
@@ -176,7 +176,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createAnyExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return new EntityExpression(){
+		return new EntityExpression(location){
 			
 		};
 	}
@@ -232,6 +232,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	public Expression createAdditionExpression(Expression e1, Expression e2,
 			SourceLocation location) {
 		// TODO Auto-generated method stub
+		//return new AdditionExpression(e1, e2, location);
 		return new AdditionExpression(e1, e2, location);
 	}
 
@@ -251,7 +252,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createGetDirectionExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new GetDirectionExpression(location);
 	}
 
 	@Override

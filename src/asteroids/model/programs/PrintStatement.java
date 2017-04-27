@@ -7,6 +7,7 @@ public class PrintStatement extends Statement {
 	private Expression value;
 
 	public PrintStatement(Expression value, SourceLocation sourceLocation) {
+		super(sourceLocation);
 		this.value = value;
 	}
 	

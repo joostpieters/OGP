@@ -399,7 +399,7 @@ public class Ship extends Entity {
 
 	public List<Object> executeProgram(double dt) {
 		// TODO Auto-generated method stub
-		return null;
+		return program.execute(dt);
 		
 	}
 

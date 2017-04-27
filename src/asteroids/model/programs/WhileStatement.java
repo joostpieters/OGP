@@ -7,6 +7,7 @@ public class WhileStatement extends Statement {
 	public WhileStatement(Expression condition, Statement body,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
+		super(sourceLocation);
 	}
 
 }

@@ -9,6 +9,7 @@ public class ReadParameterExpression extends Expression {
 	public ReadParameterExpression(String parameterName,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
+		super(sourceLocation);
 		this.parameterName = parameterName;
 	}
 

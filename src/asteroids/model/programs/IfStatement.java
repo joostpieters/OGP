@@ -7,6 +7,7 @@ public class IfStatement extends Statement {
 	public IfStatement(Expression condition, Statement ifBody,
 			Statement elseBody, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
+		super(sourceLocation);
 	}
 
 }

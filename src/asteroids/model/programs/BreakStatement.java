@@ -6,6 +6,7 @@ public class BreakStatement extends Statement {
 
 	public BreakStatement(SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
+		super(sourceLocation);
 	}
 
 }
