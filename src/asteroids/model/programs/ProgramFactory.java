@@ -2,6 +2,7 @@ package asteroids.model.programs;
 
 import java.util.List;
 
+import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
@@ -87,7 +88,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	public Expression createFunctionCallExpression(String functionName,
 			List<Expression> actualArgs, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
-		return null;
+		return new FunctionCallExpression(functionName, actualArgs, sourceLocation);
 	}
 
 	@Override
@@ -101,21 +102,26 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	public Expression createNotExpression(Expression expression,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
-		return null;
+		return new NotExpression(e, sourceLocation);
 	}
 
 	@Override
 	public Expression createDoubleLiteralExpression(double value,
 			SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new DoubleLiteralExpression(value, location);
 	}
 
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
 		// TODO Auto-generated method stub
 		return new EntityExpression(){
-			
+
+			@Override
+			public Entity evaluate() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		};
 	}
 
@@ -178,68 +184,68 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createGetXExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new GetXExpression(e, location);
 	}
 
 	@Override
 	public Expression createGetYExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new GetYExpression(e, location);
 	}
 
 	@Override
 	public Expression createGetVXExpression(Expression e,
 			SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new GetVXExpression(e, location);
 	}
 
 	@Override
 	public Expression createGetVYExpression(Expression e,
 			SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new GetVYExpression(e, location);
 	}
 
 	@Override
 	public Expression createGetRadiusExpression(Expression e,
 			SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new GetRadiusExpression(e, location);
 	}
 
 	@Override
 	public Expression createLessThanExpression(Expression e1, Expression e2,
 			SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new LessThanExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression createEqualityExpression(Expression e1, Expression e2,
 			SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new EqualityExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression createAdditionExpression(Expression e1, Expression e2,
 			SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new AdditionExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression createMultiplicationExpression(Expression e1,
 			Expression e2, SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new MultiplicationExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression createSqrtExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated method stub
-		return null;
+		return new SqrtExpression(e, location);
 	}
 
 	@Override
@@ -252,6 +258,12 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	public Statement createThrustOnStatement(SourceLocation location) {
 		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
+
+			@Override
+			public Action returnAction() {
+				// TODO Auto-generated method stub
+				return Action.THRUST_ON;
+			}
 			//TODO
 		};
 	}
@@ -260,9 +272,13 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	public Statement createThrustOffStatement(SourceLocation location) {
 		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
-			public void execute(){
-				
+
+			@Override
+			public Action returnAction() {
+				// TODO Auto-generated method stub
+				return Action.THRUST_OFF;
 			}
+			
 		};
 	}
 
@@ -270,6 +286,12 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	public Statement createFireStatement(SourceLocation location) {
 		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
+
+			@Override
+			public Action returnAction() {
+				// TODO Auto-generated method stub
+				return Action.FIRE;
+			}
 			//TODO
 		};
 	}
@@ -279,6 +301,12 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			SourceLocation location) {
 		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
+
+			@Override
+			public Action returnAction() {
+				// TODO Auto-generated method stub
+				return Action.TURN;
+			}
 			//TODO
 		};
 	}
@@ -287,6 +315,12 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	public Statement createSkipStatement(SourceLocation location) {
 		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
+
+			@Override
+			public Action returnAction() {
+				// TODO Auto-generated method stub
+				return Action.SKIP;
+			}
 			//TODO
 		};
 	}

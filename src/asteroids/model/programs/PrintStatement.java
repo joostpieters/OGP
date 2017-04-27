@@ -11,7 +11,7 @@ public class PrintStatement extends Statement {
 	}
 	
 	public void execute() {
-		System.out.println(value.toString());
+		System.out.println(value.evaluate().toString());
 	}
 	
 }

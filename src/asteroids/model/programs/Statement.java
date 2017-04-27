@@ -1,5 +1,5 @@
 package asteroids.model.programs;
 
-public class Statement {
+public abstract class Statement {
 
 }

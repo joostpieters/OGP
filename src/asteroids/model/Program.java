@@ -15,5 +15,9 @@ public class Program {
 		this.functions = functions;
 		this.main = main;
 	}
+	
+	public void execute(double dt) {
+		
+	}
 
 }
