@@ -12,5 +12,9 @@ public class ReadParameterExpression extends Expression {
 		super(sourceLocation);
 		this.parameterName = parameterName;
 	}
+	
+	public String toString() {
+		return "[ReadParameterExpression: " + parameterName + "]";
+	}
 
 }

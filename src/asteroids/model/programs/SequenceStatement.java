@@ -2,6 +2,7 @@ package asteroids.model.programs;
 
 import java.util.List;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class SequenceStatement extends Statement {
@@ -18,6 +19,14 @@ public class SequenceStatement extends Statement {
 	public void execute() {
 		
 		
+	}
+	
+	public String toString() {
+		return "[SequenceStatement: " + statements.toString() + "]";
+	}
+	
+	public void setShip(Ship ship) {
+		for(Statement statement : statements) statement.setShip(ship);
 	}
 
 }

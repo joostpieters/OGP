@@ -246,6 +246,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createSqrtExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated method stub
+		
 		return new SqrtExpression(e, location);
 	}
 
@@ -265,6 +266,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 				// TODO Auto-generated method stub
 				return Action.THRUST_ON;
 			}
+			
+			public String toString() {
+				return "[ThrustOnStatement]";
+			}
 			//TODO
 		};
 	}
@@ -280,6 +285,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 				return Action.THRUST_OFF;
 			}
 			
+			public String toString() {
+				return "[ThrustOffStatement]";
+			}
+			
 		};
 	}
 
@@ -292,6 +301,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public Action returnAction() {
 				// TODO Auto-generated method stub
 				return Action.FIRE;
+			}
+			
+			public String toString() {
+				return "[FireStatement]";
 			}
 			//TODO
 		};
@@ -308,6 +321,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 				// TODO Auto-generated method stub
 				return Action.TURN;
 			}
+			
+			public String toString() {
+				return "[TurnStatement: " + angle.toString() + "]";
+			}
 			//TODO
 		};
 	}
@@ -321,6 +338,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public Action returnAction() {
 				// TODO Auto-generated method stub
 				return Action.SKIP;
+			}
+			
+			public String toString() {
+				return "[SkipStatement]";
 			}
 			//TODO
 		};
