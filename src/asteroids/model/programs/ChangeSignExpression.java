@@ -1,5 +1,6 @@
 package asteroids.model.programs;
 
+import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class ChangeSignExpression extends Expression {
@@ -16,6 +17,16 @@ public class ChangeSignExpression extends Expression {
 		Object eEvaluated = e.evaluate();
 		if(!(eEvaluated instanceof Double)) throw new IllegalArgumentException();
 		return -((Double)eEvaluated);
+	}
+
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		e.setProgram(program);
+	}
+	
+	public String toString() {
+		return "[ChangeSignExpression: " + e + "]";
 	}
 
 }

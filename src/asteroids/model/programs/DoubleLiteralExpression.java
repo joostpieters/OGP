@@ -1,5 +1,6 @@
 package asteroids.model.programs;
 
+import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class DoubleLiteralExpression extends Expression {
@@ -14,6 +15,12 @@ public class DoubleLiteralExpression extends Expression {
 	@Override
 	public Double evaluate() {
 		return value;
+	}
+
+	@Override
+	public void setProgram(Program program) {
+		// do nothing
+		super.setProgram(program);
 	}
 
 }

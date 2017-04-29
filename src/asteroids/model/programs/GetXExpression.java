@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import asteroids.model.Entity;
+import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetXExpression extends Expression {
@@ -17,6 +18,16 @@ public class GetXExpression extends Expression {
 		Object eEvaluated = e.evaluate();
 		if(!(eEvaluated instanceof Entity)) throw new IllegalArgumentException();
 		return ((Entity)eEvaluated).getPosition()[0];
+	}
+
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		e.setProgram(program);
+	}
+	
+	public String toString() {
+		return "[GetXExpression: " + e.toString() + "]";
 	}
 
 }

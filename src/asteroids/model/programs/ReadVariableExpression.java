@@ -3,15 +3,15 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class ReadParameterExpression extends Expression {
+public class ReadVariableExpression extends Expression {
 
-	private String parameterName;
+	private String variableName;
 
-	public ReadParameterExpression(String parameterName,
+	public ReadVariableExpression(String variableName,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
-		this.parameterName = parameterName;
+		this.variableName = variableName;
 	}
 	
 	public void setProgram(Program program) {
@@ -19,12 +19,13 @@ public class ReadParameterExpression extends Expression {
 	}
 
 	public String toString() {
-		return "[ReadParameterExpression: " + parameterName + "]";
+		return "[ReadVariableExpression: " + variableName + "]";
 	}
 
 	@Override
 	public Object evaluate() {
 		// TODO Auto-generated method stub
+		return getProgram().getVariable(variableName);
 	}
 
 }

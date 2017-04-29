@@ -395,7 +395,7 @@ public class Ship extends Entity {
 
 	public void loadProgram(Program program) {
 		this.program = program;
-		program.setShip(this);
+		if(program != null) program.setShip(this);
 	}
 
 	public List<Object> executeProgram(double dt) {

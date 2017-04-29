@@ -1,5 +1,6 @@
 package asteroids.model.programs;
 
+import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
@@ -15,11 +16,13 @@ public class ReturnStatement extends Statement {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void setShip(Ship ship) {
-		// TODO Auto-generated method stub
-		
+	
+	public void setProgram(Program program) {
+		super.setProgram(program);
+	}
+	
+	public String toString(){
+		return "[ReturnStatement]";
 	}
 
 }

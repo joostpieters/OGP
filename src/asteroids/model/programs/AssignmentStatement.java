@@ -1,13 +1,13 @@
 package asteroids.model.programs;
 
-import asteroids.model.Ship;
+import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class AssigmentStatement extends Statement {
+public class AssignmentStatement extends Statement {
 	Expression value;
 	private String variableName;
 
-	public AssigmentStatement(String variableName, Expression value,
+	public AssignmentStatement(String variableName, Expression value,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
@@ -16,13 +16,15 @@ public class AssigmentStatement extends Statement {
 	}
 
 	@Override
-	public void execute() {
+	public boolean execute() {
 		// TODO Auto-generated method stub
-		
+		getProgram().assignVariable(variableName, value);
+		return true;
 	}
 	
-	public void setShip(Ship ship) {
-		value.setShip(ship);
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		value.setProgram(program);
 	}
 
 }

@@ -1,6 +1,6 @@
 package asteroids.model.programs;
 
-import asteroids.model.Ship;
+import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class PrintStatement extends Statement {
@@ -12,15 +12,19 @@ public class PrintStatement extends Statement {
 		this.value = value;
 	}
 	
-	public void execute() {
-		System.out.println(value.evaluate().toString());
+	public boolean execute() {
+		Object evaluatedValue = value.evaluate();
+		System.out.println(evaluatedValue.toString());
+		getProgram().getResults().add(evaluatedValue);
+		return true;
 	}
 	
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		value.setProgram(program);
+	}
+
 	public String toString(){
 		return "[PrintStatement: " + value.toString() + "]";
-	}
-	
-	public void setShip(Ship ship) {
-		value.setShip(ship);
 	}
 }
