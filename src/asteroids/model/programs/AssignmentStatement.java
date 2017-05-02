@@ -25,5 +25,10 @@ public class AssignmentStatement extends Statement {
 		super.setProgram(program);
 		value.setProgram(program);
 	}
+	
+	@Override
+	public String toString() {
+		return "[AssigmentStatement: " + variableName + " <- " + value +"]";
+	}
 
 }
