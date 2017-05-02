@@ -14,7 +14,7 @@ public class GetXExpression extends Expression {
 	}
 
 	@Override
-	public Double evaluate() {
+	public Double evaluate() throws IllegalArgumentException {
 		Object eEvaluated = e.evaluate();
 		if(!(eEvaluated instanceof Entity)) throw new IllegalArgumentException();
 		return ((Entity)eEvaluated).getPosition()[0];

@@ -19,7 +19,7 @@ public class MultiplicationExpression extends Expression {
 	public Double evaluate() {
 		Object e1Evaluated = e1.evaluate();Object e2Evaluated = e2.evaluate();
 		if(!(e1Evaluated instanceof Double && e2Evaluated instanceof Double)) throw new IllegalArgumentException();
-		return Math.sqrt((Double)e1Evaluated * (Double)e2Evaluated);
+		return (Double)e1Evaluated * (Double)e2Evaluated;
 	}
 
 	@Override

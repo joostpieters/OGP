@@ -21,19 +21,20 @@ public class SequenceStatement extends Statement {
 	public void execute() {
 		failedToAdvanceTime = false;
 		hasActiveBreakStatement = false;
-		double line = getProgram().getCurrentLine();
+		SourceLocation location = getProgram().getCurrentLocation();
 		for(Statement statement: statements) {
-			if(statement.getSourceLocation().getLine()> line){
+			if(statement.getSourceLocation().getLine()>= location.getLine()){
 				statement.execute();
+				if(statement.failedToAdvanceTime()){
+					failedToAdvanceTime = true;
+					return;
+				}
+				if(statement instanceof BreakStatement) {
+					hasActiveBreakStatement = true;
+					return;
+				}
 			}
-			if(statement.failedToAdvanceTime()){
-				failedToAdvanceTime = true;
-				return;
-			}
-			if(statement instanceof BreakStatement) {
-				hasActiveBreakStatement = true;
-				return;
-			}
+			
 		}
 	}
 	

@@ -15,7 +15,8 @@ public class PrintStatement extends Statement {
 	@Override
 	public void execute() {
 		Object evaluatedValue = value.evaluate();
-		System.out.println(evaluatedValue.toString());
+		if (evaluatedValue == null) System.out.println("null");
+		else System.out.println(evaluatedValue.toString());
 		getProgram().addResult(evaluatedValue);
 	}
 	

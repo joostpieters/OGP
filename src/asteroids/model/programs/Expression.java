@@ -11,7 +11,7 @@ public abstract class Expression {
 		this.sourceLocation = sourceLocation;
 	}
 
-	public abstract Object evaluate();
+	public abstract Object evaluate() throws IllegalArgumentException;
 
 	public void setProgram(Program program){
 		this.program = program;

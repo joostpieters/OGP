@@ -375,13 +375,13 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public void execute() {
 				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
+				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
 					setFailedToAdvanceTime(true);
 					return;
 				}
 				getProgram().getShip().thrustOn();
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
 			@Override
@@ -400,13 +400,13 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public void execute() {
 				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
+				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
 					setFailedToAdvanceTime(true);
 					return;
 				}
 				getProgram().getShip().thrustOff();
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
 			@Override
@@ -425,13 +425,13 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public void execute() {
 				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
+				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
 					setFailedToAdvanceTime(true);
 					return;
 				}
 				getProgram().getShip().fireBullet();
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
 			@Override
@@ -451,13 +451,13 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public void execute() {
 				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
+				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
 					setFailedToAdvanceTime(true);
 					return;
 				}
 				getProgram().getShip().turn((Double)angle.evaluate());
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
 			@Override
@@ -476,12 +476,12 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public void execute() {
 				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
+				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
 					setFailedToAdvanceTime(true);
 					return;
 				}
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
 			@Override

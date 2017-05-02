@@ -23,22 +23,25 @@ public class IfStatement extends Statement {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-		failedToAdvanceTime = false;
+		setFailedToAdvanceTime(false);
 		if(!executingIfBody && !executingElseBody){
 			if ((boolean) condition.evaluate()) executingIfBody = true;
-			else executingElseBody = true;
+			else {
+				if (elseBody == null) return;
+				executingElseBody = true;
+			}
 		}
 		if(executingIfBody) {
 			ifBody.execute();
 			if (ifBody.failedToAdvanceTime()) {
-				failedToAdvanceTime = true;
+				setFailedToAdvanceTime(true);
 				return;
 			} else executingIfBody = false;
 		}
 		if(executingElseBody) {
 			elseBody.execute();
 			if (elseBody.failedToAdvanceTime()) {
-				failedToAdvanceTime = true;
+				setFailedToAdvanceTime(true);
 				return;
 			} else executingElseBody = false;
 		}
@@ -50,12 +53,21 @@ public class IfStatement extends Statement {
 		super.setProgram(program);
 		condition.setProgram(program);
 		ifBody.setProgram(program);
-		elseBody.setProgram(program);
+		if(elseBody != null) elseBody.setProgram(program);
 	}
 	
 	@Override
 	public String toString() {
 		return "[IfStatement: if " + condition + " then " + ifBody + " else " + elseBody + "]";
+	}
+
+	@Override
+	public boolean failedToAdvanceTime() {
+		return failedToAdvanceTime;
+	}
+
+	private void setFailedToAdvanceTime(boolean b) {
+		failedToAdvanceTime = b;
 	}
 
 }

@@ -2468,7 +2468,7 @@ public class Part3TestFull {
     }
   }
 
-  @Test @Ignore
+  @Test
   public void testFunctionCall_GlobalVariableWithFunctionName() throws ModelException {
     try {
       max_score += 4;

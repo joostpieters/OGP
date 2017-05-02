@@ -1,6 +1,7 @@
 package asteroids.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -16,10 +17,10 @@ public class Program {
 
 	private List<Function> functions;
 	private Statement main;
-	private Set<Variable> variables;
-	private List<Object> results = new ArrayList<Object>();
+	private Set<Variable> variables = new HashSet<Variable>();
+	private List<Object> results = new ArrayList();
 	private double timeLeftToExecute;
-	private double currentLine;
+	private SourceLocation currentLocation = new SourceLocation(0, 0);
 	private Ship ship;
 
 	public Program(List<Function> functions, Statement main) {
@@ -33,11 +34,11 @@ public class Program {
 	public List<Object> execute(double dt) {
 		timeLeftToExecute = timeLeftToExecute + dt;
 		main.execute();
-		if (main.failedToAdvanceTime()) {
-			return null;
+		if (!main.failedToAdvanceTime()) {
+			currentLocation = new SourceLocation(0, 0);
+			return results.size()==0? null: results;
 		}
-		currentLine = 0;
-		return results;
+		return null;
 	}
 
 	public void setShip(Ship ship) {
@@ -58,7 +59,7 @@ public class Program {
 	public void assignVariable(String variableName, Expression value) {
 		Optional<Variable> variableToAssignTo = variables.stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value);
-		else variables.add(new Variable(variableName, value.evaluate()));
+		else variables.add(new Variable<>(variableName, value.evaluate()));
 	}
 
 	public Object getVariable(String parameterName) throws NoSuchElementException {
@@ -70,14 +71,6 @@ public class Program {
 		timeLeftToExecute -= 0.2;
 	}
 
-	public double getCurrentLine() {
-		return currentLine;
-	}
-
-	public void setCurrentLine(double currentLine) {
-		this.currentLine = currentLine;
-	}
-
 	public double getTimer() {
 		// TODO Auto-generated method stub
 		return timeLeftToExecute;
@@ -85,6 +78,15 @@ public class Program {
 
 	public void addResult(Object result) {
 		results.add(result);
+	}
+
+	public SourceLocation getCurrentLocation() {
+		// TODO Auto-generated method stub
+		return currentLocation;
+	}
+
+	public void setCurrentLocation(SourceLocation currentLocation) {
+		this.currentLocation = currentLocation;
 	}
 
 }
