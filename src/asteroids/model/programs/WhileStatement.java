@@ -8,6 +8,7 @@ public class WhileStatement extends Statement {
 	Expression condition;
 	Statement body;
 	boolean executingBody;
+	boolean advancedTime;
 
 	public WhileStatement(Expression condition, Statement body,
 			SourceLocation sourceLocation) {
@@ -18,22 +19,21 @@ public class WhileStatement extends Statement {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		// TODO Auto-generated method stub
+		advancedTime = false;
 		if(!executingBody){
 			if((boolean) condition.evaluate()) executingBody = true;
-			else return true;
+			else return;
 		}
 		if (body.hasActiveBreakStatement()) {
 			executingBody = false;
-			return true;
+			return;
 		}
-		boolean ended = body.execute();
-		if (ended) {
-			executingBody = false;
-			return false;
-		}
-		else return false;
+		body.execute();
+		if (body.advancedTime()){
+			advancedTime = true;
+		} else executingBody = false;
 	}
 
 	@Override
@@ -41,6 +41,11 @@ public class WhileStatement extends Statement {
 		super.setProgram(program);
 		condition.setProgram(program);
 		body.setProgram(program);
+	}
+	
+	@Override
+	public boolean advancedTime() {
+		return advancedTime;
 	}
 	
 	@Override

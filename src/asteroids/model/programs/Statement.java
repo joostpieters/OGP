@@ -16,7 +16,7 @@ public abstract class Statement {
 		this.location = location;
 	}
 
-	public abstract boolean execute();
+	public abstract void execute();
 
 	public void setProgram(Program program){
 		this.program = program;
@@ -27,6 +27,16 @@ public abstract class Statement {
 	}
 
 	public boolean hasActiveBreakStatement() {
+		return false;
+	}
+
+	public SourceLocation getSourceLocation() {
+		// TODO Auto-generated method stub
+		return location;
+	}
+
+	public boolean advancedTime() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 

@@ -9,6 +9,7 @@ public class IfStatement extends Statement {
 	private Statement elseBody;
 	private boolean executingIfBody = false;
 	private boolean executingElseBody = false;
+	boolean advancedTime;
 
 	public IfStatement(Expression condition, Statement ifBody,
 			Statement elseBody, SourceLocation sourceLocation) {
@@ -20,27 +21,28 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		// TODO Auto-generated method stub
+		advancedTime = false;
 		if(!executingIfBody && !executingElseBody){
 			if ((boolean) condition.evaluate()) executingIfBody = true;
 			else executingElseBody = true;
 		}
 		if(executingIfBody) {
-			boolean ended = ifBody.execute();
-			if (ended) {
-				executingIfBody = false;
-				return true;
-			}
+			ifBody.execute();
+			if (ifBody.advancedTime()) {
+				advancedTime = true;
+				return;
+			} else executingIfBody = false;
 		}
 		if(executingElseBody) {
-			boolean ended = elseBody.execute();
-			if (ended) {
-				executingElseBody = false;
-				return true;
-			}
+			elseBody.execute();
+			if (elseBody.advancedTime()) {
+				advancedTime = true;
+				return;
+			} else executingElseBody = false;
 		}
-		return false;
+		return;
 	}
 
 	@Override

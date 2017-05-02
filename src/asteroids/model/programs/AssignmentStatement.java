@@ -16,10 +16,9 @@ public class AssignmentStatement extends Statement {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		// TODO Auto-generated method stub
 		getProgram().assignVariable(variableName, value);
-		return true;
 	}
 	
 	public void setProgram(Program program) {

@@ -12,11 +12,10 @@ public class PrintStatement extends Statement {
 		this.value = value;
 	}
 	
-	public boolean execute() {
+	public void execute() {
 		Object evaluatedValue = value.evaluate();
 		System.out.println(evaluatedValue.toString());
 		getProgram().getResults().add(evaluatedValue);
-		return true;
 	}
 	
 	public void setProgram(Program program) {

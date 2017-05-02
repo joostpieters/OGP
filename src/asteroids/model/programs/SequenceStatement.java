@@ -8,8 +8,8 @@ import asteroids.part3.programs.SourceLocation;
 public class SequenceStatement extends Statement {
 
 	private List<Statement> statements;
-	private int executedStatements = 0;
 	private boolean hasActiveBreakStatement;
+	private boolean advancedTime;
 
 	public SequenceStatement(List<Statement> statements,
 			SourceLocation sourceLocation) {
@@ -18,31 +18,44 @@ public class SequenceStatement extends Statement {
 	}
 
 	@Override
-	public boolean execute() {
-		if(executedStatements == 0 || hasActiveBreakStatement()) hasActiveBreakStatement = false;
-		boolean ended = statements.get(executedStatements).execute();
-		if (statements.get(executedStatements) instanceof BreakStatement) {
-			executedStatements = 0;
-			hasActiveBreakStatement = true;
+	public void execute() {
+		advancedTime = false;
+		hasActiveBreakStatement = false;
+		double line = getProgram().getCurrentLine();
+		for(Statement statement: statements) {
+			if(statement.getSourceLocation().getLine()> line){
+				statement.execute();
+			}
+			if(statement.advancedTime()){
+				advancedTime = true;
+				return;
+			}
+			if(statement instanceof BreakStatement) {
+				hasActiveBreakStatement = true;
+				return;
+			}
 		}
-		if (ended) executedStatements++;
-		if (executedStatements == statements.size()){
-			executedStatements = 0;
-			return true;
-		} else return false;
 	}
 	
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		for(Statement statement : statements) statement.setProgram(program);
 	}
 
-	public String toString() {
-		return "[SequenceStatement: " + statements.toString() + "]";
+	@Override
+	public boolean advancedTime(){
+		return advancedTime;
 	}
 
+	@Override
 	public boolean hasActiveBreakStatement() {
 		return hasActiveBreakStatement;
+	}
+
+	@Override
+	public String toString() {
+		return "[SequenceStatement: " + statements.toString() + "]";
 	}
 
 }

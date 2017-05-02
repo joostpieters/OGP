@@ -8,4 +8,8 @@ public abstract class ActionStatement extends Statement {
 	public ActionStatement(SourceLocation location) {
 		super(location);
 	}
+	
+	public boolean advancedTime() {
+		return true;
+	}
 }

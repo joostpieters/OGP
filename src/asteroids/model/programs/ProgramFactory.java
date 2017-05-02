@@ -368,6 +368,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public boolean execute() {
 				getProgram().getShip().thrustOn();
 				getProgram().advanceTimer();
+				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
 				return true;
 			}
 			
@@ -386,6 +387,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public boolean execute() {
 				getProgram().getShip().thrustOff();
 				getProgram().advanceTimer();
+				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
 				return true;
 			}
 			
@@ -404,6 +406,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public boolean execute() {
 				getProgram().getShip().fireBullet();
 				getProgram().advanceTimer();
+				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
 				return true;
 			}
 			
@@ -423,6 +426,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public boolean execute() {
 				getProgram().getShip().turn((Double)angle.evaluate());
 				getProgram().advanceTimer();
+				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
 				return true;
 			}
 			
@@ -441,6 +445,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public boolean execute() {
 				// TODO Auto-generated method stub
 				getProgram().advanceTimer();
+				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
 				return true;
 			}
 			

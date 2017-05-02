@@ -11,9 +11,9 @@ public class BreakStatement extends Statement {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		// TODO Auto-generated method stub
-		return true;
+		return;
 	}
 	
 	public String toString() {

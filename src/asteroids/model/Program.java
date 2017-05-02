@@ -19,7 +19,7 @@ public class Program {
 	private Set<Variable> variables;
 	private List<Object> results = new ArrayList<Object>();
 	private double timeLeftToExecute;
-	private SourceLocation currentLocation;
+	private double currentLine;
 	private Ship ship;
 
 	public Program(List<Function> functions, Statement main) {
@@ -32,7 +32,6 @@ public class Program {
 	
 	public List<Object> execute(double dt) {
 		timeLeftToExecute = timeLeftToExecute + dt;
-		List<Object> results = new ArrayList<Object>();
 		while(timeLeftToExecute > 0.2){//TODO add condition for fully executed main
 			main.execute(); //TODO
 		}
@@ -68,6 +67,14 @@ public class Program {
 
 	public void advanceTimer() {
 		timeLeftToExecute -= 0.2;
+	}
+
+	public double getCurrentLine() {
+		return currentLine;
+	}
+
+	public void setCurrentLine(double currentLine) {
+		this.currentLine = currentLine;
 	}
 
 }

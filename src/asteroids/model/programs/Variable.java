@@ -1,24 +1,24 @@
 package asteroids.model.programs;
 
-public class Variable {
+public class Variable<T> {
 	
 	private String variableName;
-	private Object value;
+	private T value;
 
-	public Variable(String variableName, Object value){
+	public Variable(String variableName, T value){
 		this.variableName = variableName;
 		this.setValue(value);
 	}
 
-	public void setValue(Object value) {
+	public void setValue(T value) {
 		this.value = value;
 	}
 	
-	public Object getValue(){
+	public T getValue(){
 		return value;
 	}
 
-	public Object getName() {
+	public String getName() {
 		// TODO Auto-generated method stub
 		return variableName;
 	}
