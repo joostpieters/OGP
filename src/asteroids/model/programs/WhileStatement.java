@@ -1,7 +1,6 @@
 package asteroids.model.programs;
 
 import asteroids.model.Program;
-import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class WhileStatement extends Statement {
@@ -27,6 +26,10 @@ public class WhileStatement extends Statement {
 			else return;
 		}
 		body.execute();
+		if (body.failedToAdvanceTime()) {
+			failedToAdvanceTime = true;
+			return;
+		}
 		while ((boolean) condition.evaluate() && !body.hasActiveBreakStatement()){
 			body.execute();
 			if (body.failedToAdvanceTime()) {
