@@ -4,7 +4,7 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class DoubleLiteralExpression extends Expression {
-	double value;
+	private double value;
 
 	public DoubleLiteralExpression(double value, SourceLocation location) {
 		// TODO Auto-generated constructor stub
@@ -21,6 +21,11 @@ public class DoubleLiteralExpression extends Expression {
 	public void setProgram(Program program) {
 		// do nothing
 		super.setProgram(program);
+	}
+	
+	@Override
+	public String toString() {
+		return "[DoubleLiteralExpression: " + value + "]";
 	}
 
 }

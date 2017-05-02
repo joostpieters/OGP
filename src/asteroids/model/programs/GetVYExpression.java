@@ -5,7 +5,7 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetVYExpression extends Expression {
-	Expression e;
+	private Expression e;
 	
 	public GetVYExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
@@ -26,6 +26,7 @@ public class GetVYExpression extends Expression {
 		e.setProgram(program);
 	}
 	
+	@Override
 	public String toString() {
 		return "[GetVYExpression: " + e.toString() + "]";
 	}

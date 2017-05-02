@@ -4,7 +4,7 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class ChangeSignExpression extends Expression {
-	Expression e;
+	private Expression e;
 
 	public ChangeSignExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated constructor stub

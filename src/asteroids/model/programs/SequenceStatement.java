@@ -9,7 +9,7 @@ public class SequenceStatement extends Statement {
 
 	private List<Statement> statements;
 	private boolean hasActiveBreakStatement;
-	private boolean advancedTime;
+	private boolean failedToAdvanceTime;
 
 	public SequenceStatement(List<Statement> statements,
 			SourceLocation sourceLocation) {
@@ -19,15 +19,15 @@ public class SequenceStatement extends Statement {
 
 	@Override
 	public void execute() {
-		advancedTime = false;
+		failedToAdvanceTime = false;
 		hasActiveBreakStatement = false;
 		double line = getProgram().getCurrentLine();
 		for(Statement statement: statements) {
 			if(statement.getSourceLocation().getLine()> line){
 				statement.execute();
 			}
-			if(statement.advancedTime()){
-				advancedTime = true;
+			if(statement.failedToAdvanceTime()){
+				failedToAdvanceTime = true;
 				return;
 			}
 			if(statement instanceof BreakStatement) {
@@ -44,8 +44,8 @@ public class SequenceStatement extends Statement {
 	}
 
 	@Override
-	public boolean advancedTime(){
-		return advancedTime;
+	public boolean failedToAdvanceTime(){
+		return failedToAdvanceTime;
 	}
 
 	@Override

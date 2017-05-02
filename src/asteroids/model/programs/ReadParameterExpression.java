@@ -14,17 +14,19 @@ public class ReadParameterExpression extends Expression {
 		this.parameterName = parameterName;
 	}
 	
+	@Override
+	public Object evaluate() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 	}
 
+	@Override
 	public String toString() {
 		return "[ReadParameterExpression: " + parameterName + "]";
-	}
-
-	@Override
-	public Object evaluate() {
-		// TODO Auto-generated method stub
 	}
 
 }

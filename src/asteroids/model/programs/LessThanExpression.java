@@ -5,8 +5,8 @@ import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class LessThanExpression extends Expression {
-	Expression e1;
-	Expression e2;
+	private Expression e1;
+	private Expression e2;
 
 	public LessThanExpression(Expression e1, Expression e2,
 			SourceLocation location) {

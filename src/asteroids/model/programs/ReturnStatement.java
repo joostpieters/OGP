@@ -17,10 +17,12 @@ public class ReturnStatement extends Statement {
 		
 	}
 	
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 	}
 	
+	@Override
 	public String toString(){
 		return "[ReturnStatement]";
 	}

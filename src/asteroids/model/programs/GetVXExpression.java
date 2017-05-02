@@ -5,7 +5,7 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetVXExpression extends Expression {
-	Expression e;
+	private Expression e;
 	
 	public GetVXExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
@@ -26,6 +26,7 @@ public class GetVXExpression extends Expression {
 		e.setProgram(program);
 	}
 	
+	@Override
 	public String toString() {
 		return "[GetVXExpression: " + e.toString() + "]";
 	}

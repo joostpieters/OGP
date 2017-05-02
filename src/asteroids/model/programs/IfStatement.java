@@ -9,7 +9,7 @@ public class IfStatement extends Statement {
 	private Statement elseBody;
 	private boolean executingIfBody = false;
 	private boolean executingElseBody = false;
-	boolean advancedTime;
+	private boolean failedToAdvanceTime;
 
 	public IfStatement(Expression condition, Statement ifBody,
 			Statement elseBody, SourceLocation sourceLocation) {
@@ -23,22 +23,22 @@ public class IfStatement extends Statement {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-		advancedTime = false;
+		failedToAdvanceTime = false;
 		if(!executingIfBody && !executingElseBody){
 			if ((boolean) condition.evaluate()) executingIfBody = true;
 			else executingElseBody = true;
 		}
 		if(executingIfBody) {
 			ifBody.execute();
-			if (ifBody.advancedTime()) {
-				advancedTime = true;
+			if (ifBody.failedToAdvanceTime()) {
+				failedToAdvanceTime = true;
 				return;
 			} else executingIfBody = false;
 		}
 		if(executingElseBody) {
 			elseBody.execute();
-			if (elseBody.advancedTime()) {
-				advancedTime = true;
+			if (elseBody.failedToAdvanceTime()) {
+				failedToAdvanceTime = true;
 				return;
 			} else executingElseBody = false;
 		}

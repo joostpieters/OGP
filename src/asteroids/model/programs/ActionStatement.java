@@ -1,15 +1,21 @@
 package asteroids.model.programs;
 
-import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public abstract class ActionStatement extends Statement {
 
+	private boolean failedToAdvanceTime;
+
 	public ActionStatement(SourceLocation location) {
 		super(location);
 	}
+
+	protected void setFailedToAdvanceTime(boolean b) {
+		this.failedToAdvanceTime = b;
+		
+	}
 	
-	public boolean advancedTime() {
-		return true;
+	public boolean failedToAdvanceTime(){
+		return failedToAdvanceTime;
 	}
 }

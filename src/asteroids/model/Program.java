@@ -32,11 +32,12 @@ public class Program {
 	
 	public List<Object> execute(double dt) {
 		timeLeftToExecute = timeLeftToExecute + dt;
-		while(timeLeftToExecute > 0.2){//TODO add condition for fully executed main
-			main.execute(); //TODO
+		main.execute();
+		if (main.failedToAdvanceTime()) {
+			return null;
 		}
-		if (timeLeftToExecute > 0.2) return results;
-		else return null;
+		currentLine = 0;
+		return results;
 	}
 
 	public void setShip(Ship ship) {
@@ -75,6 +76,15 @@ public class Program {
 
 	public void setCurrentLine(double currentLine) {
 		this.currentLine = currentLine;
+	}
+
+	public double getTimer() {
+		// TODO Auto-generated method stub
+		return timeLeftToExecute;
+	}
+
+	public void addResult(Object result) {
+		results.add(result);
 	}
 
 }

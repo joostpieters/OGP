@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,6 +129,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 				return null;
 			}
 			
+			@Override
 			public String toString() {
 				return "[NullExpression]";
 			}
@@ -142,11 +142,12 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new EntityExpression(location){
 
 			@Override
-			public Object evaluate() {
+			public Ship evaluate() {
 				// TODO Auto-generated method stub
 				return getProgram().getShip();
 			}
 			
+			@Override
 			public String toString() {
 				return "[SelfExpression]";
 			}
@@ -159,7 +160,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new EntityExpression(location){
 
 			@Override
-			public Object evaluate() {
+			public Ship evaluate() {
 				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Ship> closestShip = self.getWorld().getShips().stream().
@@ -168,6 +169,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 				return null;
 			}
 			
+			@Override
 			public String toString() {
 				return "[ShipExpression]";
 			}
@@ -181,7 +183,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new EntityExpression(location){
 
 			@Override
-			public Object evaluate() {
+			public Asteroid evaluate() {
 				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Asteroid> closestAsteroid = self.getWorld().getAsteroids().stream().
@@ -190,6 +192,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 				return null;
 			}
 			
+			@Override
 			public String toString() {
 				return "[AsteroidExpression]";
 			}
@@ -203,7 +206,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new EntityExpression(location){
 
 			@Override
-			public Object evaluate() {
+			public Planetoid evaluate() {
 				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Planetoid> closestPlanetoid = self.getWorld().getPlanetoids().stream().
@@ -212,6 +215,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 					return null;
 			}
 			
+			@Override
 			public String toString() {
 				return "[PlanetoidExpression]";
 			}
@@ -225,7 +229,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new EntityExpression(location){
 
 			@Override
-			public Object evaluate() {
+			public Bullet evaluate() {
 				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Bullet> closestBullet = self.getWorld().getBullets().stream().filter(bullet -> bullet.getSource() == self).
@@ -234,6 +238,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 					return null;
 			}
 			
+			@Override
 			public String toString() {
 				return "[BulletExpression]";
 			}
@@ -247,7 +252,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new EntityExpression(location){
 
 			@Override
-			public Object evaluate() {
+			public MinorPlanet evaluate() {
 				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Entity> closestPlanet = self.getWorld().getEntities().stream().filter(entity -> entity instanceof MinorPlanet).
@@ -256,6 +261,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 					return null;
 			}
 			
+			@Override
 			public String toString() {
 				return "[PlanetExpression]";
 			}
@@ -269,7 +275,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new EntityExpression(location){
 
 			@Override
-			public Object evaluate() {
+			public Entity evaluate() {
 				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Entity> anyEntity = self.getWorld().getEntities().stream().findAny();
@@ -277,6 +283,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 					return null;
 			}
 			
+			@Override
 			public String toString() {
 				return "[AnyExpression]";
 			}
@@ -366,11 +373,18 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 			@Override
 			public void execute() {
+				// TODO Auto-generated method stub
+				setFailedToAdvanceTime(false);
+				if (getProgram().getTimer() < 0.2) {
+					setFailedToAdvanceTime(true);
+					return;
+				}
 				getProgram().getShip().thrustOn();
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
+				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
+			@Override
 			public String toString() {
 				return "[ThrustOnStatement]";
 			}
@@ -384,11 +398,18 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 			@Override
 			public void execute() {
+				// TODO Auto-generated method stub
+				setFailedToAdvanceTime(false);
+				if (getProgram().getTimer() < 0.2) {
+					setFailedToAdvanceTime(true);
+					return;
+				}
 				getProgram().getShip().thrustOff();
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
+				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
+			@Override
 			public String toString() {
 				return "[ThrustOffStatement]";
 			}
@@ -402,11 +423,18 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 			@Override
 			public void execute() {
+				// TODO Auto-generated method stub
+				setFailedToAdvanceTime(false);
+				if (getProgram().getTimer() < 0.2) {
+					setFailedToAdvanceTime(true);
+					return;
+				}
 				getProgram().getShip().fireBullet();
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
+				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
+			@Override
 			public String toString() {
 				return "[FireStatement]";
 			}
@@ -421,11 +449,18 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 			@Override
 			public void execute() {
+				// TODO Auto-generated method stub
+				setFailedToAdvanceTime(false);
+				if (getProgram().getTimer() < 0.2) {
+					setFailedToAdvanceTime(true);
+					return;
+				}
 				getProgram().getShip().turn((Double)angle.evaluate());
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
+				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
+			@Override
 			public String toString() {
 				return "[TurnStatement: " + angle.toString() + "]";
 			}
@@ -440,10 +475,16 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			@Override
 			public void execute() {
 				// TODO Auto-generated method stub
+				setFailedToAdvanceTime(false);
+				if (getProgram().getTimer() < 0.2) {
+					setFailedToAdvanceTime(true);
+					return;
+				}
 				getProgram().advanceTimer();
-				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
+				getProgram().setCurrentLine(getSourceLocation().getLine());
 			}
 			
+			@Override
 			public String toString() {
 				return "[SkipStatement]";
 			}

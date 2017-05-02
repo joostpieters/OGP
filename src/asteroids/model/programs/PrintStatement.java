@@ -12,17 +12,20 @@ public class PrintStatement extends Statement {
 		this.value = value;
 	}
 	
+	@Override
 	public void execute() {
 		Object evaluatedValue = value.evaluate();
 		System.out.println(evaluatedValue.toString());
-		getProgram().getResults().add(evaluatedValue);
+		getProgram().addResult(evaluatedValue);
 	}
 	
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		value.setProgram(program);
 	}
 
+	@Override
 	public String toString(){
 		return "[PrintStatement: " + value.toString() + "]";
 	}

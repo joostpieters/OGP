@@ -4,7 +4,7 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class AssignmentStatement extends Statement {
-	Expression value;
+	private Expression value;
 	private String variableName;
 
 	public AssignmentStatement(String variableName, Expression value,

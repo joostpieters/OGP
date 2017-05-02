@@ -1,8 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
-import java.util.Optional;
-
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
@@ -35,7 +32,7 @@ public abstract class Statement {
 		return location;
 	}
 
-	public boolean advancedTime() {
+	public boolean failedToAdvanceTime() {
 		// TODO Auto-generated method stub
 		return false;
 	}

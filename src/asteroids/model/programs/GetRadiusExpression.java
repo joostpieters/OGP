@@ -6,7 +6,7 @@ import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetRadiusExpression extends Expression {
-	Expression e;
+	private Expression e;
 
 	public GetRadiusExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
@@ -27,6 +27,7 @@ public class GetRadiusExpression extends Expression {
 		e.setProgram(program);
 	}
 	
+	@Override
 	public String toString() {
 		return "[GetRadiusExpression: " + e.toString() + "]";
 	}

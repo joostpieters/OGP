@@ -4,8 +4,8 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class AdditionExpression extends Expression {
-	Expression e1;
-	Expression e2;
+	private Expression e1;
+	private Expression e2;
 
 	public AdditionExpression(Expression e1, Expression e2,
 			SourceLocation location) {
