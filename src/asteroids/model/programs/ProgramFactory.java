@@ -365,11 +365,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new ActionStatement(location) {
 
 			@Override
-			public boolean execute() {
+			public void execute() {
 				getProgram().getShip().thrustOn();
 				getProgram().advanceTimer();
 				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
-				return true;
 			}
 			
 			public String toString() {
@@ -384,11 +383,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new ActionStatement(location) {
 
 			@Override
-			public boolean execute() {
+			public void execute() {
 				getProgram().getShip().thrustOff();
 				getProgram().advanceTimer();
 				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
-				return true;
 			}
 			
 			public String toString() {
@@ -403,11 +401,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new ActionStatement(location) {
 
 			@Override
-			public boolean execute() {
+			public void execute() {
 				getProgram().getShip().fireBullet();
 				getProgram().advanceTimer();
 				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
-				return true;
 			}
 			
 			public String toString() {
@@ -423,11 +420,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new ActionStatement(location) {
 
 			@Override
-			public boolean execute() {
+			public void execute() {
 				getProgram().getShip().turn((Double)angle.evaluate());
 				getProgram().advanceTimer();
 				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
-				return true;
 			}
 			
 			public String toString() {
@@ -442,11 +438,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		return new ActionStatement(location) {
 
 			@Override
-			public boolean execute() {
+			public void execute() {
 				// TODO Auto-generated method stub
 				getProgram().advanceTimer();
 				getProgram().setCurrentLine(getSourceLocation().getLine()+1);
-				return true;
 			}
 			
 			public String toString() {
