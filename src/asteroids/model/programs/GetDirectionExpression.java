@@ -3,7 +3,7 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class GetDirectionExpression extends Expression {
+public class GetDirectionExpression extends Expression<Double> {
 
 	public GetDirectionExpression(SourceLocation location) {
 		// TODO Auto-generated constructor stub

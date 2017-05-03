@@ -3,10 +3,10 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class NotExpression extends Expression {
-	private Expression e;
+public class NotExpression extends Expression<Boolean> {
+	private Expression<Boolean> e;
 
-	public NotExpression(Expression e, SourceLocation location) {
+	public NotExpression(Expression<Boolean> e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 		super(location);
 		this.e = e;
@@ -14,9 +14,7 @@ public class NotExpression extends Expression {
 
 	@Override
 	public Boolean evaluate() {
-		Object eEvaluated = e.evaluate();
-		if(!(eEvaluated instanceof Boolean)) throw new IllegalArgumentException();
-		return !((Boolean)eEvaluated);
+		return !e.evaluate();
 	}
 
 	@Override

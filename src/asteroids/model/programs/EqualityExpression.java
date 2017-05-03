@@ -3,7 +3,7 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class EqualityExpression extends Expression {
+public class EqualityExpression extends Expression<Boolean> {
 	private Expression e1;
 	private Expression e2;
 

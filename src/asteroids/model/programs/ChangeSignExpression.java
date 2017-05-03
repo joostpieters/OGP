@@ -3,10 +3,10 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class ChangeSignExpression extends Expression {
-	private Expression e;
+public class ChangeSignExpression extends Expression<Double> {
+	private Expression<Double> e;
 
-	public ChangeSignExpression(Expression e, SourceLocation location) {
+	public ChangeSignExpression(Expression<Double> e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 		super(location);
 		this.e = e;
@@ -14,9 +14,7 @@ public class ChangeSignExpression extends Expression {
 
 	@Override
 	public Double evaluate() {
-		Object eEvaluated = e.evaluate();
-		if(!(eEvaluated instanceof Double)) throw new IllegalArgumentException();
-		return -((Double)eEvaluated);
+		return -e.evaluate();
 	}
 
 	@Override

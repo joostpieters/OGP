@@ -3,7 +3,7 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public abstract class Expression {
+public abstract class Expression<T> {
 	private SourceLocation sourceLocation;
 	private Program program;
 	
@@ -11,7 +11,7 @@ public abstract class Expression {
 		this.sourceLocation = sourceLocation;
 	}
 
-	public abstract Object evaluate() throws IllegalArgumentException;
+	public abstract T evaluate() throws IllegalArgumentException;
 
 	public void setProgram(Program program){
 		this.program = program;

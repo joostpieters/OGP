@@ -4,10 +4,10 @@ import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class GetVXExpression extends Expression {
-	private Expression e;
+public class GetVXExpression extends Expression<Double> {
+	private Expression<? extends Entity> e;
 	
-	public GetVXExpression(Expression e, SourceLocation location) {
+	public GetVXExpression(Expression<? extends Entity> e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 		super(location);
 		this.e = e;
@@ -15,9 +15,7 @@ public class GetVXExpression extends Expression {
 
 	@Override
 	public Double evaluate() throws IllegalArgumentException {
-		Object eEvaluated = e.evaluate();
-		if(!(eEvaluated instanceof Entity)) throw new IllegalArgumentException();
-		return ((Entity)eEvaluated).getVelocity()[0];
+		return e.evaluate().getVelocity()[0];
 	}
 
 	@Override

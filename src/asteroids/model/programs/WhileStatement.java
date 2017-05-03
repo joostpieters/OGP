@@ -4,12 +4,12 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class WhileStatement extends Statement {
-	private Expression condition;
+	private Expression<Boolean> condition;
 	private Statement body;
 	private boolean executingBody;
 	private boolean failedToAdvanceTime;
 
-	public WhileStatement(Expression condition, Statement body,
+	public WhileStatement(Expression<Boolean> condition, Statement body,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
@@ -22,7 +22,7 @@ public class WhileStatement extends Statement {
 		// TODO Auto-generated method stub
 		failedToAdvanceTime = false;
 		if(!executingBody){
-			if((boolean) condition.evaluate()) executingBody = true;
+			if(condition.evaluate()) executingBody = true;
 			else return;
 		}
 		body.execute();

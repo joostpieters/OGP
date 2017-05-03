@@ -3,7 +3,7 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class DoubleLiteralExpression extends Expression {
+public class DoubleLiteralExpression extends Expression<Double> {
 	private double value;
 
 	public DoubleLiteralExpression(double value, SourceLocation location) {
