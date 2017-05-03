@@ -23,7 +23,8 @@ public class SequenceStatement extends Statement {
 		hasActiveBreakStatement = false;
 		SourceLocation location = getProgram().getCurrentLocation();
 		for(Statement statement: statements) {
-			if(statement.getSourceLocation().getLine()>= location.getLine()){
+			SourceLocation statementLocation = statement.getSourceLocation();
+			if(statementLocation.getLine()> location.getLine()||(statementLocation.getLine()==location.getLine()&&statementLocation.getColumn()>=location.getColumn())){
 				statement.execute();
 				if(statement.failedToAdvanceTime()){
 					failedToAdvanceTime = true;

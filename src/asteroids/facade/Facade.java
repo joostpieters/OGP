@@ -27,6 +27,8 @@ public class Facade implements IFacade {
 			return new Ship(x,y,xVelocity,yVelocity,radius,orientation, mass);
 		} catch(IllegalArgumentException exc){
 			throw new ModelException(exc);
+		} catch(AssertionError e){
+			throw new ModelException(e);
 		}
 	}
 
@@ -52,7 +54,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void turn(Ship ship, double angle) throws ModelException {
-		ship.turn(angle);
+		try{
+			ship.turn(angle);
+		} catch (AssertionError e){
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
@@ -516,7 +522,14 @@ public class Facade implements IFacade {
 	@Override
 	public List<Object> executeProgram(Ship ship, double dt)
 			throws ModelException {
-		return ship.executeProgram(dt);
+		try{
+			return ship.executeProgram(dt);
+		} catch (Exception exc) {
+			throw new ModelException(exc);
+		} catch (AssertionError e){
+			throw new ModelException(e);
+		}
+		
 	}
 
 	@Override

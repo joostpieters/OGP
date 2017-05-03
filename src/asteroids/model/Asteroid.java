@@ -7,20 +7,13 @@ public class Asteroid extends MinorPlanet {
 		super(x, y, xVelocity, yVelocity, radius);
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public double getRadius() {
-		return radius;
-	}
 	
-	private static final double radius = 5;
-
 	@Override
 	public double getDensity() {
 		return density;
 	}
 	
-	private static final double density = 0.917E12;
+	private static final double density = 2.65E12;
 
 	@Override
 	public void collide(Entity entity) {

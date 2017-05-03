@@ -163,7 +163,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public Ship evaluate() {
 				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
-				Optional<Ship> closestShip = self.getWorld().getShips().stream().
+				Optional<Ship> closestShip = self.getWorld().getShips().stream().filter(ship -> !ship.equals(self)).
 					reduce((ship1, ship2) -> (self.getDistanceBetween(ship1) < self.getDistanceBetween(ship2) ? ship1 : ship2));
 				if (closestShip.isPresent()) return closestShip.get();
 				return null;

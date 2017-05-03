@@ -9,14 +9,16 @@ public abstract class MinorPlanet extends Entity {
 
 	@Override
 	public double getMass() {
-		return 4/3*Math.PI*Math.pow(getRadius(), 3)*getDensity();
+		return 4/3.*Math.PI*Math.pow(getRadius(), 3)*getDensity();
 	}
 
 	@Override
 	public double getMinRadius() {
-		return 5;
+		return minRadius;
 	}
 	
+	private static final double minRadius = 5;
+
 	@Override
 	public void collide(Entity entity) {
 		if (entity instanceof MinorPlanet) {

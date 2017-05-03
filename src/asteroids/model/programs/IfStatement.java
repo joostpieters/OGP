@@ -7,8 +7,8 @@ public class IfStatement extends Statement {
 	private Expression condition;
 	private Statement ifBody;
 	private Statement elseBody;
-	private boolean executingIfBody = false;
-	private boolean executingElseBody = false;
+	private boolean executingIfBody;
+	private boolean executingElseBody;
 	private boolean failedToAdvanceTime;
 
 	public IfStatement(Expression condition, Statement ifBody,
@@ -23,7 +23,7 @@ public class IfStatement extends Statement {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-		setFailedToAdvanceTime(false);
+		failedToAdvanceTime = false;
 		if(!executingIfBody && !executingElseBody){
 			if ((boolean) condition.evaluate()) executingIfBody = true;
 			else {
@@ -34,14 +34,14 @@ public class IfStatement extends Statement {
 		if(executingIfBody) {
 			ifBody.execute();
 			if (ifBody.failedToAdvanceTime()) {
-				setFailedToAdvanceTime(true);
+				failedToAdvanceTime = true;
 				return;
 			} else executingIfBody = false;
 		}
 		if(executingElseBody) {
 			elseBody.execute();
 			if (elseBody.failedToAdvanceTime()) {
-				setFailedToAdvanceTime(true);
+				failedToAdvanceTime = true;
 				return;
 			} else executingElseBody = false;
 		}

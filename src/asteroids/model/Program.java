@@ -36,7 +36,8 @@ public class Program {
 		main.execute();
 		if (!main.failedToAdvanceTime()) {
 			currentLocation = new SourceLocation(0, 0);
-			return results.size()==0? null: results;
+			List<Object> resultsToThrow = results; results = null;
+			return resultsToThrow;
 		}
 		return null;
 	}
@@ -56,15 +57,15 @@ public class Program {
 		return results;
 	}
 
-	public void assignVariable(String variableName, Expression value) {
+	public void assignVariable(String variableName, Object value) {
 		Optional<Variable> variableToAssignTo = variables.stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value);
-		else variables.add(new Variable<>(variableName, value.evaluate()));
+		else variables.add(new Variable<>(variableName, value));
 	}
 
 	public Object getVariable(String parameterName) throws NoSuchElementException {
 		// TODO Auto-generated method stub
-		return variables.stream().filter(variable -> variable.getName().equals(parameterName)).findFirst().get();
+		return variables.stream().filter(variable -> variable.getName().equals(parameterName)).findFirst().get().getValue();
 	}
 
 	public void advanceTimer() {

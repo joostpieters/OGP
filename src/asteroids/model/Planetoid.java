@@ -17,8 +17,8 @@ public class Planetoid extends MinorPlanet {
 	}
 	
 	@Override
-	public double getRadius() {//TODO fix
-		return super.getRadius() * (1 - totalTraveledDistance * 0.000001);
+	public double getRadius() {
+		return super.getRadius() - totalTraveledDistance * 0.000001;
 		
 	}
 

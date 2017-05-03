@@ -4,10 +4,10 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class WhileStatement extends Statement {
-	Expression condition;
-	Statement body;
-	boolean executingBody;
-	boolean failedToAdvanceTime;
+	private Expression condition;
+	private Statement body;
+	private boolean executingBody;
+	private boolean failedToAdvanceTime;
 
 	public WhileStatement(Expression condition, Statement body,
 			SourceLocation sourceLocation) {

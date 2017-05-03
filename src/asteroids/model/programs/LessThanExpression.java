@@ -18,6 +18,7 @@ public class LessThanExpression extends Expression {
 	@Override
 	public Boolean evaluate() {
 		Object e1Evaluated = e1.evaluate();Object e2Evaluated = e2.evaluate();
+		System.out.println(e1Evaluated.getClass());
 		if(!(e1Evaluated instanceof Double && e2Evaluated instanceof Double)) throw new IllegalArgumentException();
 		return ((Double)e1Evaluated < (Double)e2Evaluated);
 	}
