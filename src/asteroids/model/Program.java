@@ -27,6 +27,7 @@ public class Program {
 		this.functions = functions;
 		this.main = main;
 		main.setProgram(this);
+		for(Function function: functions) function.setProgram(this);
 		timeLeftToExecute = 0;
 		System.out.println(main.toString());
 	}

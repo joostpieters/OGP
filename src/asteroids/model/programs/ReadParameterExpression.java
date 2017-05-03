@@ -17,6 +17,7 @@ public class ReadParameterExpression extends Expression {
 	@Override
 	public Object evaluate() {
 		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
