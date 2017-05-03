@@ -3,11 +3,11 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class AssignmentStatement extends Statement {
-	private Expression value;
+public class AssignmentStatement<T> extends Statement {
+	private Expression<T> value;
 	private String variableName;
 
-	public AssignmentStatement(String variableName, Expression value,
+	public AssignmentStatement(String variableName, Expression<T> value,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
@@ -18,7 +18,7 @@ public class AssignmentStatement extends Statement {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-		getProgram().assignVariable(variableName, value.evaluate());
+		getProgram().assignVariable(variableName, value);
 	}
 	
 	public void setProgram(Program program) {

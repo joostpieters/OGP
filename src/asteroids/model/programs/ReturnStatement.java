@@ -4,10 +4,12 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class ReturnStatement extends Statement {
+	private Expression value;
 
 	public ReturnStatement(Expression value, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
+		this.value = value;
 	}
 
 	@Override

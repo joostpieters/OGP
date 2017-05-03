@@ -18,7 +18,7 @@ public class Program {
 	private List<Function> functions;
 	private Statement main;
 	private Set<Variable> variables = new HashSet<Variable>();
-	private List<Object> results = new ArrayList();
+	private List<Object> results = new ArrayList<Object>();
 	private double timeLeftToExecute;
 	private SourceLocation currentLocation = new SourceLocation(0, 0);
 	private Ship ship;
@@ -57,10 +57,10 @@ public class Program {
 		return results;
 	}
 
-	public void assignVariable(String variableName, Object value) {
+	public <T> void assignVariable(String variableName, Expression<T> value) {
 		Optional<Variable> variableToAssignTo = variables.stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
-		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value);
-		else variables.add(new Variable<>(variableName, value));
+		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate());
+		else variables.add(new Variable<T>(variableName, value.evaluate()));
 	}
 
 	public Object getVariable(String parameterName) throws NoSuchElementException {

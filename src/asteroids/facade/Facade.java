@@ -536,7 +536,11 @@ public class Facade implements IFacade {
 	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory()
 			throws ModelException {
 		// TODO Auto-generated method stub
-		return new ProgramFactory();
+		try{
+			return new ProgramFactory();
+		} catch (ClassCastException e){
+			throw new ModelException(e);
+		}
 	}
 
 }
