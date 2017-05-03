@@ -30,7 +30,9 @@ public class WhileStatement extends Statement {
 			failedToAdvanceTime = true;
 			return;
 		}
-		while ((boolean) condition.evaluate() && !body.hasActiveBreakStatement()){
+		
+		while (condition.evaluate() && !body.hasActiveBreakStatement()){
+			getProgram().setCurrentLocation(this.getSourceLocation());
 			body.execute();
 			if (body.failedToAdvanceTime()) {
 				failedToAdvanceTime = true;

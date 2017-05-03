@@ -22,9 +22,10 @@ public class SequenceStatement extends Statement {
 		failedToAdvanceTime = false;
 		hasActiveBreakStatement = false;
 		SourceLocation location = getProgram().getCurrentLocation();
-		for(Statement statement: statements) {
-			SourceLocation statementLocation = statement.getSourceLocation();
-			if(statementLocation.getLine()> location.getLine()||(statementLocation.getLine()==location.getLine()&&statementLocation.getColumn()>=location.getColumn())){
+		for(int i = 0; i < statements.size(); i++) {
+			Statement statement = statements.get(i);
+			SourceLocation nextStatementLocation = (i == statements.size()-1) ? null : statements.get(i+1).getSourceLocation();
+			if(i == statements.size()-1 || nextStatementLocation.getLine()> location.getLine()||(nextStatementLocation.getLine()==location.getLine()&&nextStatementLocation.getColumn()>location.getColumn())){
 				statement.execute();
 				if(statement.failedToAdvanceTime()){
 					failedToAdvanceTime = true;
@@ -35,7 +36,6 @@ public class SequenceStatement extends Statement {
 					return;
 				}
 			}
-			
 		}
 	}
 	

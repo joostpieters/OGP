@@ -456,6 +456,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 					setFailedToAdvanceTime(true);
 					return;
 				}
+				if(!Ship.isValidOrientation(getProgram().getShip().getOrientation()+(double)angle.evaluate())) throw new IllegalArgumentException("Invalid angle");
 				getProgram().getShip().turn((Double)angle.evaluate());
 				getProgram().advanceTimer();
 			}
