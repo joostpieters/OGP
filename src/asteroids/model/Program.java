@@ -59,14 +59,14 @@ public class Program {
 	}
 
 	public <T> void assignVariable(String variableName, Expression<T> value) {
-		Optional<Variable> variableToAssignTo = variables.stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
+		Optional<Variable> variableToAssignTo = getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate());
-		else variables.add(new Variable<T>(variableName, value.evaluate()));
+		else getVariables().add(new Variable<T>(variableName, value.evaluate()));
 	}
 
 	public Object getVariable(String parameterName) throws NoSuchElementException {
 		// TODO Auto-generated method stub
-		return variables.stream().filter(variable -> variable.getName().equals(parameterName)).findFirst().get().getValue();
+		return getVariables().stream().filter(variable -> variable.getName().equals(parameterName)).findFirst().get().getValue();
 	}
 
 	public void advanceTimer() {
@@ -89,6 +89,10 @@ public class Program {
 
 	public void setCurrentLocation(SourceLocation currentLocation) {
 		this.currentLocation = currentLocation;
+	}
+
+	public Set<Variable> getVariables() {
+		return variables;
 	}
 
 }

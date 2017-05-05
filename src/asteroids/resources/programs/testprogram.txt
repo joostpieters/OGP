@@ -1,0 +1,10 @@
+fire;
+turn 0.2;
+fire;
+turn 0.2;
+fire;
+turn 0.2;
+fire;
+turn 0.2;
+fire;
+turn 0.2;

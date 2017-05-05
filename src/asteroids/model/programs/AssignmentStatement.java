@@ -1,5 +1,7 @@
 package asteroids.model.programs;
 
+import java.util.Optional;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
@@ -17,8 +19,9 @@ public class AssignmentStatement<T> extends Statement {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		getProgram().assignVariable(variableName, value);
+		Optional<Variable> variableToAssignTo = getProgram().getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
+		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate());
+		else getProgram().getVariables().add(new Variable<T>(variableName, value.evaluate()));
 	}
 	
 	public void setProgram(Program program) {
