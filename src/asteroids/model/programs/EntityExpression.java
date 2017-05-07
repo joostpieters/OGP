@@ -14,5 +14,9 @@ public abstract class EntityExpression extends Expression<Entity> {
 	public void setProgram(Program program) {
 		 super.setProgram(program);
 	}
+	
+	public void setFunction(Function function) {
+		
+	}
 
 }

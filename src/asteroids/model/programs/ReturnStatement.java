@@ -5,6 +5,7 @@ import asteroids.part3.programs.SourceLocation;
 
 public class ReturnStatement extends Statement {
 	private Expression value;
+	private Function function;
 
 	public ReturnStatement(Expression value, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
@@ -14,6 +15,7 @@ public class ReturnStatement extends Statement {
 
 	@Override
 	public void execute() {
+		if (function == null) throw new IllegalArgumentException();
 		// TODO Auto-generated method stub
 		
 	}
@@ -26,6 +28,12 @@ public class ReturnStatement extends Statement {
 	@Override
 	public String toString(){
 		return "[ReturnStatement]";
+	}
+
+	@Override
+	public void setFunction(Function function) throws IllegalArgumentException {
+		this.function = function;
+		value.setFunction(function);
 	}
 
 }

@@ -6,6 +6,7 @@ import asteroids.part3.programs.SourceLocation;
 public class ReadParameterExpression extends Expression {
 
 	private String parameterName;
+	private Function function;
 
 	public ReadParameterExpression(String parameterName,
 			SourceLocation sourceLocation) {
@@ -23,6 +24,11 @@ public class ReadParameterExpression extends Expression {
 	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
+	}
+	
+	@Override
+	public void setFunction(Function function) {
+		this.function = function;
 	}
 
 	@Override

@@ -28,6 +28,12 @@ public class MultiplicationExpression extends Expression<Double> {
 	}
 	
 	@Override
+	public void setFunction(Function function) throws IllegalArgumentException {
+		e1.setFunction(function);
+		e2.setFunction(function);
+	}
+	
+	@Override
 	public String toString() {
 		return "[MultiplicationExpression: " + e1 + " * " + e2 +"]";
 	}

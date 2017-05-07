@@ -24,6 +24,11 @@ public class SqrtExpression extends Expression<Double> {
 	}
 	
 	@Override
+	public void setFunction(Function function) {
+		e.setFunction(function);
+	}
+	
+	@Override
 	public String toString() {
 		return "[SqrtExpression: " + e + "]";
 	}

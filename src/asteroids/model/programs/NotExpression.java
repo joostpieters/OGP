@@ -24,6 +24,11 @@ public class NotExpression extends Expression<Boolean> {
 	}
 	
 	@Override
+	public void setFunction(Function function) {
+		e.setFunction(function);
+	}
+	
+	@Override
 	public String toString() {
 		return "[NotExpression: " + e + "]";
 	}

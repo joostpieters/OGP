@@ -29,6 +29,12 @@ public class EqualityExpression extends Expression<Boolean> {
 	}
 	
 	@Override
+	public void setFunction(Function function) {
+		e1.setFunction(function);
+		e2.setFunction(function);
+	}
+
+	@Override
 	public String toString() {
 		return "[EqualityExpression: " + e1 + " == " + e2 +"]";
 	}

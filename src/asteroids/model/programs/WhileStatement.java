@@ -53,6 +53,12 @@ public class WhileStatement extends Statement {
 	public boolean failedToAdvanceTime() {
 		return failedToAdvanceTime;
 	}
+
+	@Override
+	public void setFunction(Function function) throws IllegalArgumentException {
+		condition.setFunction(function);
+		body.setFunction(function);
+	}
 	
 	@Override
 	public String toString() {

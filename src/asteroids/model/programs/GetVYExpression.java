@@ -29,4 +29,9 @@ public class GetVYExpression extends Expression<Double> {
 		return "[GetVYExpression: " + e.toString() + "]";
 	}
 
+	@Override
+	public void setFunction(Function function) {
+		e.setFunction(function);
+	}
+
 }

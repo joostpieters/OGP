@@ -18,4 +18,8 @@ public abstract class ActionStatement extends Statement {
 	public boolean failedToAdvanceTime(){
 		return failedToAdvanceTime;
 	}
+	
+	public void setFunction(Function function) throws IllegalArgumentException {
+		throw new IllegalArgumentException("Action statements can't be contained in a function body");
+	}
 }

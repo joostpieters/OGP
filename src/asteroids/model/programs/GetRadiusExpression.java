@@ -29,4 +29,9 @@ public class GetRadiusExpression extends Expression<Double> {
 		return "[GetRadiusExpression: " + e.toString() + "]";
 	}
 
+	@Override
+	public void setFunction(Function function) {
+		e.setFunction(function);
+	}
+
 }

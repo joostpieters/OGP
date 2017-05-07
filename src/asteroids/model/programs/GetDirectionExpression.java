@@ -25,4 +25,10 @@ public class GetDirectionExpression extends Expression<Double> {
 		return "[GetDirectionExpression]";
 	}
 
+	@Override
+	public void setFunction(Function function) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

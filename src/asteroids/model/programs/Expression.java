@@ -20,5 +20,7 @@ public abstract class Expression<T> {
 	public Program getProgram(){
 		return program;
 	}
+	
+	public abstract void setFunction(Function function);
 
 }

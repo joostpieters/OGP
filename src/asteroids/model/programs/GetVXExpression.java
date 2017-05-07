@@ -29,4 +29,9 @@ public class GetVXExpression extends Expression<Double> {
 		return "[GetVXExpression: " + e.toString() + "]";
 	}
 
+	@Override
+	public void setFunction(Function function) {
+		e.setFunction(function);
+	}
+
 }

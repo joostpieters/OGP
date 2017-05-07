@@ -30,4 +30,10 @@ public class BreakStatement extends Statement {
 		return true;
 	}
 
+	@Override
+	public void setFunction(Function function) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

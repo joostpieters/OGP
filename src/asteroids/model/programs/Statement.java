@@ -37,4 +37,5 @@ public abstract class Statement {
 		return false;
 	}
 
+	public abstract void setFunction(Function function) throws IllegalArgumentException ;
 }

@@ -57,17 +57,24 @@ public class IfStatement extends Statement {
 	}
 	
 	@Override
-	public String toString() {
-		return "[IfStatement: if " + condition + " then " + ifBody + " else " + elseBody + "]";
-	}
-
-	@Override
 	public boolean failedToAdvanceTime() {
 		return failedToAdvanceTime;
 	}
 
 	private void setFailedToAdvanceTime(boolean b) {
 		failedToAdvanceTime = b;
+	}
+
+	@Override
+	public void setFunction(Function function) throws IllegalArgumentException {
+		condition.setFunction(function);
+		ifBody.setFunction(function);
+		if(elseBody != null) elseBody.setFunction(function);
+	}
+
+	@Override
+	public String toString() {
+		return "[IfStatement: if " + condition + " then " + ifBody + " else " + elseBody + "]";
 	}
 
 }

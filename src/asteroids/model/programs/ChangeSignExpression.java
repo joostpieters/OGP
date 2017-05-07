@@ -27,4 +27,9 @@ public class ChangeSignExpression extends Expression<Double> {
 		return "[ChangeSignExpression: " + e + "]";
 	}
 
+	@Override
+	public void setFunction(Function function) {
+		e.setFunction(function);
+	}
+
 }

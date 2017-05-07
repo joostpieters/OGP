@@ -27,6 +27,11 @@ public class AdditionExpression extends Expression<Double> {
 		e2.setProgram(program);
 	}
 	
+	public void setFunction(Function function){
+		e1.setFunction(function);
+		e2.setFunction(function);
+	}
+	
 	@Override
 	public String toString() {
 		return "[AdditionExpression: " + e1 + " + " + e2 +"]";

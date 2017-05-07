@@ -25,6 +25,11 @@ public class PrintStatement extends Statement {
 		super.setProgram(program);
 		value.setProgram(program);
 	}
+	
+	@Override
+	public void setFunction(Function function) throws IllegalArgumentException {
+		throw new IllegalArgumentException("Print statements can't occur in the body of functions.");
+	}
 
 	@Override
 	public String toString(){

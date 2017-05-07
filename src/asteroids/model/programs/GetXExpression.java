@@ -29,4 +29,9 @@ public class GetXExpression extends Expression<Double> {
 		return "[GetXExpression: " + e.toString() + "]";
 	}
 
+	@Override
+	public void setFunction(Function function) {
+		e.setFunction(function);
+	}
+
 }

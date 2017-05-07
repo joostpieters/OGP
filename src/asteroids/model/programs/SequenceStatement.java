@@ -54,6 +54,11 @@ public class SequenceStatement extends Statement {
 	public boolean hasActiveBreakStatement() {
 		return hasActiveBreakStatement;
 	}
+	
+	@Override
+	public void setFunction(Function function) {
+		for(Statement statement : statements) statement.setFunction(function);
+	}
 
 	@Override
 	public String toString() {

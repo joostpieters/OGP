@@ -28,4 +28,10 @@ public class DoubleLiteralExpression extends Expression<Double> {
 		return "[DoubleLiteralExpression: " + value + "]";
 	}
 
+	@Override
+	public void setFunction(Function function) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

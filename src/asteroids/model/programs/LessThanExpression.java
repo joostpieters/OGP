@@ -28,6 +28,12 @@ public class LessThanExpression extends Expression<Boolean> {
 	}
 	
 	@Override
+	public void setFunction(Function function) {
+		e1.setFunction(function);
+		e2.setFunction(function);
+	}
+
+	@Override
 	public String toString() {
 		return "[LessThanExpression: " + e1 + " < " + e2 +"]";
 	}
