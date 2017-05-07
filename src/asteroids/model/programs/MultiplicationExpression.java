@@ -4,10 +4,10 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class MultiplicationExpression extends Expression<Double> {
-	private Expression<Double> e1;
-	private Expression<Double> e2;
+	private Expression<? extends Double> e1;
+	private Expression<? extends Double> e2;
 
-	public MultiplicationExpression(Expression<Double> e1, Expression<Double> e2,
+	public MultiplicationExpression(Expression<? extends Double> e1, Expression<? extends Double> e2,
 			SourceLocation location) {
 		// TODO Auto-generated constructor stub
 		super(location);

@@ -4,14 +4,14 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class IfStatement extends Statement {
-	private Expression<Boolean> condition;
+	private Expression<? extends Boolean> condition;
 	private Statement ifBody;
 	private Statement elseBody;
 	private boolean executingIfBody;
 	private boolean executingElseBody;
 	private boolean failedToAdvanceTime;
 
-	public IfStatement(Expression<Boolean> condition, Statement ifBody,
+	public IfStatement(Expression<? extends Boolean> condition, Statement ifBody,
 			Statement elseBody, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
@@ -34,14 +34,14 @@ public class IfStatement extends Statement {
 		if(executingIfBody) {
 			ifBody.execute();
 			if (ifBody.failedToAdvanceTime()) {
-				failedToAdvanceTime = true;
+				setFailedToAdvanceTime(true);
 				return;
 			} else executingIfBody = false;
 		}
 		if(executingElseBody) {
 			elseBody.execute();
 			if (elseBody.failedToAdvanceTime()) {
-				failedToAdvanceTime = true;
+				setFailedToAdvanceTime(true);
 				return;
 			} else executingElseBody = false;
 		}

@@ -4,9 +4,9 @@ import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class NotExpression extends Expression<Boolean> {
-	private Expression<Boolean> e;
+	private Expression<? extends Boolean> e;
 
-	public NotExpression(Expression<Boolean> e, SourceLocation location) {
+	public NotExpression(Expression<? extends Boolean> e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 		super(location);
 		this.e = e;
