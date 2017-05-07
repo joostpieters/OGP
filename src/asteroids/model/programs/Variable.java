@@ -13,11 +13,11 @@ public class Variable<T> {
 	}
 	
 	public void setValue(T value) {
-		if(!isValidValue(value)) throw new IllegalArgumentException();
+		if(!canHaveAsValue(value)) throw new IllegalArgumentException();
 		this.value = value;
 	}
 	
-	private boolean isValidValue(T value) {
+	private boolean canHaveAsValue(T value) {
 		return getValue()== null || (value instanceof Boolean && getValue() instanceof Boolean)
 			||(value instanceof Double && getValue() instanceof Double)
 			||(value instanceof Entity && getValue() instanceof Entity);
