@@ -2,6 +2,13 @@ package asteroids.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class of bullets with a given position, velocity and radius in two dimensions.
+ * @ see implementation
+ * @version 3.1
+ * @author  Sander Leyssens & Sarah Joseph
+ */
+
 public class Bullet extends Entity {
 
 	/**

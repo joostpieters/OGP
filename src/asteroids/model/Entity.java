@@ -545,6 +545,6 @@ public abstract class Entity {
 		if(position[0] == 0 || position[0] == getWorld().getSize()[0]) setVelocity(new double[]{-getVelocity()[0],getVelocity()[1]});
 		if(position[1] == 0 || position[1] == getWorld().getSize()[1]) setVelocity(new double[]{getVelocity()[0],-getVelocity()[1]});
 	}
-
+	
 	public abstract void collide(Entity entity);
 }

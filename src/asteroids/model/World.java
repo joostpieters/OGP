@@ -7,8 +7,7 @@ import asteroids.part2.CollisionListener;
 
 /**
  * A class of worlds with a given width and height.
- * @Invar  for each bullet in getBullets(): bullet.getWorld() == this
- * @Invar  for each ship in getShip(): ship.getWorld() == this
+ * @ see implementation
  * @version 3.1
  * @author  Sander Leyssens & Sarah Joseph
  */
