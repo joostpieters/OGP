@@ -103,7 +103,11 @@ public class Bullet extends Entity {
 		return density;
 	}
 	
-	
+	/**
+	 * Return the minimum radius of this bullet.
+	 * @return Returns the minimum radius of this bullet.
+	 *         | result == minRadius
+	 */
 	public double getMinRadius(){
 		return minRadius;
 	}
@@ -144,6 +148,11 @@ public class Bullet extends Entity {
 		if (this.getRemainingBounces() < 0) this.terminate();
 	}
 	
+	/**
+	 * Terminates the entity that contains this bullet
+	 * @post The entity containing this bullet is terminated
+	 *       | super.terminate()
+	 */
 	public void terminate(){
 		super.terminate();
 		if (this.getShip() != null) ship.removeBullet(this);

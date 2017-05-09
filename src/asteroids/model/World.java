@@ -278,8 +278,7 @@ public class World {
 	 * @param  collisionListener
 	 *         Invoked when the entity is about to collide with a boundary or other entity
 	 * @effect  All entities are moved to their predicted position after time dt
-	 * 	       | for each entity in getEntities(): entity.move(dt)
-	 *   
+	 * 	       | for each entity in getEntities(): entity.move(dt)  
 	 * @Throws IllegalArgumentException
 	 *         | dt < 0 or Double.isNaN(dt)
 	 */
