@@ -308,6 +308,7 @@ public class Ship extends Entity {
 	 * 	       | thrust(getAcceleration()*dt)   
 	 */
 	public void move(double dt){
+		if(getProgram()!= null) getProgram().execute(dt);
 		super.move(dt);
 		thrust(getAcceleration()*dt);
 	}
