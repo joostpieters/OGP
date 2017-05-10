@@ -93,4 +93,9 @@ public class Program {
 		return new HashSet<Variable>(variables);
 	}
 
+	public Function getFunction(String functionName) {
+		// TODO Auto-generated method stub
+		return this.functions.stream().filter(function -> function.getName().equals(functionName)).findFirst().get();
+	}
+
 }

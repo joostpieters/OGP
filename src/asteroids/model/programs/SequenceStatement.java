@@ -10,6 +10,7 @@ public class SequenceStatement extends Statement {
 	private List<Statement> statements;
 	private boolean hasActiveBreakStatement;
 	private boolean failedToAdvanceTime;
+	private Function function;
 
 	public SequenceStatement(List<Statement> statements,
 			SourceLocation sourceLocation) {
@@ -25,7 +26,7 @@ public class SequenceStatement extends Statement {
 		for(int i = 0; i < statements.size(); i++) {
 			Statement statement = statements.get(i);
 			SourceLocation nextStatementLocation = (i == statements.size()-1) ? null : statements.get(i+1).getSourceLocation();
-			if(i == statements.size()-1 || nextStatementLocation.getLine()> location.getLine()||(nextStatementLocation.getLine()==location.getLine()&&nextStatementLocation.getColumn()>location.getColumn())){
+			if(this.getFunction() != null|| i == statements.size()-1 || nextStatementLocation.getLine()> location.getLine()||(nextStatementLocation.getLine()==location.getLine()&&nextStatementLocation.getColumn()>location.getColumn())){
 				statement.execute();
 				if(statement.failedToAdvanceTime()){
 					failedToAdvanceTime = true;
@@ -39,6 +40,11 @@ public class SequenceStatement extends Statement {
 		}
 	}
 	
+	private Function getFunction() {
+		// TODO Auto-generated method stub
+		return function;
+	}
+
 	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
@@ -57,6 +63,7 @@ public class SequenceStatement extends Statement {
 	
 	@Override
 	public void setFunction(Function function) {
+		this.function = function;
 		for(Statement statement : statements) statement.setFunction(function);
 	}
 

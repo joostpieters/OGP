@@ -1,5 +1,6 @@
 package asteroids.model.programs;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -14,6 +15,7 @@ public class Function {
 	private SourceLocation sourceLocation;
 	private Program program;
 	private Set<Variable> variables = new HashSet<Variable>();
+	private List<Expression> actualArgs = new ArrayList<Expression>();
 
 	public Function(String functionName, Statement body,
 			SourceLocation sourceLocation) {
@@ -25,6 +27,7 @@ public class Function {
 	
 	public Object evaluate(List<Expression> actualArgs){
 		variables = new HashSet<Variable>();
+		this.actualArgs = actualArgs;
 		body.execute();
 		return null;
 	}
@@ -45,6 +48,11 @@ public class Function {
 	public Object getVariable(String variableName) throws NoSuchElementException {
 		// TODO Auto-generated method stub
 		return getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst().get().getValue();
+	}
+
+	public String getName() {
+		// TODO Auto-generated method stub
+		return name;
 	}
 
 }

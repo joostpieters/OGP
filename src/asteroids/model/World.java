@@ -289,7 +289,12 @@ public class World {
 		double[] position = getPositionNextCollision();
 		Entity[] entities = getNextCollidingObjects();
 		while (tC <= dt){
-			for(Entity entity: getEntities()) entity.move(tC);
+			for(Entity entity: getEntities()) {
+				if (entity instanceof Ship && ((Ship) entity).getProgram() != null) {
+					((Ship) entity).executeProgram(tC);
+				}
+				entity.move(tC);
+			}
 			if(entities[1] == null){
 				if(collisionListener != null) collisionListener.boundaryCollision(entities[0], position[0], position[1]);
 				entities[0].collideBoundary();
@@ -304,7 +309,12 @@ public class World {
 			position = getPositionNextCollision();
 			entities = getNextCollidingObjects();
 		}
-		for(Entity entity: getEntities()) entity.move(dt);
+		for(Entity entity: getEntities()) {
+			if (entity instanceof Ship && ((Ship) entity).getProgram() != null) {
+				((Ship) entity).executeProgram(dt);
+			}
+			entity.move(dt);
+		}
 		
 	}
 	

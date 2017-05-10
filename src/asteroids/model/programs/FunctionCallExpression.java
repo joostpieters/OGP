@@ -12,17 +12,25 @@ public class FunctionCallExpression extends Expression {
 			List<Expression> actualArgs, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
+		this.functionName = functionName;
+		this.actualArgs = actualArgs;
 	}
 
 	@Override
 	public Object evaluate() {
 		// TODO Auto-generated method stub
-		return null;
+		return getProgram().getFunction(functionName).evaluate(actualArgs);
 	}
 	
 	@Override
 	public String toString() {
 		return "[FunctionCallExpression: " + functionName + ": + " + actualArgs.toString() +"]";
+	}
+
+	@Override
+	public void setFunction(Function function) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
