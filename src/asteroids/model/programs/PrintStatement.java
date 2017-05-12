@@ -1,5 +1,8 @@
 package asteroids.model.programs;
 
+import java.util.List;
+import java.util.Optional;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
@@ -21,14 +24,14 @@ public class PrintStatement extends Statement {
 	}
 	
 	@Override
+	public Optional execute(List<Expression> actualArgs) {
+		throw new IllegalArgumentException("Print statements can't occur in the body of functions.");
+	}
+
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		value.setProgram(program);
-	}
-	
-	@Override
-	public void setFunction(Function function) throws IllegalArgumentException {
-		throw new IllegalArgumentException("Print statements can't occur in the body of functions.");
 	}
 
 	@Override

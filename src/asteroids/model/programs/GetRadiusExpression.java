@@ -1,5 +1,7 @@
 package asteroids.model.programs;
 
+import java.util.List;
+
 import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -19,6 +21,12 @@ public class GetRadiusExpression extends Expression<Double> {
 	}
 
 	@Override
+	public Double evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return e.evaluate(actualArgs).getRadius();
+	}
+
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		e.setProgram(program);
@@ -27,11 +35,6 @@ public class GetRadiusExpression extends Expression<Double> {
 	@Override
 	public String toString() {
 		return "[GetRadiusExpression: " + e.toString() + "]";
-	}
-
-	@Override
-	public void setFunction(Function function) {
-		e.setFunction(function);
 	}
 
 }

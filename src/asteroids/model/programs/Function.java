@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import asteroids.model.Program;
@@ -21,15 +22,18 @@ public class Function {
 			SourceLocation sourceLocation) {
 		this.name = functionName;
 		this.body = body;
-		body.setFunction(this);
 		this.sourceLocation = sourceLocation;
 	}
 	
 	public Object evaluate(List<Expression> actualArgs){
 		variables = new HashSet<Variable>();
 		this.actualArgs = actualArgs;
-		body.execute();
-		return null;
+		try{
+			return body.execute(actualArgs).get();
+		} catch (NoSuchElementException e) {
+			throw new IllegalArgumentException("Functions need a return statement");
+		}
+		
 	}
 
 	public void setProgram(Program program) {

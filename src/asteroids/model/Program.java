@@ -93,9 +93,9 @@ public class Program {
 		return new HashSet<Variable>(variables);
 	}
 
-	public Function getFunction(String functionName) {
+	public Function getFunction(String functionName) throws NoSuchElementException {
 		// TODO Auto-generated method stub
-		return this.functions.stream().filter(function -> function.getName().equals(functionName)).findFirst().get();
+		return this.functions.stream().filter(function -> function.getName().equals(functionName)).reduce((first, second) -> second).get();
 	}
 
 }

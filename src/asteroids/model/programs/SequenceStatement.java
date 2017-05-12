@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import java.util.List;
+import java.util.Optional;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -10,7 +11,6 @@ public class SequenceStatement extends Statement {
 	private List<Statement> statements;
 	private boolean hasActiveBreakStatement;
 	private boolean failedToAdvanceTime;
-	private Function function;
 
 	public SequenceStatement(List<Statement> statements,
 			SourceLocation sourceLocation) {
@@ -26,7 +26,7 @@ public class SequenceStatement extends Statement {
 		for(int i = 0; i < statements.size(); i++) {
 			Statement statement = statements.get(i);
 			SourceLocation nextStatementLocation = (i == statements.size()-1) ? null : statements.get(i+1).getSourceLocation();
-			if(this.getFunction() != null|| i == statements.size()-1 || nextStatementLocation.getLine()> location.getLine()||(nextStatementLocation.getLine()==location.getLine()&&nextStatementLocation.getColumn()>location.getColumn())){
+			if(i == statements.size()-1 || nextStatementLocation.getLine()> location.getLine()||(nextStatementLocation.getLine()==location.getLine()&&nextStatementLocation.getColumn()>location.getColumn())){
 				statement.execute();
 				if(statement.failedToAdvanceTime()){
 					failedToAdvanceTime = true;
@@ -39,10 +39,20 @@ public class SequenceStatement extends Statement {
 			}
 		}
 	}
-	
-	private Function getFunction() {
-		// TODO Auto-generated method stub
-		return function;
+
+	@Override
+	public Optional execute(List<Expression> actualArgs) {
+		hasActiveBreakStatement = false;
+		for(int i = 0; i < statements.size(); i++) {
+			Statement statement = statements.get(i);
+			Optional result = statement.execute(actualArgs);
+			if (result.isPresent()) return result;
+			if (statement instanceof BreakStatement) {
+				hasActiveBreakStatement = true;
+				return Optional.empty();
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override
@@ -59,12 +69,6 @@ public class SequenceStatement extends Statement {
 	@Override
 	public boolean hasActiveBreakStatement() {
 		return hasActiveBreakStatement;
-	}
-	
-	@Override
-	public void setFunction(Function function) {
-		this.function = function;
-		for(Statement statement : statements) statement.setFunction(function);
 	}
 
 	@Override

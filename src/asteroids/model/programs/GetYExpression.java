@@ -1,5 +1,7 @@
 package asteroids.model.programs;
 
+import java.util.List;
+
 import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -19,6 +21,11 @@ public class GetYExpression extends Expression<Double> {
 	}
 
 	@Override
+	public Double evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
+		return e.evaluate(actualArgs).getPosition()[1];
+	}
+
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		e.setProgram(program);
@@ -27,11 +34,6 @@ public class GetYExpression extends Expression<Double> {
 	@Override
 	public String toString() {
 		return "[GetVXExpression: " + e.toString() + "]";
-	}
-
-	@Override
-	public void setFunction(Function function) {
-		e.setFunction(function);
 	}
 
 }

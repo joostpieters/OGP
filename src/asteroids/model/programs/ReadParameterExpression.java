@@ -1,9 +1,11 @@
 package asteroids.model.programs;
 
+import java.util.List;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class ReadParameterExpression extends Expression {
+public class ReadParameterExpression extends Expression<Object> {
 
 	private String parameterName;
 	private Function function;
@@ -18,17 +20,18 @@ public class ReadParameterExpression extends Expression {
 	@Override
 	public Object evaluate() {
 		// TODO Auto-generated method stub
-		return null;
+		throw new IllegalArgumentException("Read parameter expression can only be used inside function bodies");
+	}
+
+	@Override
+	public Object evaluate(List<Expression> actualArgs) throws IndexOutOfBoundsException {
+		int argIndex = Integer.parseInt(parameterName.substring(1, parameterName.length()));
+		return actualArgs.get(argIndex).evaluate();
 	}
 
 	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
-	}
-	
-	@Override
-	public void setFunction(Function function) {
-		this.function = function;
 	}
 
 	@Override

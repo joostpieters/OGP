@@ -1,5 +1,8 @@
 package asteroids.model.programs;
 
+import java.util.List;
+import java.util.Optional;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
@@ -49,6 +52,25 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
+	public Optional execute(List<Expression> actualArgs) {
+		failedToAdvanceTime = false;
+		if(!executingIfBody && !executingElseBody){
+			if (condition.evaluate(actualArgs)) executingIfBody = true;
+			else {
+				if (elseBody == null) return Optional.empty();
+				executingElseBody = true;
+			}
+		}
+		if(executingIfBody) {
+			return ifBody.execute(actualArgs);
+		}
+		if(executingElseBody) {
+			return elseBody.execute(actualArgs);
+		}
+		return Optional.empty();
+	}
+
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		condition.setProgram(program);
@@ -63,13 +85,6 @@ public class IfStatement extends Statement {
 
 	private void setFailedToAdvanceTime(boolean b) {
 		failedToAdvanceTime = b;
-	}
-
-	@Override
-	public void setFunction(Function function) throws IllegalArgumentException {
-		condition.setFunction(function);
-		ifBody.setFunction(function);
-		if(elseBody != null) elseBody.setFunction(function);
 	}
 
 	@Override

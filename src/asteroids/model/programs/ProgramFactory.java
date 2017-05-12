@@ -3,13 +3,7 @@ package asteroids.model.programs;
 import java.util.List;
 import java.util.Optional;
 
-import asteroids.model.Asteroid;
-import asteroids.model.Bullet;
-import asteroids.model.Entity;
-import asteroids.model.MinorPlanet;
-import asteroids.model.Planetoid;
-import asteroids.model.Program;
-import asteroids.model.Ship;
+import asteroids.model.*;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
@@ -63,6 +57,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	}
 
 	@Override
+	
 	public Statement createPrintStatement(Expression value,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub

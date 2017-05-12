@@ -1,11 +1,13 @@
 package asteroids.model.programs;
 
+import java.util.List;
+import java.util.Optional;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class ReturnStatement extends Statement {
 	private Expression value;
-	private Function function;
 
 	public ReturnStatement(Expression value, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
@@ -15,8 +17,7 @@ public class ReturnStatement extends Statement {
 
 	@Override
 	public void execute() {
-		if (function == null) throw new IllegalArgumentException();
-		// TODO Auto-generated method stub
+		throw new IllegalArgumentException();
 		
 	}
 	
@@ -31,9 +32,8 @@ public class ReturnStatement extends Statement {
 	}
 
 	@Override
-	public void setFunction(Function function) throws IllegalArgumentException {
-		this.function = function;
-		value.setFunction(function);
+	public Optional execute(List<Expression> actualArgs) {
+		return Optional.of(value);
 	}
 
 }

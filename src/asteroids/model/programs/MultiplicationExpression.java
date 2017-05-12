@@ -1,5 +1,7 @@
 package asteroids.model.programs;
 
+import java.util.List;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
@@ -21,16 +23,15 @@ public class MultiplicationExpression extends Expression<Double> {
 	}
 
 	@Override
+	public Double evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
+		return e1.evaluate(actualArgs) * e2.evaluate(actualArgs);
+	}
+
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		e1.setProgram(program);
 		e2.setProgram(program);
-	}
-	
-	@Override
-	public void setFunction(Function function) throws IllegalArgumentException {
-		e1.setFunction(function);
-		e2.setFunction(function);
 	}
 	
 	@Override

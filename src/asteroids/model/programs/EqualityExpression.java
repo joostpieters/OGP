@@ -1,5 +1,7 @@
 package asteroids.model.programs;
 
+import java.util.List;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
@@ -22,16 +24,16 @@ public class EqualityExpression extends Expression<Boolean> {
 	}
 
 	@Override
+	public Boolean evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
+		Object e1Evaluated = e1.evaluate(actualArgs);Object e2Evaluated = e2.evaluate(actualArgs);
+		return e1Evaluated.equals(e2Evaluated);
+	}
+
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		e1.setProgram(program);
 		e2.setProgram(program);
-	}
-	
-	@Override
-	public void setFunction(Function function) {
-		e1.setFunction(function);
-		e2.setFunction(function);
 	}
 
 	@Override

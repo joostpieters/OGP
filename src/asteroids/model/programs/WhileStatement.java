@@ -1,5 +1,8 @@
 package asteroids.model.programs;
 
+import java.util.List;
+import java.util.Optional;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
@@ -41,6 +44,25 @@ public class WhileStatement extends Statement {
 		}
 		executingBody = false;
 	}
+	
+	@Override
+	public Optional execute(List<Expression> actualArgs) {
+		// TODO Auto-generated method stub
+		failedToAdvanceTime = false;
+		if(!executingBody){
+			if(condition.evaluate(actualArgs)) executingBody = true;
+			else return Optional.empty();
+		}
+		Optional result = body.execute(actualArgs);
+		if (result.isPresent()) return result;
+		while (condition.evaluate(actualArgs) && !body.hasActiveBreakStatement()){
+			getProgram().setCurrentLocation(this.getSourceLocation());
+			result = body.execute(actualArgs);
+			if(result.isPresent()) return result;
+		}
+		executingBody = false;
+		return Optional.empty();
+	}
 
 	@Override
 	public void setProgram(Program program) {
@@ -52,12 +74,6 @@ public class WhileStatement extends Statement {
 	@Override
 	public boolean failedToAdvanceTime() {
 		return failedToAdvanceTime;
-	}
-
-	@Override
-	public void setFunction(Function function) throws IllegalArgumentException {
-		condition.setFunction(function);
-		body.setFunction(function);
 	}
 	
 	@Override

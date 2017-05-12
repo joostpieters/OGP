@@ -1,11 +1,12 @@
 package asteroids.model.programs;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class ReadVariableExpression extends Expression {
+public class ReadVariableExpression extends Expression<Object> {
 
 	private String variableName;
 	
@@ -25,25 +26,15 @@ public class ReadVariableExpression extends Expression {
 	public String toString() {
 		return "[ReadVariableExpression: " + variableName + "]";
 	}
-	
-	public Function getFunction() {
-		return function;
-	}
-
-	@Override
-	public void setFunction(Function function) {
-		this.function = function;
-	}
-
-	private Function function;
 
 	@Override
 	public Object evaluate() {
 		// TODO Auto-generated method stub
-		try{
-			if (getFunction() != null) return getFunction().getVariable(variableName);
-		} catch (NoSuchElementException e){}
 		return getProgram().getVariable(variableName);
+	}
+	
+	public Object evaluate(List<Expression> actualArgs){
+		
 	}
 
 }

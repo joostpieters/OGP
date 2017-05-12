@@ -1,5 +1,7 @@
 package asteroids.model.programs;
 
+import java.util.List;
+
 import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -15,8 +17,8 @@ public abstract class EntityExpression extends Expression<Entity> {
 		 super.setProgram(program);
 	}
 	
-	public void setFunction(Function function) {
-		
+	public Entity evaluate(List<Expression> actualArgs){
+		return evaluate();
 	}
 
 }

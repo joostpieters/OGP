@@ -1,5 +1,8 @@
 package asteroids.model.programs;
 
+import java.util.List;
+import java.util.Optional;
+
 import asteroids.part3.programs.SourceLocation;
 
 public abstract class ActionStatement extends Statement {
@@ -19,7 +22,8 @@ public abstract class ActionStatement extends Statement {
 		return failedToAdvanceTime;
 	}
 	
-	public void setFunction(Function function) throws IllegalArgumentException {
-		throw new IllegalArgumentException("Action statements can't be contained in a function body");
+	@Override
+	public Optional execute(List<Expression> actualArgs){
+		throw new IllegalArgumentException("Action statements cannot occur in function bodies");
 	}
 }

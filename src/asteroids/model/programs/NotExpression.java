@@ -1,5 +1,7 @@
 package asteroids.model.programs;
 
+import java.util.List;
+
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
@@ -18,14 +20,14 @@ public class NotExpression extends Expression<Boolean> {
 	}
 
 	@Override
+	public Boolean evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
+		return !e.evaluate(actualArgs);
+	}
+
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		e.setProgram(program);
-	}
-	
-	@Override
-	public void setFunction(Function function) {
-		e.setFunction(function);
 	}
 	
 	@Override
