@@ -10,6 +10,7 @@ import asteroids.part3.programs.SourceLocation;
 public class AssignmentStatement<T> extends Statement {
 	private Expression<T> value;
 	private String variableName;
+	private boolean hasActiveBreakStatement;
 
 	public AssignmentStatement(String variableName, Expression<T> value,
 			SourceLocation sourceLocation) {
@@ -21,6 +22,7 @@ public class AssignmentStatement<T> extends Statement {
 
 	@Override
 	public void execute() {
+		setHasActiveBreakStatement(false);
 		try{
 			getProgram().getFunction(variableName);
 			throw new IllegalArgumentException("A function has the same name as this global variable");
@@ -28,8 +30,17 @@ public class AssignmentStatement<T> extends Statement {
 		Optional<Variable> variableToAssignTo = getProgram().getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate());
 		else getProgram().addVariable(new Variable<T>(variableName, value.evaluate()));
+		if (value instanceof FunctionCallExpression && ((FunctionCallExpression)value).hasActiveBreakStatement()) setHasActiveBreakStatement(true);
 	}
 	
+	private void setHasActiveBreakStatement(boolean b) {
+		this.hasActiveBreakStatement = b;
+	}
+	
+	public boolean hasActiveBreakStatement(){
+		return hasActiveBreakStatement;
+	}
+
 	public Optional execute(List<Expression> actualArgs){
 		Optional<Variable> variableToAssignTo = getFunction().getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate());

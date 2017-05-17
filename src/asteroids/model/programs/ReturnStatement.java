@@ -24,6 +24,7 @@ public class ReturnStatement extends Statement {
 	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
+		value.setProgram(program);
 	}
 	
 	@Override
@@ -33,7 +34,7 @@ public class ReturnStatement extends Statement {
 
 	@Override
 	public Optional execute(List<Expression> actualArgs) {
-		return Optional.of(value);
+		return Optional.of(value.evaluate(actualArgs));
 	}
 
 }

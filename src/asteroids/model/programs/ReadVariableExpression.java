@@ -34,7 +34,8 @@ public class ReadVariableExpression extends Expression<Object> {
 	}
 	
 	public Object evaluate(List<Expression> actualArgs){
-		
+		//TODO implement local variables
+		return getProgram().getVariable(variableName);
 	}
 
 }

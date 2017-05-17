@@ -32,7 +32,7 @@ public class SequenceStatement extends Statement {
 					failedToAdvanceTime = true;
 					return;
 				}
-				if(statement instanceof BreakStatement) {
+				if(statement.hasActiveBreakStatement()) {
 					hasActiveBreakStatement = true;
 					return;
 				}
@@ -46,8 +46,11 @@ public class SequenceStatement extends Statement {
 		for(int i = 0; i < statements.size(); i++) {
 			Statement statement = statements.get(i);
 			Optional result = statement.execute(actualArgs);
-			if (result.isPresent()) return result;
-			if (statement instanceof BreakStatement) {
+			if (result.isPresent()) {
+				if (statement.hasActiveBreakStatement()) hasActiveBreakStatement = true;
+				return result;
+			}
+			if (statement.hasActiveBreakStatement()) {
 				hasActiveBreakStatement = true;
 				return Optional.empty();
 			}

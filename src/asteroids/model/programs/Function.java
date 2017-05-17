@@ -16,7 +16,7 @@ public class Function {
 	private SourceLocation sourceLocation;
 	private Program program;
 	private Set<Variable> variables = new HashSet<Variable>();
-	private List<Expression> actualArgs = new ArrayList<Expression>();
+	private boolean hasActiveBreakStatement;
 
 	public Function(String functionName, Statement body,
 			SourceLocation sourceLocation) {
@@ -27,13 +27,22 @@ public class Function {
 	
 	public Object evaluate(List<Expression> actualArgs){
 		variables = new HashSet<Variable>();
-		this.actualArgs = actualArgs;
+		setHasActiveBreakStatement(false);
 		try{
-			return body.execute(actualArgs).get();
+			Optional result = body.execute(actualArgs);
+			if (body.hasActiveBreakStatement()) {
+				setHasActiveBreakStatement(true);
+				return null;
+			}
+			else setHasActiveBreakStatement(false);
+			return result.get();
 		} catch (NoSuchElementException e) {
 			throw new IllegalArgumentException("Functions need a return statement");
 		}
-		
+	}
+
+	private void setHasActiveBreakStatement(boolean b) {
+		hasActiveBreakStatement = b;
 	}
 
 	public void setProgram(Program program) {
@@ -57,6 +66,11 @@ public class Function {
 	public String getName() {
 		// TODO Auto-generated method stub
 		return name;
+	}
+
+	public boolean hasActiveBreakStatement() {
+		// TODO Auto-generated method stub
+		return hasActiveBreakStatement;
 	}
 
 }

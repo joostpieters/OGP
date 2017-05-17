@@ -37,7 +37,8 @@ public class Program {
 		main.execute();
 		if (!main.failedToAdvanceTime()) {
 			currentLocation = new SourceLocation(0, 0);
-			List<Object> resultsToThrow = results; results = null;
+			List<Object> resultsToThrow = results; 
+			results = null;
 			return resultsToThrow;
 		}
 		return null;

@@ -8,9 +8,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.event.ListSelectionEvent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -1955,6 +1958,7 @@ public class Part3TestFull {
       facade.loadProgramOnShip(ship1, program);
       List<Object> results = facade.executeProgram(ship1, 1.0);
       Object[] expecteds = { 10.0, 12.0, 14.0, 16.0, 0.0 };
+      System.out.println(results.toString());
       assertArrayEquals(expecteds, results.toArray());
       score += 16;
     }

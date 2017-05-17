@@ -13,6 +13,7 @@ public class IfStatement extends Statement {
 	private boolean executingIfBody;
 	private boolean executingElseBody;
 	private boolean failedToAdvanceTime;
+	private boolean hasActiveBreakStatement;
 
 	public IfStatement(Expression<? extends Boolean> condition, Statement ifBody,
 			Statement elseBody, SourceLocation sourceLocation) {
@@ -27,6 +28,7 @@ public class IfStatement extends Statement {
 	public void execute() {
 		// TODO Auto-generated method stub
 		failedToAdvanceTime = false;
+		setHasActiveBreakStatement(false);
 		if(!executingIfBody && !executingElseBody){
 			if (condition.evaluate()) executingIfBody = true;
 			else {
@@ -39,20 +41,29 @@ public class IfStatement extends Statement {
 			if (ifBody.failedToAdvanceTime()) {
 				setFailedToAdvanceTime(true);
 				return;
-			} else executingIfBody = false;
+			} else {
+				if(ifBody.hasActiveBreakStatement()) setHasActiveBreakStatement(true);
+				else setHasActiveBreakStatement(false);
+				executingIfBody = false;
+			}
 		}
 		if(executingElseBody) {
 			elseBody.execute();
 			if (elseBody.failedToAdvanceTime()) {
 				setFailedToAdvanceTime(true);
 				return;
-			} else executingElseBody = false;
+			} else {
+				if(elseBody.hasActiveBreakStatement()) setHasActiveBreakStatement(true);
+				else setHasActiveBreakStatement(false);
+				executingElseBody = false;
+			}
 		}
 		return;
 	}
 
 	@Override
 	public Optional execute(List<Expression> actualArgs) {
+		setHasActiveBreakStatement(false);
 		failedToAdvanceTime = false;
 		if(!executingIfBody && !executingElseBody){
 			if (condition.evaluate(actualArgs)) executingIfBody = true;
@@ -62,10 +73,16 @@ public class IfStatement extends Statement {
 			}
 		}
 		if(executingIfBody) {
-			return ifBody.execute(actualArgs);
+			Optional result = ifBody.execute(actualArgs);
+			if(ifBody.hasActiveBreakStatement()) setHasActiveBreakStatement(true);
+			else setHasActiveBreakStatement(false);
+			return result;
 		}
 		if(executingElseBody) {
-			return elseBody.execute(actualArgs);
+			Optional result = elseBody.execute(actualArgs);
+			if(elseBody.hasActiveBreakStatement()) setHasActiveBreakStatement(true);
+			else setHasActiveBreakStatement(false);
+			return result;
 		}
 		return Optional.empty();
 	}
@@ -90,6 +107,15 @@ public class IfStatement extends Statement {
 	@Override
 	public String toString() {
 		return "[IfStatement: if " + condition + " then " + ifBody + " else " + elseBody + "]";
+	}
+
+	@Override
+	public boolean hasActiveBreakStatement() {
+		return hasActiveBreakStatement;
+	}
+
+	public void setHasActiveBreakStatement(boolean hasActiveBreakStatement) {
+		this.hasActiveBreakStatement = hasActiveBreakStatement;
 	}
 
 }

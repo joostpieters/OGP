@@ -56,7 +56,6 @@ public class WhileStatement extends Statement {
 		Optional result = body.execute(actualArgs);
 		if (result.isPresent()) return result;
 		while (condition.evaluate(actualArgs) && !body.hasActiveBreakStatement()){
-			getProgram().setCurrentLocation(this.getSourceLocation());
 			result = body.execute(actualArgs);
 			if(result.isPresent()) return result;
 		}
