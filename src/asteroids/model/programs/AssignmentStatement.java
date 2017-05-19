@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -43,10 +42,11 @@ public class AssignmentStatement<T> extends Statement {
 	}
 
 	@Override
-	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables){
+	public Optional execute(Object[] actualArgs, Set<Variable> localVariables){
 		Optional<Variable> variableToAssignTo = localVariables.stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
-		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate());
-		else localVariables.add(new Variable<T>(variableName, value.evaluate()));
+		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate(actualArgs, localVariables));
+		else localVariables.add(new Variable<T>(variableName, value.evaluate(actualArgs, localVariables)));
+		if (value instanceof FunctionCallExpression && ((FunctionCallExpression)value).hasActiveBreakStatement()) setHasActiveBreakStatement(true);
 		return Optional.empty();
 	}
 	

@@ -43,7 +43,7 @@ public class SequenceStatement extends Statement {
 	}
 
 	@Override
-	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables) {
+	public Optional execute(Object[] actualArgs, Set<Variable> localVariables) {
 		hasActiveBreakStatement = false;
 		for(int i = 0; i < statements.size(); i++) {
 			Statement statement = statements.get(i);

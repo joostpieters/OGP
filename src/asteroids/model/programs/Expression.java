@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Set;
 
 import asteroids.model.Program;
@@ -16,7 +15,7 @@ public abstract class Expression<T> {
 
 	public abstract T evaluate() throws IllegalArgumentException;
 	
-	public abstract T evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException;
+	public abstract T evaluate(Object[] actualArgs, Set<Variable> localVariables) throws IllegalArgumentException;
 
 	public void setProgram(Program program){
 		this.program = program;

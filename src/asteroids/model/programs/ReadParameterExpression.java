@@ -25,9 +25,10 @@ public class ReadParameterExpression extends Expression<Object> {
 	}
 
 	@Override
-	public Object evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IndexOutOfBoundsException {
+	public Object evaluate(Object[] actualArgs, Set<Variable> localVariables) throws IndexOutOfBoundsException {
 		int argIndex = Integer.parseInt(parameterName.substring(1, parameterName.length()));
-		return actualArgs.get(argIndex-1).evaluate();
+		System.out.println(actualArgs[argIndex-1]);
+		return actualArgs[argIndex-1];
 	}
 
 	@Override

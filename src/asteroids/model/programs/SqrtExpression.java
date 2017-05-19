@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Set;
 
 import asteroids.model.Program;
@@ -21,7 +20,7 @@ public class SqrtExpression extends Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
+	public Double evaluate(Object[] actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
 		return Math.sqrt(e.evaluate(actualArgs, localVariables));
 	}
 

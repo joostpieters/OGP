@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Set;
 
 import asteroids.model.Program;
@@ -21,7 +20,7 @@ public class DoubleLiteralExpression extends Expression<Double> {
 	}
 	
 	@Override
-	public Double evaluate(List<Expression> actualArgs, Set<Variable> localVariables){
+	public Double evaluate(Object[] actualArgs, Set<Variable> localVariables){
 		return value;
 	}
 

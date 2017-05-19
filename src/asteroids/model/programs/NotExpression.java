@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Set;
 
 import asteroids.model.Program;
@@ -21,7 +20,7 @@ public class NotExpression extends Expression<Boolean> {
 	}
 
 	@Override
-	public Boolean evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
+	public Boolean evaluate(Object[] actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
 		return !e.evaluate(actualArgs, localVariables);
 	}
 

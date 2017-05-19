@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,7 +33,7 @@ public class ReturnStatement extends Statement {
 	}
 
 	@Override
-	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables) {
+	public Optional execute(Object[] actualArgs, Set<Variable> localVariables) {
 		return Optional.of(value.evaluate(actualArgs, localVariables));
 	}
 

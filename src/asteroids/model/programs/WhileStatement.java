@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -47,13 +46,11 @@ public class WhileStatement extends Statement {
 	}
 	
 	@Override
-	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables) {
+	public Optional execute(Object[] actualArgs, Set<Variable> localVariables) {
 		// TODO Auto-generated method stub
 		failedToAdvanceTime = false;
-		if(!executingBody){
-			if(condition.evaluate(actualArgs, localVariables)) executingBody = true;
-			else return Optional.empty();
-		}
+		if(condition.evaluate(actualArgs, localVariables)) executingBody = true;
+		else return Optional.empty();
 		Optional result = body.execute(actualArgs, localVariables);
 		if (result.isPresent()) return result;
 		while (condition.evaluate(actualArgs, localVariables) && !body.hasActiveBreakStatement()){

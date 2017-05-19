@@ -32,10 +32,11 @@ public class Program {
 		System.out.println(main.toString());
 	}
 	
-	public List<Object> execute(double dt) {
+	public List<Object> execute(double dt) throws IllegalArgumentException {
 		timeLeftToExecute = timeLeftToExecute + dt;
 		main.execute();
 		if (!main.failedToAdvanceTime()) {
+			if(main.hasActiveBreakStatement()) throw new IllegalArgumentException("Break statements cannot occur outside function bodies");
 			currentLocation = new SourceLocation(0, 0);
 			List<Object> resultsToThrow = results; 
 			results = null;

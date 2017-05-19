@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,6 +17,8 @@ public abstract class Statement {
 	}
 
 	public abstract void execute();
+
+	public abstract Optional execute(Object[] actualArgs, Set<Variable> localVariables) ;
 
 	public void setProgram(Program program){
 		this.program = program;
@@ -40,6 +41,4 @@ public abstract class Statement {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	public abstract Optional execute(List<Expression> actualArgs, Set<Variable> localVariables) ;
 }

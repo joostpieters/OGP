@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Set;
 
 import asteroids.model.Entity;
@@ -20,7 +19,7 @@ public abstract class EntityExpression extends Expression<Entity> {
 	}
 	
 	@Override
-	public Entity evaluate(List<Expression> actualArgs, Set<Variable> localVariables){
+	public Entity evaluate(Object[] actualArgs, Set<Variable> localVariables){
 		return evaluate();
 	}
 

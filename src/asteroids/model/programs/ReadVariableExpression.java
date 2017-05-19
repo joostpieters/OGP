@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -35,7 +34,7 @@ public class ReadVariableExpression extends Expression<Object> {
 		return getProgram().getVariable(variableName).getValue();
 	}
 	
-	public Object evaluate(List<Expression> actualArgs, Set<Variable> localVariables){
+	public Object evaluate(Object[] actualArgs, Set<Variable> localVariables){
 		//TODO implement local variables
 		Optional<Variable> localVariable = localVariables.stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(localVariable.isPresent()) return localVariable.get().getValue();

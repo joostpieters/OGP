@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Set;
 
 import asteroids.model.Program;
@@ -20,7 +19,7 @@ public class GetDirectionExpression extends Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
+	public Double evaluate(Object[] actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return getProgram().getShip().getOrientation();
 	}

@@ -1,6 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -63,15 +62,13 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables) {
+	public Optional execute(Object[] actualArgs, Set<Variable> localVariables) {
 		setHasActiveBreakStatement(false);
 		failedToAdvanceTime = false;
-		if(!executingIfBody && !executingElseBody){
-			if (condition.evaluate(actualArgs, localVariables)) executingIfBody = true;
-			else {
-				if (elseBody == null) return Optional.empty();
-				executingElseBody = true;
-			}
+		if (condition.evaluate(actualArgs, localVariables)) executingIfBody = true;
+		else {
+			if (elseBody == null) return Optional.empty();
+			executingElseBody = true;
 		}
 		if(executingIfBody) {
 			Optional result = ifBody.execute(actualArgs, localVariables);

@@ -24,7 +24,7 @@ public class Function {
 		this.sourceLocation = sourceLocation;
 	}
 	
-	public Object evaluate(List<Expression> actualArgs){
+	public Object evaluate(Object[] actualArgs){
 		setHasActiveBreakStatement(false);
 		Set<Variable> localVariables = new HashSet<Variable>();
 		try{

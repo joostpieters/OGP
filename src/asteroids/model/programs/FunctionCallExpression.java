@@ -22,18 +22,20 @@ public class FunctionCallExpression extends Expression<Object> {
 	public Object evaluate() {
 		// TODO Auto-generated method stub
 		Function function =  getProgram().getFunction(functionName);
-		Object result = function.evaluate(actualArgs);
+		Object[] actualArgsEvaluated = actualArgs.stream().map(arg -> arg.evaluate()).toArray();
+		Object result = function.evaluate(actualArgsEvaluated);
 		if (function.hasActiveBreakStatement()) setHasActiveBreakStatement(true);
 		else setHasActiveBreakStatement(false);
 		return result;
 	}
 
 	@Override
-	public Object evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
+	public Object evaluate(Object[] actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
 		setHasActiveBreakStatement(false);
 		// TODO Auto-generated method stub
 		Function function =  getProgram().getFunction(functionName);
-		Object result = function.evaluate(this.actualArgs);
+		Object[] actualArgsEvaluated = this.actualArgs.stream().map(arg -> arg.evaluate(actualArgs, localVariables)).toArray();
+		Object result = function.evaluate(actualArgsEvaluated);
 		if (function.hasActiveBreakStatement()) {
 			setHasActiveBreakStatement(true);
 		}

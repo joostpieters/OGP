@@ -13,7 +13,7 @@ public class Part3 {
 	public static void main(String[] args) throws FileNotFoundException {
 		boolean tryFullscreen = false;
 		boolean enableSound = true;
-		URL aiProgramUrl = ResourceUtils.toURL("asteroids/resources/programs/program.txt");
+		URL aiProgramUrl = ResourceUtils.toURL("asteroids/resources/programs/program_assignment.txt");
 		for (int i = 0; i < args.length; i++) {
 			String arg = args[i];
 			if (arg.equals("-fullscreen")) {
