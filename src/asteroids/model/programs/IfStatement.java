@@ -2,6 +2,7 @@ package asteroids.model.programs;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -62,24 +63,24 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public Optional execute(List<Expression> actualArgs) {
+	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables) {
 		setHasActiveBreakStatement(false);
 		failedToAdvanceTime = false;
 		if(!executingIfBody && !executingElseBody){
-			if (condition.evaluate(actualArgs)) executingIfBody = true;
+			if (condition.evaluate(actualArgs, localVariables)) executingIfBody = true;
 			else {
 				if (elseBody == null) return Optional.empty();
 				executingElseBody = true;
 			}
 		}
 		if(executingIfBody) {
-			Optional result = ifBody.execute(actualArgs);
+			Optional result = ifBody.execute(actualArgs, localVariables);
 			if(ifBody.hasActiveBreakStatement()) setHasActiveBreakStatement(true);
 			else setHasActiveBreakStatement(false);
 			return result;
 		}
 		if(executingElseBody) {
-			Optional result = elseBody.execute(actualArgs);
+			Optional result = elseBody.execute(actualArgs, localVariables);
 			if(elseBody.hasActiveBreakStatement()) setHasActiveBreakStatement(true);
 			else setHasActiveBreakStatement(false);
 			return result;

@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import java.util.List;
+import java.util.Set;
 
 import asteroids.model.Entity;
 import asteroids.model.Program;
@@ -13,11 +14,13 @@ public abstract class EntityExpression extends Expression<Entity> {
 		super(location);
 	}
 	
+	@Override
 	public void setProgram(Program program) {
 		 super.setProgram(program);
 	}
 	
-	public Entity evaluate(List<Expression> actualArgs){
+	@Override
+	public Entity evaluate(List<Expression> actualArgs, Set<Variable> localVariables){
 		return evaluate();
 	}
 

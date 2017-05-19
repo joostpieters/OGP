@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import java.util.List;
+import java.util.Set;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -20,8 +21,8 @@ public class ChangeSignExpression extends Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
-		return -e.evaluate(actualArgs);
+	public Double evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
+		return -e.evaluate(actualArgs, localVariables);
 	}
 
 	@Override
@@ -30,6 +31,7 @@ public class ChangeSignExpression extends Expression<Double> {
 		e.setProgram(program);
 	}
 	
+	@Override
 	public String toString() {
 		return "[ChangeSignExpression: " + e + "]";
 	}

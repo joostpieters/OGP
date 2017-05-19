@@ -15,7 +15,6 @@ public class Function {
 	private Statement body;
 	private SourceLocation sourceLocation;
 	private Program program;
-	private Set<Variable> variables = new HashSet<Variable>();
 	private boolean hasActiveBreakStatement;
 
 	public Function(String functionName, Statement body,
@@ -26,10 +25,10 @@ public class Function {
 	}
 	
 	public Object evaluate(List<Expression> actualArgs){
-		variables = new HashSet<Variable>();
 		setHasActiveBreakStatement(false);
+		Set<Variable> localVariables = new HashSet<Variable>();
 		try{
-			Optional result = body.execute(actualArgs);
+			Optional result = body.execute(actualArgs,localVariables);
 			if (body.hasActiveBreakStatement()) {
 				setHasActiveBreakStatement(true);
 				return null;
@@ -48,19 +47,6 @@ public class Function {
 	public void setProgram(Program program) {
 		this.program = program;
 		body.setProgram(program);
-	}
-	
-	public Set<Variable> getVariables() {
-		return new HashSet<Variable>(variables);
-	}
-	
-	public void addVariable(Variable variable) {
-		variables.add(variable);
-	}
-
-	public Object getVariable(String variableName) throws NoSuchElementException {
-		// TODO Auto-generated method stub
-		return getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst().get().getValue();
 	}
 
 	public String getName() {

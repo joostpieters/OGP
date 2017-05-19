@@ -2,6 +2,7 @@ package asteroids.model.programs;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -24,7 +25,7 @@ public class PrintStatement extends Statement {
 	}
 	
 	@Override
-	public Optional execute(List<Expression> actualArgs) {
+	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables) {
 		throw new IllegalArgumentException("Print statements can't occur in the body of functions.");
 	}
 

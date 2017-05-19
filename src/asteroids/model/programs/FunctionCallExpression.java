@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import java.util.List;
+import java.util.Set;
 
 import asteroids.part3.programs.SourceLocation;
 
@@ -28,7 +29,7 @@ public class FunctionCallExpression extends Expression<Object> {
 	}
 
 	@Override
-	public Object evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
+	public Object evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
 		setHasActiveBreakStatement(false);
 		// TODO Auto-generated method stub
 		Function function =  getProgram().getFunction(functionName);

@@ -3,6 +3,7 @@ package asteroids.model.programs;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -41,10 +42,12 @@ public class AssignmentStatement<T> extends Statement {
 		return hasActiveBreakStatement;
 	}
 
-	public Optional execute(List<Expression> actualArgs){
-		Optional<Variable> variableToAssignTo = getFunction().getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
+	@Override
+	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables){
+		Optional<Variable> variableToAssignTo = localVariables.stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate());
-		else getFunction().addVariable(new Variable<T>(variableName, value.evaluate()));
+		else localVariables.add(new Variable<T>(variableName, value.evaluate()));
+		return Optional.empty();
 	}
 	
 	public void setProgram(Program program) {

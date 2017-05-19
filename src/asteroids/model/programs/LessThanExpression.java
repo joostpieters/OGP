@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import java.util.List;
+import java.util.Set;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -23,8 +24,8 @@ public class LessThanExpression extends Expression<Boolean> {
 	}
 
 	@Override
-	public Boolean evaluate(List<Expression> actualArgs) {
-		return e1.evaluate(actualArgs) < e2.evaluate(actualArgs);
+	public Boolean evaluate(List<Expression> actualArgs, Set<Variable> localVariables) {
+		return e1.evaluate(actualArgs, localVariables) < e2.evaluate(actualArgs, localVariables);
 	}
 
 	@Override

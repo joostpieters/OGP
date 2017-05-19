@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import java.util.List;
+import java.util.Set;
 
 import asteroids.model.Entity;
 import asteroids.model.Program;
@@ -21,8 +22,8 @@ public class GetVXExpression extends Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
-		return e.evaluate(actualArgs).getVelocity()[0];
+	public Double evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
+		return e.evaluate(actualArgs, localVariables).getVelocity()[0];
 	}
 
 	@Override

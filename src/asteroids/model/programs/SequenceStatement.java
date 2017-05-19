@@ -2,6 +2,7 @@ package asteroids.model.programs;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -28,6 +29,7 @@ public class SequenceStatement extends Statement {
 			SourceLocation nextStatementLocation = (i == statements.size()-1) ? null : statements.get(i+1).getSourceLocation();
 			if(i == statements.size()-1 || nextStatementLocation.getLine()> location.getLine()||(nextStatementLocation.getLine()==location.getLine()&&nextStatementLocation.getColumn()>location.getColumn())){
 				statement.execute();
+				
 				if(statement.failedToAdvanceTime()){
 					failedToAdvanceTime = true;
 					return;
@@ -41,11 +43,11 @@ public class SequenceStatement extends Statement {
 	}
 
 	@Override
-	public Optional execute(List<Expression> actualArgs) {
+	public Optional execute(List<Expression> actualArgs, Set<Variable> localVariables) {
 		hasActiveBreakStatement = false;
 		for(int i = 0; i < statements.size(); i++) {
 			Statement statement = statements.get(i);
-			Optional result = statement.execute(actualArgs);
+			Optional result = statement.execute(actualArgs, localVariables);
 			if (result.isPresent()) {
 				if (statement.hasActiveBreakStatement()) hasActiveBreakStatement = true;
 				return result;

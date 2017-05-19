@@ -59,9 +59,8 @@ public class Program {
 		return results;
 	}
 
-	public Object getVariable(String variableName) throws NoSuchElementException {
-		// TODO Auto-generated method stub
-		return getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst().get().getValue();
+	public Variable getVariable(String variableName) throws NoSuchElementException {
+		return getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst().get();
 	}
 	
 	public void addVariable(Variable variable){

@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import java.util.List;
+import java.util.Set;
 
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
@@ -24,8 +25,9 @@ public class EqualityExpression extends Expression<Boolean> {
 	}
 
 	@Override
-	public Boolean evaluate(List<Expression> actualArgs) throws IllegalArgumentException {
-		Object e1Evaluated = e1.evaluate(actualArgs);Object e2Evaluated = e2.evaluate(actualArgs);
+	public Boolean evaluate(List<Expression> actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
+		Object e1Evaluated = e1.evaluate(actualArgs, localVariables);
+		Object e2Evaluated = e2.evaluate(actualArgs, localVariables);
 		return e1Evaluated.equals(e2Evaluated);
 	}
 
