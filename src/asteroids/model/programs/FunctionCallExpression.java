@@ -3,6 +3,7 @@ package asteroids.model.programs;
 import java.util.List;
 import java.util.Set;
 
+import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class FunctionCallExpression extends Expression<Object> {
@@ -15,8 +16,7 @@ public class FunctionCallExpression extends Expression<Object> {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
 		this.functionName = functionName;
-		this.actualArgs = actualArgs;
-	}
+		this.actualArgs = actualArgs;	}
 
 	@Override
 	public Object evaluate() {
@@ -54,6 +54,12 @@ public class FunctionCallExpression extends Expression<Object> {
 	@Override
 	public String toString() {
 		return "[FunctionCallExpression: " + functionName + ": + " + actualArgs.toString() +"]";
+	}
+	
+	@Override
+	public void setProgram(Program program){
+		super.setProgram(program);
+		for (Expression arg: actualArgs) arg.setProgram(getProgram());
 	}
 
 }

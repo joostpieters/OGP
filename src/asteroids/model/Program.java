@@ -29,7 +29,6 @@ public class Program {
 		main.setProgram(this);
 		for(Function function: functions) function.setProgram(this);
 		timeLeftToExecute = 0;
-		System.out.println(main.toString());
 	}
 	
 	public List<Object> execute(double dt) throws IllegalArgumentException {

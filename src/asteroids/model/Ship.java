@@ -265,7 +265,8 @@ public class Ship extends Entity {
 		if (bullet.isTerminated()) return false;
 		if (bullet.getShip() != null && bullet.getShip() != this) return false;
 		if (bullet.getSource() != null && bullet.getSource() != this) return false;
-		return true;
+		if (bullet.getWorld() != null && bullet.getSource() == null) return false;
+		return bullet.isWithinBoundaries(this);
 	}
 
 	/**
@@ -354,6 +355,7 @@ public class Ship extends Entity {
 					
 				}
 			}
+			bullet.terminate();
 		}
 		double distanceToEdge = getWorld().getSize()[0] - bullet.getPosition()[0];
 		distanceToEdge = Math.min(distanceToEdge, bullet.getPosition()[0]);

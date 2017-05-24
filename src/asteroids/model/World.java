@@ -34,6 +34,14 @@ public class World {
 		this.width = width >= 0 ? (Double.isFinite(width) ? width : Double.MAX_VALUE) : 0;
 		this.height = height >= 0 ? (Double.isFinite(height) ? height : Double.MAX_VALUE) : 0;
 	}
+	
+	public double getWidth(){
+		return width;
+	}
+	
+	public double getHeight(){
+		return height;
+	}
 
 
 	/**
@@ -64,6 +72,11 @@ public class World {
 			if (entity.overlap(entity2))
 				return false;
 		}
+		if ((entity.getRadius() > entity.getPosition()[0] 
+				|| entity.getRadius() > entity.getPosition()[1]
+				|| getWidth() < entity.getPosition()[0] + entity.getRadius() 
+				|| getHeight() < entity.getPosition()[1] + entity.getRadius())){
+			return false;}
 		return true;
 	}
 	
@@ -89,12 +102,9 @@ public class World {
 	 * Add an entity to this world.
 	 */
 	public void addEntity(Entity entity) {
-		if (entity instanceof Bullet) addBullet((Bullet)entity);
-		else {
-			if(!canHaveAsEntity(entity)) throw new IllegalArgumentException("This world cannot have the given entity.");
-			entities.add(entity);
-			entity.setWorld(this);
-		}
+	if(!canHaveAsEntity(entity)) throw new IllegalArgumentException("This world cannot have the given entity.");
+	entities.add(entity);
+	entity.setWorld(this);
 	}
 	
 	/**
@@ -126,32 +136,6 @@ public class World {
 		if(entity == null || entity.getWorld() != this) throw new IllegalArgumentException();
 		entities.remove(entity);
 		entity.removeWorld();
-	}
-	
-	/**
-	 * Add the given bullet to this world.
-	 * @param bullet
-	 * 	      The given bullet
-	 * @Pre   The given bullet is valid.
-	 * @effect  The given bullet is added to this world.
-	 *        | bullet.setShip(this)
-	 * @throws IllegalArgumentException
-	 *        The given bullet is not part of this world
-	 *        | bullet.getWorld() != this
-	 */
-	public void addBullet(Bullet bullet) throws IllegalArgumentException {
-		if(!canHaveAsEntity(bullet)) throw new IllegalArgumentException("This world cannot have the given bullet as bullet.");
-		double[] position = bullet.getPosition();
-		double radius = bullet.getRadius();
-		double distance = position[0]-radius;
-		distance = Math.min(distance, this.getSize()[0]-position[0]-radius);
-		distance = Math.min(distance, position[1]-radius);
-		distance = Math.min(distance, this.getSize()[1]-position[1]-radius);
-		if(distance < 0) bullet.terminate();
-		else{
-			entities.add(bullet);
-			bullet.setWorld(this);
-		}
 	}
 	
 	/**

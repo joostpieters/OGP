@@ -459,6 +459,12 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 			public String toString() {
 				return "[TurnStatement: " + angle.toString() + "]";
 			}
+			
+			@Override
+			public void setProgram(Program program){
+				super.setProgram(program);
+				angle.setProgram(program);
+			}
 		};
 	}
 
