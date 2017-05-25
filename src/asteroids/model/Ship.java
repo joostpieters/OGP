@@ -32,16 +32,16 @@ public class Ship extends Entity {
 	 * @param  orientation
 	 *         The orientation of this new ship.
 	 * @post   The new position of the ship is equal to the given position.
-	 *         | new.getPosition().equals({x,y})
+	 *         | new.getPosition().equals(new OrderedPair(x,y))
 	 * @post   The new velocity of the ship is equal to the given velocity.
-	 *         | new.getVelocity().equals({xVelocity,yVelocity})
+	 *         | new.getVelocity().equals(new OrderedPair(xVelocity,yVelocity))
 	 * @post   The new radius of the ship is equal to the given radius.
 	 *         | new.getRadius() == radius
 	 * @post   The new orientation of the ship is equal to the given orientation.
 	 *         | new.getOrientation() == orientation
 	 * @throws IllegalArgumentException
 	 *         The given initial position or radius is not valid.
-	 *         | !isValidPosition({x,y})||!isValidRadius(radius)
+	 *         | !isValidPosition(new OrderedPair(x,y))||!isValidRadius(radius)
 	 */
 	public Ship(double x, double y, double xVelocity,
 			double yVelocity, double radius, double orientation, double mass) throws IllegalArgumentException {
@@ -123,7 +123,7 @@ public class Ship extends Entity {
 	/**
 	 * Return the mass of this ship.
 	 * @return Returns the mass of this ship type object with the loaded bullets
-	 *         | result == totalMass
+	 *         | result == getBullets().isEmpty() ? this.mass : this.mass + this.getBullets().stream().map(t -> t.getMass()).reduce((u, t) -> u + t).get();
 	 */
 	@Override
 	public double getMass(){
@@ -138,13 +138,12 @@ public class Ship extends Entity {
 	 * @post   The thrust is larger than 0. TODO: may need editing
 	 * 	       | if (amount < 0 || Double.isNaN(amount)) amount = 0
 	 * @effect The new velocity of the ship is set to the calculated velocity.
-	 *         | setVelocity({this.getVelocity()[0]+amount*Math.cos(this.getOrientation()),this.getVelocity()[1]+amount*Math.sin(this.getOrientation())});
+	 *         | setVelocity(getVelocity().sum(new OrderedPair(Math.cos(orientation),Math.sin(orientation)).multiply(amount)));
 	 */
 	public void thrust(double amount) {
 		if (amount < 0 || Double.isNaN(amount)) amount = 0;
-		OrderedPair velocity = getVelocity();
 		double orientation = getOrientation();
-		setVelocity(new OrderedPair(velocity.getX()+amount*Math.cos(orientation),velocity.getY()+amount*Math.sin(orientation)));
+		setVelocity(getVelocity().sum(new OrderedPair(Math.cos(orientation),Math.sin(orientation)).multiply(amount)));
 	}
 
 	/**
@@ -329,9 +328,9 @@ public class Ship extends Entity {
 	 * @effect The bullet is set in the world which contains this ship
 	 *         | this.getWorld().addBullet(bullet)
 	 * @effect The bullet has a new velocity set to the calculated velocity
-	 *         | bullet.setVelocity(new double[]{xVelocity, yVelocity})
+	 *         | bullet.setVelocity(new OrderedPair(xVelocity, yVelocity))
 	 * @effect The bullet has a new position set to the calculated position
-	 *         | bullet.setPosition(new double[]{xPosition, yPosition})
+	 *         | bullet.setPosition(new OrderedPair(xPosition, yPosition))
 	 * @throws NoSuchElementException
 	 *         The ship ran out of bullets
 	 */
@@ -374,12 +373,10 @@ public class Ship extends Entity {
 	 * 
 	 * @param  entity
 	 * 	       The entity named entity
-	 * @effect If this ship collides with a bullet and the bullet was fired by the ship, it will be reloaded
-	 * 	       | if (bullet.getSource() == this) this.loadBullet(bullet)
-	 * @effect If this ship collides with a bullet and the bullet was fired by another ship, both entities will be terminated
-	 *         | bullet.terminate() && this.terminate()
 	 * @effect If this ship collides with another ship, they bounce off each other with adjusted velocities
 	 *         | this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj)
+	 * @effect If this ship collides with another non-ship entity, the other entity collides with this ship instead
+	 *         | entity.collide(this)
 	 */
 	@Override
 	public void collide(Entity entity) {

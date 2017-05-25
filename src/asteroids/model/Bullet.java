@@ -24,9 +24,9 @@ public class Bullet extends Entity {
 	 * @param  radius
 	 *         The radius of this new ship.
 	 * @post   The new position of the ship is equal to the given position.
-	 *         | new.getPosition().equals({x,y})
+	 *         | new.getPosition().equals(new OrderedPair(x,y))
 	 * @post   The new velocity of the ship is equal to the given velocity.
-	 *         | new.getVelocity().equals({xVelocity,yVelocity})
+	 *         | new.getVelocity().equals(new OrderedPair(xVelocity,yVelocity))
 	 * @post   The new radius of the ship is equal to the given radius.
 	 *         | new.getRadius() == radius
 	 */
@@ -91,7 +91,7 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * Set the source for the given ship
+	 * Set the source to the given ship
 	 * @post The new source of this bullet is the given ship
 	 *       | new.getSource() == ship
 	 */

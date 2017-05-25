@@ -24,14 +24,14 @@ public abstract class Entity {
 	 * @param  radius
 	 *         The radius of this new ship.
 	 * @post   The new position of the ship is equal to the given position.
-	 *         | new.getPosition().equals({x,y})
+	 *         | new.getPosition().equals(new OrderedPair(x,y))
 	 * @post   The new velocity of the ship is equal to the given velocity.
-	 *         | new.getVelocity().equals({xVelocity,yVelocity})
+	 *         | new.getVelocity().equals(new OrderedPair(xVelocity,yVelocity))
 	 * @post   The new radius of the ship is equal to the given radius.
 	 *         | new.getRadius() == radius
 	 * @throws IllegalArgumentException
 	 *         The given initial position or radius is not valid.
-	 *         | !isValidPosition({x,y})||!isValidRadius(radius)
+	 *         | !isValidPosition(new OrderedPair(x,y))||!isValidRadius(radius)
 	 */
 	protected Entity(double x, double y, double xVelocity,
 			double yVelocity, double radius) throws IllegalArgumentException {
@@ -55,15 +55,15 @@ public abstract class Entity {
 
 	/**
 	 * Return the validity of a potential position for an entity as type boolean.
-	 * @param  orderedPair
+	 * @param  newPosition
 	 * 	       | A potential position for an entity
 	 * @return Returns the validity of the potential position for an entity.
-	 *         | result == !((position.length != 2)||(Double.isNaN(position[0]))||(Double.isNaN(position[1])))
+	 *         | result == !((Double.isNaN(newPosition.getX())||(Double.isNaN(newPosition.getY()))
 	 */
 	@Raw
-	private static boolean isValidPosition(OrderedPair orderedPair) {
-		if (Double.isNaN(orderedPair.getX())) return false;
-		if (Double.isNaN(orderedPair.getY())) return false;
+	private static boolean isValidPosition(OrderedPair newPosition) {
+		if (Double.isNaN(newPosition.getX())) return false;
+		if (Double.isNaN(newPosition.getY())) return false;
 		return true;
 	}
 
@@ -83,13 +83,13 @@ public abstract class Entity {
 
 	/**
 	 * Set the position to the given position.
-	 * @param  orderedPair
+	 * @param  newPosition
 	 * 	       The x-and y-coordinate of this entity
 	 * @post   The new value of the position of this entity equals position.
-	 *         | new.getPosition().equals(position)
+	 *         | new.getPosition().equals(newPosition)
 	 * @throws IllegalArgumentException
 	 *         The given position is not valid.
-	 *         | !isValidPosition(position)
+	 *         | !isValidPosition(newPosition)
 	 *
 	 */
 	@Raw
@@ -122,13 +122,13 @@ public abstract class Entity {
 	 * @param  orderedPair
 	 * 	       The x-and y-velocity of this entity
 	 * @post   If the given velocity is not valid, nothing happens.
-	 *         | if (Double.isNaN(velocity[0]))||(Double.isNaN(velocity[1]))||(velocity.length != 2)
+	 *         | if ( (Double.isNaN(newVelocity.getX())) || (Double.isNaN(newVelocity.getY())) )
 	 * @post   If the given velocity is slower than the speed of light, the new velocity is set to the given velocity.
-	 *         | speed = Math.sqrt(dotProduct(velocity, velocity))
-	 * 	       | if (Math.sqrt(dotProduct(velocity, velocity)) <= getMaxSpeed()) new.velocity.equals(velocity)
+	 *         | speed = newVelocity.getLength()
+	 * 	       | if (speed <= getMaxSpeed()) new.getVelocity().equals(newVelocity)
 	 * @post   If the given velocity is faster than the speed of light, the new velocity is given the same direction as the given velocity, but the speed of light.
-	 *         | speed = Math.sqrt(dotProduct(velocity, velocity))
-	 *         | new.velocity.equals({velocity[0]*getMaxSpeed()/speed,velocity[1]*getMaxSpeed()/speed})
+	 *         | speed = newVelocity.getLength()
+	 *         | new.getVelocity().equals(newVelocity.multiply(getMaxSpeed()/speed))
 	 */
 	protected void setVelocity(OrderedPair newVelocity) {
 		if (Double.isNaN(newVelocity.getX())) return;
@@ -141,7 +141,7 @@ public abstract class Entity {
 	/**
 	 * Return the speed of this entity as type double.
 	 * @return Returns the speed of this entity.
-	 *         | result == Math.sqrt(dotProduct(this.getVelocity(), this.getVelocity()))
+	 *         | result == getVelocity().getLength()
 	 */
 	@Raw
 	public double getSpeed() {
@@ -168,7 +168,7 @@ public abstract class Entity {
 	 * @param  radius
 	 * 	       The radius of this entity
 	 * @post   The new radius is set to the given radius
-	 * 		   | this.radius = radius
+	 * 		   | new.getRadius() = radius
 	 * @throws IllegalArgumentException
 	 *         The given radius is not valid.
 	 *         | (!isValidRadius(radius))
@@ -221,7 +221,7 @@ public abstract class Entity {
 	 * index 0 and the y-coordinate at index 1, after moving for the given time dt.
 	 * @param  dt
 	 * @return Returns the position of this entity.
-	 *         | result.equals({getPosition()[0]+getVelocity[0]*dt,getPosition[1]+getVelocity[1]*dt})
+	 *         | result.equals(getPosition().sum(getVelocity().multiply(dt))
 	 * @throws IllegalArgumentException
 	 *         The given time difference is not valid.
 	 *         | !isValidDt(dt)
@@ -229,9 +229,7 @@ public abstract class Entity {
 	@Raw
 	public OrderedPair getPositionAfterMovingForAPeriodOf(double dt) {
 		if (!isValidDt(dt)) throw new IllegalArgumentException("The given time lapse is invalid");
-		OrderedPair position = getPosition();
-		OrderedPair velocity = getVelocity();
-		return position.sum(velocity.multiply(dt));
+		return getPosition().sum(getVelocity().multiply(dt));
 	}
 
 	/**
@@ -263,7 +261,7 @@ public abstract class Entity {
 	 * @param  entity2
 	 * 	       The entity named entity2.
 	 * @return Return the distance between the centers of this entity and entity2.
-	 *         | result == Math.sqrt(dotProduct(this.getPositionDifference(entity2), this.getPositionDifference(entity2))
+	 *         | result == getPositionDifference(entity2).getLength()
 	 * @throws IllegalArgumentException
 	 *         Entity2 is not created
 	 *         | entity2 == null
@@ -271,9 +269,7 @@ public abstract class Entity {
 	@Raw
 	public double getDistanceBetweenCenters(@Raw Entity entity2) throws NullPointerException {
 		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
-		OrderedPair positionDifference = getPositionDifference(entity2);
-		double distance = positionDifference.getLength();
-		return distance;
+		return getPositionDifference(entity2).getLength();
 	}
 
 	/**
@@ -281,7 +277,7 @@ public abstract class Entity {
 	 * @param  entity2
 	 * 	       The entity named entity2.
 	 * @return Return the difference in position between this entity and entity2.
-	 *         | result.equals({entity2.getPosition()[0]-this.getPosition()[0],entity2.getPosition()[1]-this.getPosition()[1]})
+	 *         | result.equals(getPosition().getDifference(entity2.getPosition()))
 	 * @throws IllegalArgumentException
 	 *         Entity2 is not created
 	 *         | entity2 == null
@@ -297,7 +293,7 @@ public abstract class Entity {
 	 * @param  entity2
 	 * 	       The entity named entity2.
 	 * @return Return the difference in velocity between this entity and entity2.
-	 *         | result.equals({entity2.getVelocity()[0]-this.getVelocity()[0],entity2.getVelocity()[1]-this.getVelocity()[1]})
+	 *         | result.equals(getVelocity().getDifference(entity2.getVelocity()))
 	 * @throws IllegalArgumentException
 	 *         Entity2 is not created
 	 *         | entity2 == null
@@ -332,7 +328,7 @@ public abstract class Entity {
 	 * @param  entity2
 	 * 	       The entity named entity2.
 	 * @return Return whether entity and entity2 overlap
-	 *         | result == (this.getDistanceBetween(entity2) < 0)
+	 *         | result == (this.getDistanceBetween(entity2)/(this.getRadius()+entity2.getRadius()) <= -0.01)
 	 * @throws IllegalArgumentException
 	 *         entity2 is not created
 	 *         | entity2 == null
@@ -368,7 +364,7 @@ public abstract class Entity {
 	 * 	       The ship named ship2
 	 * @return Return the time to collision between ship and ship2 
 	 *         Returns the smallest time such that the distance between the ships after moving for a time is 0
-	 *         | result == min({dt | Math.sqrt(dotProduct(ship2.getPositionAfterMovingForAPeriodOf(dt), this.getPositionAfterMovingForAPeriodOf(dt))) == ship2.getRadius() + this.getRadius()})
+	 *         | result == min({dt | Math.sqrt(ship2.getPositionAfterMovingForAPeriodOf(dt).dotProduct(this.getPositionAfterMovingForAPeriodOf(dt))) == ship2.getRadius() + this.getRadius()})
 	 * @throws IllegalArgumentException
 	 *         Ship2 is not created or the two ships overlap
 	 *         | ship2 == null || this.overlap(ship2)
@@ -397,7 +393,9 @@ public abstract class Entity {
 	 * @return If the time to collision is not finite, return null
 	 * 	       | if (getTimeToCollision(ship2) == Double.POSITIVE_INFINITY) result == null
 	 * @return Return the position at time of collision between ship and ship2
-	 *         | result.equals(this.getPositionAfterMovingForAPeriodOf(this.getTimeToCollision(ship2)))
+	 *         | positionDifference = this.getPositionAfterMovingForAPeriodOf(time).getDifference(ship2.getPositionAfterMovingForAPeriodOf(time));
+	 *         | radiusRatio = this.getRadius()/(this.getRadius()+ship2.getRadius());
+	 *         | result.equals(thisPosition.sum(positionDifference.multiply(radiusRatio))
 	 */
 	public OrderedPair getCollisionPosition(Entity ship2) throws IllegalArgumentException {
 		double time = this.getTimeToCollision(ship2);
@@ -449,6 +447,8 @@ public abstract class Entity {
 	 * Terminate this entity
 	 * @post  This entity is terminated
 	 *        | isTerminated = true
+	 * @post  This entity is removed from its world
+	 * 		  | !(this.world.(new.getEntities().contains(this)) 
 	 */
 	public void terminate() {
 		isTerminated = true;
@@ -457,7 +457,7 @@ public abstract class Entity {
 	
 	/**
 	 * Return the termination status of this entity as type boolean
-	 * @return Returns the termination status o this entity
+	 * @return Returns the termination status of this entity
 	 *         | result == isTerminated
 	 */
 	public boolean isTerminated() {
@@ -467,15 +467,15 @@ public abstract class Entity {
 	private boolean isTerminated = false;	
 	
 	/**
-	 * Return the number of seconds until the first collision between this entity and the nearest boundary within it's trajectory.
+	 * Return the number of seconds until the first collision between this entity and the nearest boundary within its trajectory.
 	 * @return Return the time to collision between this entity and the perpendicular boundary
 	 *         Returns the smallest time dt such that the distance between this entity after moving for a time of dt is 0
-	 *         | min(xTime, yTime)
+	 *         | result == min(xTime, yTime)
 	 * @throws IllegalArgumentException
 	 *         Ship2 is not created or the two ships overlap
 	 *         | ship2 == null || this.overlap(ship2)
 	 */
-	public double getTimeCollisionBoundary() {
+	public double getTimeCollisionBoundary() throws IllegalArgumentException {
 		if (getWorld()== null) return Double.POSITIVE_INFINITY;
 		double xTime = Double.POSITIVE_INFINITY; double yTime = Double.POSITIVE_INFINITY;
 		OrderedPair velocity = getVelocity();
@@ -495,7 +495,7 @@ public abstract class Entity {
 	 * index 0 and the y-coordinate at index 1, at the point of collision with the nearest boundary within it's trajectory.
 	 * @param  dt
 	 * @return Returns the position of this entity at collision with nearest boundary within it's trajectory
-	 *         | result == positionAtEntityCollisionBoundary
+	 *         | result == xDistance <= yDistance ? new OrderedPair(xBoundary,positionAtEntityCollisionBoundary.getY()) : new OrderedPair(positionAtEntityCollisionBoundary.getX(),yBoundary)
 	 */
 	public OrderedPair getPositionCollisionBoundary() {
 		OrderedPair positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
@@ -507,21 +507,17 @@ public abstract class Entity {
 		double xDistance = velocity.getX() > 0 ? xBoundary - positionAtEntityCollisionBoundary.getX() : positionAtEntityCollisionBoundary.getX();
 		double yDistance = velocity.getY() > 0 ? yBoundary - positionAtEntityCollisionBoundary.getY() : positionAtEntityCollisionBoundary.getY();
 		
-		OrderedPair collisionPosition = xDistance <= yDistance ? new OrderedPair(xBoundary,positionAtEntityCollisionBoundary.getY()) : new OrderedPair(positionAtEntityCollisionBoundary.getX(),yBoundary);
-//		if(xDistance < 0) xDistance = Double.POSITIVE_INFINITY;
-//		if(yDistance < 0) yDistance = Double.POSITIVE_INFINITY;
-//		if(xDistance == Double.POSITIVE_INFINITY && yDistance == Double.POSITIVE_INFINITY) return null;
-		return collisionPosition;
+		return xDistance <= yDistance ? new OrderedPair(xBoundary,positionAtEntityCollisionBoundary.getY()) : new OrderedPair(positionAtEntityCollisionBoundary.getX(),yBoundary);
 	}
 
 	/**
 	 * Set the negation of the velocity vector in question upon collision with a boundary, thereby bouncing off the boundary.
 	 * @post   If the entity bounces off the vertical border the x-component of the velocity is negated
 	 *         | if(getPositionCollisionBoundary()[0] == 0 || getPositionCollisionBoundary()[0] == getWorld().getSize()[0])
-	 *         |   new.getVelocity()[0] == -getVelocity()[0]
+	 *         |   new.getVelocity().getX() == -getVelocity().getX()
 	 * @post   If the entity bounces off the horizontal border the y-component of the velocity is reversed
 	 *         | if(getPositionCollisionBoundary()[1] == 0 || getPositionCollisionBoundary()[1] == getWorld().getSize()[1])
-	 *         |   new.getVelocity()[1] == -getVelocity()[1]
+	 *         |   new.getVelocity().getY() == -getVelocity().getY()
 	 */
 	public void collideBoundary() {
 		OrderedPair position = getPositionCollisionBoundary();

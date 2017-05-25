@@ -25,10 +25,10 @@ public class World {
 	 *         The width of this new world
 	 * @param  height
 	 *         The height of this new world.
-	 * @post   The new width of the world is equal to the given width if the given width is greater than or equal to 0, and 0 otherwise.
-	 *         | new.getWidth = width >= 0 ? width : 0
-	 * @post   The new height of this world is equal to the given height if the given height is greater than or equal to 0, and 0 otherwise.
-	 *         | this.height = height >= 0 ? height : 0
+	 * @post   The new width of the world is  equal to Double.MAX_VALUE if the given width is not finite, equal to the given width if the given width is greater than or equal to 0, and 0 otherwise.
+	 *         | new.getWidth = width >= 0 ? (Double.isFinite(width) ? width : Double.MAX_VALUE) : 0
+	 * @post   The new height of this world is equal to Double.MAX_VALUE if the given height is not finite, equal to the given height if the given height is greater than or equal to 0, and 0 otherwise.
+	 *         | this.height = height >= 0 ? (Double.isFinite(height) ? height : Double.MAX_VALUE) : 0
 	 */
 	public World(double width, double height) {
 		this.width = width >= 0 ? (Double.isFinite(width) ? width : Double.MAX_VALUE) : 0;
@@ -53,11 +53,16 @@ public class World {
  	 *        Returns false if the entity is a bullet which belongs to any ship.
 	 *        | if (entity instanceof Bullet && ((Bullet)entity).getShip() != null) result == false
 	 *        Returns false if the ship belongs to any world other than this world.
-	 *        | if (!(ship.getWorld() == null || ship.getWorld() != this)) result == false
+	 *        | if (!(entity.getWorld() == this || entity.getWorld() == null) result == false
 	 *        Returns false if either the ship or this world are terminated.
 	 *        | if (ship.isTerminated() || this.isTerminated()) result == false
 	 *        Returns false if the ship overlaps with any entities of this world.
 	 *        | if (for some entity in this.getEntities() ship.overlap(entity)) result == false
+	 *        Returns false if the ship is not fully within the boundaries of this world.
+	 *        | if ((entity.getRadius() > entity.getPosition().getX() 
+	 *        | 	|| entity.getRadius() > entity.getPosition().getY()
+	 *        | 	|| getWidth() < entity.getPosition().getX() + entity.getRadius() 
+	 *        | 	|| getHeight() < entity.getPosition().getY() + entity.getRadius())) result == false
 	 *        Returns true otherwise.
 	 *        | result == true
 	 */
@@ -109,6 +114,8 @@ public class World {
 	
 	/**
 	 * Return all the planetoids on this world.
+	 * @return Returns the planetoids of this world
+	 *         | result == getEntities().stream().filter(t -> t instanceof Planetoid).map(t->(Planetoid)t).collect(Collectors.toSet());
 	 */
 	public Set<Planetoid> getPlanetoids() {
 		return getEntities().stream().filter(t -> t instanceof Planetoid).map(t->(Planetoid)t).collect(Collectors.toSet());
@@ -117,7 +124,7 @@ public class World {
 	/**
 	 * Return the bullets within this world as hashed set.
 	 * @return Returns the bullets of this world
-	 *         | result == bullets
+	 *         | result == getEntities().stream().filter(t -> t instanceof Bullet).map(t->(Bullet)t).collect(Collectors.toSet());
 	 */
 	public Set<Bullet> getBullets() {
 		return getEntities().stream().filter(t -> t instanceof Bullet).map(t->(Bullet)t).collect(Collectors.toSet());
@@ -125,7 +132,6 @@ public class World {
 	
 	/**
 	 * Terminate the given entity from this world
-	 * @Pre    The given entity is part of this world
 	 * @effect   The given entity is removed from the hashed set entity and removed from this world
 	 *         | entity.remove(bullet) && entity.removeWorld();
 	 * @throws IllegalArgumentException
@@ -146,9 +152,7 @@ public class World {
 	 *         | isTerminated = true
 	 */
 	public void terminate(){
-		for(Entity entity : getEntities()){
-			this.removeEntity(entity);
-		}
+		for(Entity entity : getEntities()) this.removeEntity(entity);
 		isTerminated = true;
 	}
 
@@ -175,7 +179,7 @@ public class World {
 	/**
 	 * Return all the entities part of this world.
 	 * @return Returns all the ships and all the bullets of this world
-	 *         | result == {entity | entity in getBullets() || entity in getShips()} 
+	 *         | result == new HashSet<Entity>(entities)
 	 */
 	public Set<Entity> getEntities() {
 		return new HashSet<Entity>(entities);
@@ -191,7 +195,7 @@ public class World {
 	 *         two entities of this world or an entity and a boundary of this world
 	 *         | minTimeObjectCollision == min{entity1.getTimeToCollision(entity1) | for each entity1, entity2 in getEntities() with entity1 != entity2}
 	 *         | minTimeBoundaryCollision == min{entity.getTimeCollisionBoundary() | for each entity in getEntities()}
-	 *         | result == min(minTimeObjectCollision, minTimeBoundaryCollision)
+	 *         | result == Math.min(timeNextCollision, entity1.getTimeToCollision(entity2))
 	 */
 	public double getTimeNextCollision() {
 		double timeNextCollision = Double.POSITIVE_INFINITY;
@@ -261,7 +265,8 @@ public class World {
 	 * @param  collisionListener
 	 *         Invoked when the entity is about to collide with a boundary or other entity
 	 * @effect  All entities are moved to their predicted position after time dt
-	 * 	       | for each entity in getEntities(): entity.move(dt)  
+	 * 	       | for each entity in getEntities(): entity.move(dt) 
+	 * 		   | see implementation 
 	 * @Throws IllegalArgumentException
 	 *         | dt < 0 or Double.isNaN(dt)
 	 */
@@ -309,7 +314,7 @@ public class World {
 	 * @param  y
 	 * 	       | the given y coordinate
 	 * @return Returns the entity at the given position if one exists.
-	 *         | if (for some entity in getEntities(): entity.getPosition().equals({x,y})) result == entity
+	 *         | if (for some entity in getEntities(): entity.getPosition().equals(new OrderedPair(x,y))) result == entity
 	 * @return Returns null if no entity exists at the given position.
 	 * 		   | result == null
 	 */
