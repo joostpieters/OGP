@@ -11,48 +11,41 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Program createProgram(List<Function> functions, Statement main) {
-		// TODO Auto-generated method stub
 		return new Program(functions, main);
 	}
 
 	@Override
 	public Function createFunctionDefinition(String functionName,
 			Statement body, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new Function(functionName, body, sourceLocation);
 	}
 
 	@Override
 	public Statement createAssignmentStatement(String variableName,
 			Expression value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new AssignmentStatement(variableName, value, sourceLocation);
 	}
 
 	@Override
 	public Statement createWhileStatement(Expression condition, Statement body,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new WhileStatement(condition, body, sourceLocation);
 	}
 
 	@Override
 	public Statement createBreakStatement(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new BreakStatement(sourceLocation);
 	}
 
 	@Override
 	public Statement createReturnStatement(Expression value,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new ReturnStatement(value, sourceLocation);
 	}
 
 	@Override
 	public Statement createIfStatement(Expression condition, Statement ifBody,
 			Statement elseBody, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new IfStatement(condition, ifBody, elseBody, sourceLocation);
 	}
 
@@ -60,67 +53,57 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	
 	public Statement createPrintStatement(Expression value,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new PrintStatement(value, sourceLocation);
 	}
 
 	@Override
 	public Statement createSequenceStatement(List<Statement> statements,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new SequenceStatement(statements, sourceLocation);
 	}
 
 	@Override
 	public Expression createReadVariableExpression(String variableName,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new ReadVariableExpression(variableName, sourceLocation);
 	}
 
 	@Override
 	public Expression createReadParameterExpression(String parameterName,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new ReadParameterExpression(parameterName, sourceLocation);
 	}
 
 	@Override
 	public Expression createFunctionCallExpression(String functionName,
 			List<Expression> actualArgs, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new FunctionCallExpression(functionName, actualArgs, sourceLocation);
 	}
 
 	@Override
 	public Expression<Double> createChangeSignExpression(Expression expression,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new ChangeSignExpression(expression, sourceLocation);
 	}
 
 	@Override
 	public Expression<Boolean> createNotExpression(Expression expression,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
 		return new NotExpression(expression, sourceLocation);
 	}
 
 	@Override
 	public Expression<Double> createDoubleLiteralExpression(double value,
 			SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new DoubleLiteralExpression(value, location);
 	}
 
 	@Override
 	public Expression<Entity> createNullExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EntityExpression(location){
 
 			@Override
 			public Entity evaluate() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 			
@@ -133,12 +116,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression<Entity> createSelfExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EntityExpression(location){
 
 			@Override
 			public Ship evaluate() {
-				// TODO Auto-generated method stub
 				return getProgram().getShip();
 			}
 			
@@ -151,12 +132,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression<Entity> createShipExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EntityExpression(location){
 
 			@Override
 			public Ship evaluate() {
-				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Ship> closestShip = self.getWorld().getShips().stream().filter(ship -> !ship.equals(self)).
 					reduce((ship1, ship2) -> (self.getDistanceBetween(ship1) < self.getDistanceBetween(ship2) ? ship1 : ship2));
@@ -174,12 +153,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression<Entity> createAsteroidExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EntityExpression(location){
 
 			@Override
 			public Asteroid evaluate() {
-				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Asteroid> closestAsteroid = self.getWorld().getAsteroids().stream().
 					reduce((asteroid1, asteroid2) -> (self.getDistanceBetween(asteroid1) < self.getDistanceBetween(asteroid2) ? asteroid1 : asteroid2));
@@ -197,12 +174,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression<Entity> createPlanetoidExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EntityExpression(location){
 
 			@Override
 			public Planetoid evaluate() {
-				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Planetoid> closestPlanetoid = self.getWorld().getPlanetoids().stream().
 						reduce((planetoid1, planetoid2) -> (self.getDistanceBetween(planetoid1) < self.getDistanceBetween(planetoid2) ? planetoid1 : planetoid2));
@@ -220,12 +195,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression<Entity> createBulletExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EntityExpression(location){
 
 			@Override
 			public Bullet evaluate() {
-				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Bullet> closestBullet = self.getWorld().getBullets().stream().filter(bullet -> bullet.getSource() == self).
 						reduce((bullet1, bullet2) -> (self.getDistanceBetween(bullet1) < self.getDistanceBetween(bullet2) ? bullet1 : bullet2));
@@ -243,12 +216,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression<Entity> createPlanetExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EntityExpression(location){
 
 			@Override
 			public MinorPlanet evaluate() {
-				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Entity> closestPlanet = self.getWorld().getEntities().stream().filter(entity -> entity instanceof MinorPlanet).
 						reduce((planet1, planet2) -> (self.getDistanceBetween(planet1) < self.getDistanceBetween(planet2) ? planet1 : planet2));
@@ -266,12 +237,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression<Entity> createAnyExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EntityExpression(location){
 
 			@Override
 			public Entity evaluate() {
-				// TODO Auto-generated method stub
 				Ship self = getProgram().getShip();
 				Optional<Entity> anyEntity = self.getWorld().getEntities().stream().findAny();
 					if (anyEntity.isPresent()) return anyEntity.get();
@@ -288,20 +257,17 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression<Double> createGetXExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new GetXExpression(e, location);
 	}
 
 	@Override
 	public Expression<Double> createGetYExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new GetYExpression(e, location);
 	}
 
 	@Override
 	public Expression<Double> createGetVXExpression(Expression e,
 			SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new GetVXExpression(e, location);
 	}
 
@@ -322,53 +288,43 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression<Boolean> createLessThanExpression(Expression e1, Expression e2,
 			SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new LessThanExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression<Boolean> createEqualityExpression(Expression e1, Expression e2,
 			SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new EqualityExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression<Double> createAdditionExpression(Expression e1, Expression e2,
 			SourceLocation location) {
-		// TODO Auto-generated method stub
-		//return new AdditionExpression(e1, e2, location);
 		return new AdditionExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression<Double> createMultiplicationExpression(Expression e1,
 			Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new MultiplicationExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression<Double> createSqrtExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		
 		return new SqrtExpression(e, location);
 	}
 
 	@Override
 	public Expression<Double> createGetDirectionExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new GetDirectionExpression(location);
 	}
 
 	@Override
 	public Statement createThrustOnStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
 
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
 				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
@@ -388,12 +344,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Statement createThrustOffStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
 
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
 				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
@@ -413,12 +367,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Statement createFireStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
 
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
 				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
@@ -439,12 +391,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Statement createTurnStatement(Expression angle,
 			SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
 
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
 				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {
@@ -470,12 +420,10 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Statement createSkipStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return new ActionStatement(location) {
 
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
 				setFailedToAdvanceTime(false);
 				getProgram().setCurrentLocation(getSourceLocation());
 				if (getProgram().getTimer() < 0.2) {

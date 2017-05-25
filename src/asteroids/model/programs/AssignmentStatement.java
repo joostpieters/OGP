@@ -7,12 +7,12 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class AssignmentStatement<T> extends ProgramElement implements Statement {
-	private Expression<T> value;
+public class AssignmentStatement extends ProgramElement implements Statement {
+	private Expression value;
 	private String variableName;
 	private boolean hasActiveBreakStatement;
 
-	public AssignmentStatement(String variableName, Expression<T> value,
+	public AssignmentStatement(String variableName, Expression value,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 		super(sourceLocation);
@@ -29,7 +29,7 @@ public class AssignmentStatement<T> extends ProgramElement implements Statement 
 		} catch (NoSuchElementException e){}
 		Optional<Variable> variableToAssignTo = getProgram().getVariables().stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate());
-		else getProgram().addVariable(new Variable<T>(variableName, value.evaluate()));
+		else getProgram().addVariable(new Variable(variableName, value.evaluate()));
 		if (value instanceof FunctionCallExpression && ((FunctionCallExpression)value).hasActiveBreakStatement()) setHasActiveBreakStatement(true);
 	}
 	
@@ -45,7 +45,7 @@ public class AssignmentStatement<T> extends ProgramElement implements Statement 
 	public Optional execute(Object[] actualArgs, Set<Variable> localVariables){
 		Optional<Variable> variableToAssignTo = localVariables.stream().filter(variable -> variable.getName().equals(variableName)).findFirst();
 		if(variableToAssignTo.isPresent()) variableToAssignTo.get().setValue(value.evaluate(actualArgs, localVariables));
-		else localVariables.add(new Variable<T>(variableName, value.evaluate(actualArgs, localVariables)));
+		else localVariables.add(new Variable(variableName, value.evaluate(actualArgs, localVariables)));
 		if (value instanceof FunctionCallExpression && ((FunctionCallExpression)value).hasActiveBreakStatement()) setHasActiveBreakStatement(true);
 		return Optional.empty();
 	}
