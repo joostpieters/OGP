@@ -6,7 +6,7 @@ import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class GetRadiusExpression extends Expression<Double> {
+public class GetRadiusExpression extends ProgramElement implements Expression<Double> {
 	private Expression<? extends Entity> e;
 
 	public GetRadiusExpression(Expression<? extends Entity> e, SourceLocation location) {

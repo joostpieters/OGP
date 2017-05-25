@@ -2,6 +2,7 @@ package asteroids.facade;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import asteroids.model.Entity;
@@ -34,12 +35,12 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getShipPosition(Ship ship) throws ModelException {
-		return ship.getPosition();
+		return ship.getPosition().toArray();
 	}
 
 	@Override
 	public double[] getShipVelocity(Ship ship) throws ModelException {
-		return ship.getVelocity();
+		return ship.getVelocity().toArray();
 	}
 
 	@Override
@@ -95,7 +96,7 @@ public class Facade implements IFacade {
 	public double[] getCollisionPosition(Ship ship1, Ship ship2)
 			throws ModelException {
 		try {
-			return ship1.getCollisionPosition(ship2);
+			return ship1.getCollisionPosition(ship2).toArray();
 		} catch(IllegalArgumentException exc) {
 			throw new ModelException(exc);
 		}
@@ -158,13 +159,13 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getBulletPosition(Bullet bullet) throws ModelException {
-		return bullet.getPosition();
+		return bullet.getPosition().toArray();
 	}
 
 	@Override
 	public double[] getBulletVelocity(Bullet bullet) throws ModelException {
 		// TODO Auto-generated method stub
-		return bullet.getVelocity();
+		return bullet.getVelocity().toArray();
 	}
 
 	@Override
@@ -308,7 +309,8 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getPositionCollisionBoundary(Object object) throws ModelException {
-		return ((Entity)object).getPositionCollisionBoundary();
+		if (((Entity)object).getPositionCollisionBoundary() == null) return null;
+		return ((Entity)object).getPositionCollisionBoundary().toArray();
 	}
 
 	@Override
@@ -320,7 +322,8 @@ public class Facade implements IFacade {
 	@Override
 	public double[] getPositionCollisionEntity(Object entity1, Object entity2) throws ModelException {
 		if (!(entity1 instanceof Entity && entity2 instanceof Entity)) throw new ModelException("The given objects are not entities.");
-		return ((Entity)entity1).getCollisionPosition((Entity)entity2);
+		if(((Entity)entity1).getCollisionPosition((Entity)entity2) == null) return null;
+		return ((Entity)entity1).getCollisionPosition((Entity)entity2).toArray();
 	}
 
 	@Override
@@ -330,7 +333,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getPositionNextCollision(World world) throws ModelException {
-		return world.getPositionNextCollision();
+		return world.getPositionNextCollision().toArray();
 	}
 
 	@Override
@@ -366,7 +369,11 @@ public class Facade implements IFacade {
 	@Override
 	public void addAsteroidToWorld(World world, Asteroid asteroid)
 			throws ModelException {
-		world.addEntity(asteroid);
+		try{
+			world.addEntity(asteroid);
+		} catch (IllegalArgumentException exc){
+			throw new ModelException(exc);
+		}
 		
 	}
 
@@ -420,13 +427,13 @@ public class Facade implements IFacade {
 	@Override
 	public double[] getAsteroidPosition(Asteroid asteroid)
 			throws ModelException {
-		return asteroid.getPosition();
+		return asteroid.getPosition().toArray();
 	}
 
 	@Override
 	public double[] getAsteroidVelocity(Asteroid asteroid)
 			throws ModelException {
-		return asteroid.getVelocity();
+		return asteroid.getVelocity().toArray();
 	}
 
 	@Override
@@ -471,14 +478,14 @@ public class Facade implements IFacade {
 	public double[] getPlanetoidPosition(Planetoid planetoid)
 			throws ModelException {
 		// TODO Auto-generated method stub
-		return planetoid.getPosition();
+		return planetoid.getPosition().toArray();
 	}
 
 	@Override
 	public double[] getPlanetoidVelocity(Planetoid planetoid)
 			throws ModelException {
 		// TODO Auto-generated method stub
-		return planetoid.getVelocity();
+		return planetoid.getVelocity().toArray();
 	}
 
 	@Override

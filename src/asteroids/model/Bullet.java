@@ -155,6 +155,10 @@ public class Bullet extends Entity {
 		if (this.getRemainingBounces() < 0) this.terminate();
 	}
 	
+	public void resetBounces(){
+		remainingBounces = 2;
+	}
+	
 	/**
 	 * Terminates the entity that contains this bullet
 	 * @post The entity containing this bullet is terminated

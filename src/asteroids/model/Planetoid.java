@@ -44,11 +44,11 @@ public class Planetoid extends MinorPlanet {
 		World world = getWorld();
 		super.terminate();
 		if (radius >= 30){
-			double[] position = getPosition();
+			OrderedPair position = getPosition();
 			double speed = 1.5*getSpeed();
 			double direction = 2*Math.PI*Math.random();
-			world.addEntity(new Asteroid(position[0]+radius/2*Math.sin(direction),position[1]+radius/2*Math.cos(direction),speed*Math.sin(direction),speed*Math.cos(direction),radius/2));
-			world.addEntity(new Asteroid(position[0]-radius/2*Math.sin(direction),position[1]-radius/2*Math.cos(direction),-speed*Math.sin(direction),-speed*Math.cos(direction),radius/2));
+			world.addEntity(new Asteroid(position.getX()+radius/2*Math.sin(direction),position.getY()+radius/2*Math.cos(direction),speed*Math.sin(direction),speed*Math.cos(direction),radius/2));
+			world.addEntity(new Asteroid(position.getX()-radius/2*Math.sin(direction),position.getY()-radius/2*Math.cos(direction),-speed*Math.sin(direction),-speed*Math.cos(direction),radius/2));
 		}
 	}
 
@@ -56,7 +56,7 @@ public class Planetoid extends MinorPlanet {
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			double shipRadius = entity.getRadius();
-			double[] newPosition = new double[]{shipRadius + Math.random()*(getWorld().getSize()[0]-2*shipRadius),shipRadius + Math.random()*(getWorld().getSize()[1]-2*shipRadius)};
+			OrderedPair newPosition = new OrderedPair(shipRadius + Math.random()*(getWorld().getSize()[0]-2*shipRadius),shipRadius + Math.random()*(getWorld().getSize()[1]-2*shipRadius));
 			entity.setPosition(newPosition);
 			for (Entity entityOther: getWorld().getEntities()) if(entityOther != entity && entityOther.overlap(entity)) entity.terminate();
 		}

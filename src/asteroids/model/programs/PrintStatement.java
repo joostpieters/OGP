@@ -6,7 +6,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class PrintStatement extends Statement {
+public class PrintStatement extends ProgramElement implements Statement {
 
 	private Expression value;
 
@@ -32,6 +32,16 @@ public class PrintStatement extends Statement {
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		value.setProgram(program);
+	}
+
+	@Override
+	public boolean hasActiveBreakStatement() {
+		return false;
+	}
+
+	@Override
+	public boolean failedToAdvanceTime() {
+		return false;
 	}
 
 	@Override

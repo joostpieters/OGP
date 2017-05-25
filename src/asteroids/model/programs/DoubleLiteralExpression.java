@@ -5,7 +5,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class DoubleLiteralExpression extends Expression<Double> {
+public class DoubleLiteralExpression extends ProgramElement implements Expression<Double> {
 	private double value;
 
 	public DoubleLiteralExpression(double value, SourceLocation location) {

@@ -142,9 +142,9 @@ public class Ship extends Entity {
 	 */
 	public void thrust(double amount) {
 		if (amount < 0 || Double.isNaN(amount)) amount = 0;
-		double[] velocity = getVelocity();
+		OrderedPair velocity = getVelocity();
 		double orientation = getOrientation();
-		setVelocity(new double[] {velocity[0]+amount*Math.cos(orientation),velocity[1]+amount*Math.sin(orientation)});
+		setVelocity(new OrderedPair(velocity.getX()+amount*Math.cos(orientation),velocity.getY()+amount*Math.sin(orientation)));
 	}
 
 	/**
@@ -245,6 +245,7 @@ public class Ship extends Entity {
 		if(bullet.getWorld() != null) bullet.getWorld().removeEntity(bullet);
 		bullet.setPosition(this.getPosition());
 		bullet.setShip(this);
+		bullet.resetBounces();
 	}
 
 	/**
@@ -330,22 +331,25 @@ public class Ship extends Entity {
 	 * @effect The bullet has a new velocity set to the calculated velocity
 	 *         | bullet.setVelocity(new double[]{xVelocity, yVelocity})
 	 * @effect The bullet has a new position set to the calculated position
-	 *         | bullet.setPosition(new double[]{xPosition, yPosition}) 
+	 *         | bullet.setPosition(new double[]{xPosition, yPosition})
+	 * @throws NoSuchElementException
+	 *         The ship ran out of bullets
 	 */
-	public void fireBullet(){
+	public void fireBullet() throws NoSuchElementException {
 		if (this.getWorld() == null) return;
+		if (!getBullets().iterator().hasNext()) return;
 		Bullet bullet = getBullets().iterator().next();
 		double orientationFire = this.getOrientation();
-		double[] positionShip = this.getPosition();
+		OrderedPair positionShip = this.getPosition();
 		double distanceBetweenCenters = (bullet.getRadius() + this.getRadius());
-		double xPosition = positionShip[0] + distanceBetweenCenters * Math.cos(orientationFire);
-		double yPosition = positionShip[1] + distanceBetweenCenters * Math.sin(orientationFire);
+		double xPosition = positionShip.getX()+ distanceBetweenCenters * Math.cos(orientationFire);
+		double yPosition = positionShip.getY() + distanceBetweenCenters * Math.sin(orientationFire);
 		double xVelocity = 250 * Math.cos(orientationFire);
 		double yVelocity = 250 * Math.sin(orientationFire);
 		bullet.setSource(this);
 		this.removeBullet(bullet);
-		bullet.setPosition(new double[]{xPosition, yPosition});
-		bullet.setVelocity(new double[]{xVelocity, yVelocity});
+		bullet.setPosition(new OrderedPair(xPosition, yPosition));
+		bullet.setVelocity(new OrderedPair(xVelocity, yVelocity));
 		try{
 			this.getWorld().addEntity(bullet);
 		} catch (IllegalArgumentException exc){
@@ -357,10 +361,10 @@ public class Ship extends Entity {
 			}
 			bullet.terminate();
 		}
-		double distanceToEdge = getWorld().getSize()[0] - bullet.getPosition()[0];
-		distanceToEdge = Math.min(distanceToEdge, bullet.getPosition()[0]);
-		distanceToEdge = Math.min(distanceToEdge, getWorld().getSize()[1] - bullet.getPosition()[1]);
-		distanceToEdge = Math.min(distanceToEdge, bullet.getPosition()[1]);
+		double distanceToEdge = getWorld().getSize()[0] - bullet.getPosition().getX();
+		distanceToEdge = Math.min(distanceToEdge, bullet.getPosition().getX());
+		distanceToEdge = Math.min(distanceToEdge, getWorld().getSize()[1] - bullet.getPosition().getY());
+		distanceToEdge = Math.min(distanceToEdge, bullet.getPosition().getY());
 		if(distanceToEdge < 0) bullet.terminate();
 	}
 
@@ -381,15 +385,15 @@ public class Ship extends Entity {
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			double mi = this.getMass();double mj = entity.getMass();
-			double[] deltaR = this.getPositionDifference(entity);
-			double[] deltaV = this.getVelocityDifference(entity);
-			double sigma = Math.sqrt(dotProduct(deltaR,deltaR));
-			double j = 2*mi*mj*(dotProduct(deltaV,deltaR))/(sigma*(mi+mj));
-			double jx = j*deltaR[0]/sigma;double jy = j*deltaR[1]/sigma;
-			double[] oldVelocityi = this.getVelocity();
-			double[] oldVelocityj = entity.getVelocity();
-			double[] newVelocityi = new double[]{oldVelocityi[0]+jx/mi,oldVelocityi[1]+jy/mi};
-			double[] newVelocityj = new double[]{oldVelocityj[0]-jx/mj,oldVelocityj[1]-jy/mj};
+			OrderedPair deltaR = this.getPositionDifference(entity);
+			OrderedPair deltaV = this.getVelocityDifference(entity);
+			double sigma = deltaR.getLength();
+			double j = 2*mi*mj*(deltaV.dotProduct(deltaR))/(sigma*(mi+mj));
+			double jx = j*deltaR.getX()/sigma;double jy = j*deltaR.getY()/sigma;
+			OrderedPair oldVelocityi = this.getVelocity();
+			OrderedPair oldVelocityj = entity.getVelocity();
+			OrderedPair newVelocityi = new OrderedPair(oldVelocityi.getX()+jx/mi,oldVelocityi.getY()+jy/mi);
+			OrderedPair newVelocityj = new OrderedPair(oldVelocityj.getX()-jx/mj,oldVelocityj.getY()-jy/mj);
 			this.setVelocity(newVelocityi);entity.setVelocity(newVelocityj);
 		}
 		else entity.collide(this);

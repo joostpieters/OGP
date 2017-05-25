@@ -6,7 +6,7 @@ import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class GetVXExpression extends Expression<Double> {
+public class GetVXExpression extends ProgramElement implements Expression<Double> {
 	private Expression<? extends Entity> e;
 	
 	public GetVXExpression(Expression<? extends Entity> e, SourceLocation location) {
@@ -17,12 +17,12 @@ public class GetVXExpression extends Expression<Double> {
 
 	@Override
 	public Double evaluate() throws IllegalArgumentException {
-		return e.evaluate().getVelocity()[0];
+		return e.evaluate().getVelocity().getX();
 	}
 
 	@Override
 	public Double evaluate(Object[] actualArgs, Set<Variable> localVariables) throws IllegalArgumentException {
-		return e.evaluate(actualArgs, localVariables).getVelocity()[0];
+		return e.evaluate(actualArgs, localVariables).getVelocity().getX();
 	}
 
 	@Override

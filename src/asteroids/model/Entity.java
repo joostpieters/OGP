@@ -35,8 +35,9 @@ public abstract class Entity {
 	 */
 	protected Entity(double x, double y, double xVelocity,
 			double yVelocity, double radius) throws IllegalArgumentException {
-		this.setPosition(new double[] {x,y});
-		this.setVelocity(new double[] {xVelocity,yVelocity});
+		
+		this.setPosition(new OrderedPair(x,y));
+		this.setVelocity(new OrderedPair(xVelocity,yVelocity));
 		this.setRadius(radius);
 	}
 	
@@ -54,16 +55,15 @@ public abstract class Entity {
 
 	/**
 	 * Return the validity of a potential position for an entity as type boolean.
-	 * @param  position
+	 * @param  orderedPair
 	 * 	       | A potential position for an entity
 	 * @return Returns the validity of the potential position for an entity.
 	 *         | result == !((position.length != 2)||(Double.isNaN(position[0]))||(Double.isNaN(position[1])))
 	 */
 	@Raw
-	private static boolean isValidPosition(double[] position) {
-		if (position.length != 2) return false;
-		if (Double.isNaN(position[0])) return false;
-		if (Double.isNaN(position[1])) return false;
+	private static boolean isValidPosition(OrderedPair orderedPair) {
+		if (Double.isNaN(orderedPair.getX())) return false;
+		if (Double.isNaN(orderedPair.getY())) return false;
 		return true;
 	}
 
@@ -75,15 +75,15 @@ public abstract class Entity {
 	 */
 	@Basic
 	@Raw
-	public double[] getPosition() {
-		return position.clone();
+	public OrderedPair getPosition() {
+		return position;
 	}
 
-	private double[] position = new double[2];
+	private OrderedPair position;
 
 	/**
 	 * Set the position to the given position.
-	 * @param  position
+	 * @param  orderedPair
 	 * 	       The x-and y-coordinate of this entity
 	 * @post   The new value of the position of this entity equals position.
 	 *         | new.getPosition().equals(position)
@@ -93,9 +93,9 @@ public abstract class Entity {
 	 *
 	 */
 	@Raw
-	protected void setPosition(double[] position) throws IllegalArgumentException {
-		if(!isValidPosition(position)) throw new IllegalArgumentException("The given position is not valid.");
-		this.position = position.clone();
+	protected void setPosition(OrderedPair newPosition) throws IllegalArgumentException {
+		if(!isValidPosition(newPosition)) throw new IllegalArgumentException("The given position is not valid.");
+		this.position = newPosition;
 	}
 
 	public static double SPEED_OF_LIGHT = 300000;
@@ -114,12 +114,12 @@ public abstract class Entity {
 	 */
 	@Basic
 	@Raw
-	public double[] getVelocity() {
-		return velocity.clone();
+	public OrderedPair getVelocity() {
+		return velocity;
 	}
 
 	/**
-	 * @param  velocity
+	 * @param  orderedPair
 	 * 	       The x-and y-velocity of this entity
 	 * @post   If the given velocity is not valid, nothing happens.
 	 *         | if (Double.isNaN(velocity[0]))||(Double.isNaN(velocity[1]))||(velocity.length != 2)
@@ -130,13 +130,12 @@ public abstract class Entity {
 	 *         | speed = Math.sqrt(dotProduct(velocity, velocity))
 	 *         | new.velocity.equals({velocity[0]*getMaxSpeed()/speed,velocity[1]*getMaxSpeed()/speed})
 	 */
-	protected void setVelocity(double[] velocity) {
-		if (Double.isNaN(velocity[0])) return;
-		if (Double.isNaN(velocity[1])) return;
-		if (velocity.length != 2) return;
-		double speed = Math.sqrt(dotProduct(velocity, velocity));
-		if (speed <= getMaxSpeed()) this.velocity = velocity.clone();
-		else this.velocity = new double[] {velocity[0]*getMaxSpeed()/speed,velocity[1]*getMaxSpeed()/speed};
+	protected void setVelocity(OrderedPair newVelocity) {
+		if (Double.isNaN(newVelocity.getX())) return;
+		if (Double.isNaN(newVelocity.getY())) return;
+		double speed = newVelocity.getLength();
+		if (speed <= getMaxSpeed()) this.velocity = newVelocity;
+		else this.velocity = newVelocity.multiply(getMaxSpeed()/speed);
 	}
 
 	/**
@@ -146,10 +145,10 @@ public abstract class Entity {
 	 */
 	@Raw
 	public double getSpeed() {
-		return Math.sqrt(dotProduct(this.getVelocity(), this.getVelocity()));
+		return getVelocity().getLength();
 	}
 
-	private double[] velocity = new double[2];
+	private OrderedPair velocity = new OrderedPair(0, 0);
 
 	
 	/**
@@ -188,21 +187,6 @@ public abstract class Entity {
 	@Raw
 	public double getRadius() {
 		return radius;
-	}
-	  
-	/**
-	 * Calculates the dot product of the given vectors of length 2
-	 * @param  vector1
-	 * 	       A given vector of length 2
-	 * @param  vector2
-	 * 	       A given vector of length 2
-	 * @return Return the dot product of the two vectors
-	 * 	       | result.equals(vector1[0]*vector2[0]+vector1[1]*vector2[1])
-	 */
-	@Raw
-	protected
-	static double dotProduct(double[] vector1, double[] vector2) {
-		return vector1[0]*vector2[0]+vector1[1]*vector2[1];
 	}
 
 	/**
@@ -243,11 +227,11 @@ public abstract class Entity {
 	 *         | !isValidDt(dt)
 	 */
 	@Raw
-	public double[] getPositionAfterMovingForAPeriodOf(double dt) {
+	public OrderedPair getPositionAfterMovingForAPeriodOf(double dt) {
 		if (!isValidDt(dt)) throw new IllegalArgumentException("The given time lapse is invalid");
-		double[] position = getPosition();
-		double[] velocity = getVelocity();
-		return new double[] {position[0]+velocity[0]*dt,position[1]+velocity[1]*dt};
+		OrderedPair position = getPosition();
+		OrderedPair velocity = getVelocity();
+		return position.sum(velocity.multiply(dt));
 	}
 
 	/**
@@ -287,8 +271,8 @@ public abstract class Entity {
 	@Raw
 	public double getDistanceBetweenCenters(@Raw Entity entity2) throws NullPointerException {
 		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
-		double[] positionDifference = getPositionDifference(entity2);
-		double distance = Math.sqrt(dotProduct(positionDifference, positionDifference));
+		OrderedPair positionDifference = getPositionDifference(entity2);
+		double distance = positionDifference.getLength();
 		return distance;
 	}
 
@@ -303,9 +287,9 @@ public abstract class Entity {
 	 *         | entity2 == null
 	 */
 	@Raw
-	public double[] getPositionDifference(@Raw Entity entity2) throws IllegalArgumentException {
+	public OrderedPair getPositionDifference(@Raw Entity entity2) throws IllegalArgumentException {
 		if (entity2 == null) throw new NullPointerException("The second entity does not exist.");
-		return new double[] {entity2.getPosition()[0]-this.getPosition()[0],entity2.getPosition()[1]-this.getPosition()[1]};
+		return getPosition().getDifference(entity2.getPosition());
 	}
 
 	/**
@@ -320,9 +304,9 @@ public abstract class Entity {
 	 *         
 	 */
 	@Raw
-	public double[] getVelocityDifference(@Raw Entity entity2) throws IllegalArgumentException {
+	public OrderedPair getVelocityDifference(@Raw Entity entity2) throws IllegalArgumentException {
 		if (entity2 == null) throw new IllegalArgumentException("The second entity does not exist.");
-		return new double[] {entity2.getVelocity()[0]-this.getVelocity()[0],entity2.getVelocity()[1]-this.getVelocity()[1]};
+		return getVelocity().getDifference(entity2.getVelocity());
 	}
 
 	/**
@@ -392,12 +376,12 @@ public abstract class Entity {
 	public double getTimeToCollision(Entity ship2) throws IllegalArgumentException {
 		if (ship2 == null) throw new IllegalArgumentException("The second ship does not exist.");
 		if (this.overlap(ship2)) throw new IllegalArgumentException("The ships overlap.");
-		double[] deltaR = this.getPositionDifference(ship2);
-		double[] deltaV = this.getVelocityDifference(ship2);
-		if (dotProduct(deltaR,deltaV) >= 0) return Double.POSITIVE_INFINITY;
-		double d = Math.pow(dotProduct(deltaV,deltaR), 2) - (dotProduct(deltaV,deltaV))*(dotProduct(deltaR,deltaR)-Math.pow(this.getRadius()+ship2.getRadius(), 2));
+		OrderedPair deltaR = this.getPositionDifference(ship2);
+		OrderedPair deltaV = this.getVelocityDifference(ship2);
+		if (deltaR.dotProduct(deltaV) >= 0) return Double.POSITIVE_INFINITY;
+		double d = Math.pow(deltaV.dotProduct(deltaR), 2) - (deltaV.dotProduct(deltaV))*(deltaR.dotProduct(deltaR)-Math.pow(this.getRadius()+ship2.getRadius(), 2));
 		if (d <= 0) return Double.POSITIVE_INFINITY;
-		else return Math.max(0, -(dotProduct(deltaR,deltaV)+Math.sqrt(d))/dotProduct(deltaV,deltaV));
+		else return Math.max(0, -(deltaR.dotProduct(deltaV)+Math.sqrt(d))/(deltaV.dotProduct(deltaV)));
 	}
 
 	/**
@@ -415,15 +399,14 @@ public abstract class Entity {
 	 * @return Return the position at time of collision between ship and ship2
 	 *         | result.equals(this.getPositionAfterMovingForAPeriodOf(this.getTimeToCollision(ship2)))
 	 */
-	public double[] getCollisionPosition(Entity ship2) throws IllegalArgumentException {
+	public OrderedPair getCollisionPosition(Entity ship2) throws IllegalArgumentException {
 		double time = this.getTimeToCollision(ship2);
 		if (time == Double.POSITIVE_INFINITY) return null;
-		double[] thisPosition = this.getPositionAfterMovingForAPeriodOf(time);
-		double[] otherPosition = ship2.getPositionAfterMovingForAPeriodOf(time);
-		double[] positionDifference = new double[]{otherPosition[0]-thisPosition[0],otherPosition[1]-thisPosition[1]};
+		OrderedPair thisPosition = this.getPositionAfterMovingForAPeriodOf(time);
+		OrderedPair otherPosition = ship2.getPositionAfterMovingForAPeriodOf(time);
+		OrderedPair positionDifference = thisPosition.getDifference(otherPosition);
 		double radiusRatio = this.getRadius()/(this.getRadius()+ship2.getRadius());
-		double[] collisionPosition = new double[]{thisPosition[0]+positionDifference[0]*radiusRatio,thisPosition[1]+positionDifference[1]*radiusRatio};
-		
+		OrderedPair collisionPosition = thisPosition.sum(positionDifference.multiply(radiusRatio));
 		return collisionPosition;
 	}
 
@@ -495,12 +478,12 @@ public abstract class Entity {
 	public double getTimeCollisionBoundary() {
 		if (getWorld()== null) return Double.POSITIVE_INFINITY;
 		double xTime = Double.POSITIVE_INFINITY; double yTime = Double.POSITIVE_INFINITY;
-		double[] velocity = getVelocity();
-		double[] position = getPosition();
-		if(velocity[0] > 0) xTime = (getWorld().getSize()[0]-position[0]-getRadius())/velocity[0];
-		if(velocity[0] < 0) xTime = -(position[0]-getRadius())/velocity[0];
-		if(velocity[1] > 0) yTime = (getWorld().getSize()[1]-position[1]-getRadius())/velocity[1];
-		if(velocity[1] < 0) yTime = -(position[1]-getRadius())/velocity[1];
+		OrderedPair velocity = getVelocity();
+		OrderedPair position = getPosition();
+		if(velocity.getX() > 0) xTime = (getWorld().getSize()[0]-position.getX()-getRadius())/velocity.getX();
+		if(velocity.getX() < 0) xTime = -(position.getX()-getRadius())/velocity.getX();
+		if(velocity.getY() > 0) yTime = (getWorld().getSize()[1]-position.getY()-getRadius())/velocity.getY();
+		if(velocity.getY() < 0) yTime = -(position.getY()-getRadius())/velocity.getY();
 		// TODO Auto-generated method stub
 		if (xTime < 0) xTime = Double.POSITIVE_INFINITY;
 		if (yTime < 0) yTime = Double.POSITIVE_INFINITY;
@@ -514,17 +497,17 @@ public abstract class Entity {
 	 * @return Returns the position of this entity at collision with nearest boundary within it's trajectory
 	 *         | result == positionAtEntityCollisionBoundary
 	 */
-	public double[] getPositionCollisionBoundary() {
-		double[] positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
-		if(positionAtEntityCollisionBoundary == null || !Double.isFinite(positionAtEntityCollisionBoundary[0]) || !Double.isFinite(positionAtEntityCollisionBoundary[1])) 
+	public OrderedPair getPositionCollisionBoundary() {
+		OrderedPair positionAtEntityCollisionBoundary = this.getPositionAfterMovingForAPeriodOf(this.getTimeCollisionBoundary());
+		if(positionAtEntityCollisionBoundary == null || !Double.isFinite(positionAtEntityCollisionBoundary.getX()) || !Double.isFinite(positionAtEntityCollisionBoundary.getY())) 
 			return null;
-		double[] velocity = this.getVelocity();
-		double xBoundary = velocity[0] > 0 ? getWorld().getSize()[0] : 0;
-		double yBoundary = velocity[1] > 0 ? getWorld().getSize()[1] : 0;
-		double xDistance = velocity[0] > 0 ? xBoundary - positionAtEntityCollisionBoundary[0] : positionAtEntityCollisionBoundary[0];
-		double yDistance = velocity[1] > 0 ? yBoundary - positionAtEntityCollisionBoundary[1] : positionAtEntityCollisionBoundary[1];;
+		OrderedPair velocity = this.getVelocity();
+		double xBoundary = velocity.getX() > 0 ? getWorld().getSize()[0] : 0;
+		double yBoundary = velocity.getY() > 0 ? getWorld().getSize()[1] : 0;
+		double xDistance = velocity.getX() > 0 ? xBoundary - positionAtEntityCollisionBoundary.getX() : positionAtEntityCollisionBoundary.getX();
+		double yDistance = velocity.getY() > 0 ? yBoundary - positionAtEntityCollisionBoundary.getY() : positionAtEntityCollisionBoundary.getY();
 		
-		double[] collisionPosition = xDistance <= yDistance ? new double[]{xBoundary,positionAtEntityCollisionBoundary[1]} : new double[]{positionAtEntityCollisionBoundary[0],yBoundary};
+		OrderedPair collisionPosition = xDistance <= yDistance ? new OrderedPair(xBoundary,positionAtEntityCollisionBoundary.getY()) : new OrderedPair(positionAtEntityCollisionBoundary.getX(),yBoundary);
 //		if(xDistance < 0) xDistance = Double.POSITIVE_INFINITY;
 //		if(yDistance < 0) yDistance = Double.POSITIVE_INFINITY;
 //		if(xDistance == Double.POSITIVE_INFINITY && yDistance == Double.POSITIVE_INFINITY) return null;
@@ -541,9 +524,10 @@ public abstract class Entity {
 	 *         |   new.getVelocity()[1] == -getVelocity()[1]
 	 */
 	public void collideBoundary() {
-		double[] position = getPositionCollisionBoundary();
-		if(position[0] == 0 || position[0] == getWorld().getSize()[0]) setVelocity(new double[]{-getVelocity()[0],getVelocity()[1]});
-		if(position[1] == 0 || position[1] == getWorld().getSize()[1]) setVelocity(new double[]{getVelocity()[0],-getVelocity()[1]});
+		OrderedPair position = getPositionCollisionBoundary();
+		if (position == null) return;
+		if(position.getX() == 0 || position.getX() == getWorld().getSize()[0]) setVelocity(new OrderedPair(-getVelocity().getX(),getVelocity().getY()));
+		if(position.getY() == 0 || position.getY() == getWorld().getSize()[1]) setVelocity(new OrderedPair(getVelocity().getX(),-getVelocity().getY()));
 	}
 	
 	public abstract void collide(Entity entity);

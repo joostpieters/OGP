@@ -7,7 +7,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class AssignmentStatement<T> extends Statement {
+public class AssignmentStatement<T> extends ProgramElement implements Statement {
 	private Expression<T> value;
 	private String variableName;
 	private boolean hasActiveBreakStatement;
@@ -58,6 +58,11 @@ public class AssignmentStatement<T> extends Statement {
 	@Override
 	public String toString() {
 		return "[AssigmentStatement: " + variableName + " <- " + value +"]";
+	}
+
+	@Override
+	public boolean failedToAdvanceTime() {
+		return false;
 	}
 
 }

@@ -7,7 +7,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class SequenceStatement extends Statement {
+public class SequenceStatement extends ProgramElement implements Statement {
 
 	private List<Statement> statements;
 	private boolean hasActiveBreakStatement;

@@ -6,7 +6,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class IfStatement extends Statement {
+public class IfStatement extends ProgramElement implements Statement {
 	private Expression<? extends Boolean> condition;
 	private Statement ifBody;
 	private Statement elseBody;

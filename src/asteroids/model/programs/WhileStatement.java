@@ -6,7 +6,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class WhileStatement extends Statement {
+public class WhileStatement extends ProgramElement implements Statement {
 	private Expression<Boolean> condition;
 	private Statement body;
 	private boolean executingBody;
@@ -71,6 +71,11 @@ public class WhileStatement extends Statement {
 	@Override
 	public boolean failedToAdvanceTime() {
 		return failedToAdvanceTime;
+	}
+
+	@Override
+	public boolean hasActiveBreakStatement() {
+		return false;
 	}
 	
 	@Override

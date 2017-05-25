@@ -5,7 +5,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class NotExpression extends Expression<Boolean> {
+public class NotExpression extends ProgramElement implements Expression<Boolean> {
 	private Expression<? extends Boolean> e;
 
 	public NotExpression(Expression<? extends Boolean> e, SourceLocation location) {

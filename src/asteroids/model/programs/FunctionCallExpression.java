@@ -6,7 +6,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class FunctionCallExpression extends Expression<Object> {
+public class FunctionCallExpression extends ProgramElement implements Expression<Object> {
 	private String functionName;
 	private List<Expression> actualArgs;
 	private boolean hasActiveBreakStatement;

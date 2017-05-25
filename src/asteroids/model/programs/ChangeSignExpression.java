@@ -5,7 +5,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class ChangeSignExpression extends Expression<Double> {
+public class ChangeSignExpression extends ProgramElement implements Expression<Double> {
 	private Expression<? extends Double> e;
 
 	public ChangeSignExpression(Expression<? extends Double> e, SourceLocation location) {

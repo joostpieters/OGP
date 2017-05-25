@@ -5,7 +5,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class MultiplicationExpression extends Expression<Double> {
+public class MultiplicationExpression extends ProgramElement implements Expression<Double> {
 	private Expression<? extends Double> e1;
 	private Expression<? extends Double> e2;
 

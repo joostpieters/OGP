@@ -5,7 +5,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class SqrtExpression extends Expression<Double> {
+public class SqrtExpression extends ProgramElement implements Expression<Double> {
 	Expression<Double> e;
 
 	public SqrtExpression(Expression<Double> e, SourceLocation location) {

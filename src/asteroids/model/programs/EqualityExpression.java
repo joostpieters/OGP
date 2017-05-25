@@ -5,7 +5,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class EqualityExpression extends Expression<Boolean> {
+public class EqualityExpression extends ProgramElement implements Expression<Boolean> {
 	private Expression e1;
 	private Expression e2;
 

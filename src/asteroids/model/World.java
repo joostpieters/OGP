@@ -72,10 +72,10 @@ public class World {
 			if (entity.overlap(entity2))
 				return false;
 		}
-		if ((entity.getRadius() > entity.getPosition()[0] 
-				|| entity.getRadius() > entity.getPosition()[1]
-				|| getWidth() < entity.getPosition()[0] + entity.getRadius() 
-				|| getHeight() < entity.getPosition()[1] + entity.getRadius())){
+		if ((entity.getRadius() > entity.getPosition().getX() 
+				|| entity.getRadius() > entity.getPosition().getY()
+				|| getWidth() < entity.getPosition().getX() + entity.getRadius() 
+				|| getHeight() < entity.getPosition().getY() + entity.getRadius())){
 			return false;}
 		return true;
 	}
@@ -217,9 +217,9 @@ public class World {
 	 * @return Return the position at time of collision between two objects of this world.
 	 *         | result == getNextCollidingObjects()[0].getCollisionPosition(getNextCollidingObjects()[1])
 	 */
-	public double[] getPositionNextCollision() {
+	public OrderedPair getPositionNextCollision() {
 		Entity[] nextCollidingObjects = getNextCollidingObjects();
-		if(nextCollidingObjects[0] == null) return new double[]{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY};
+		if(nextCollidingObjects[0] == null) return new OrderedPair(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 		if (nextCollidingObjects[1] == null) return nextCollidingObjects[0].getPositionCollisionBoundary();
 		else return nextCollidingObjects[0].getCollisionPosition(nextCollidingObjects[1]);
 	}
@@ -270,7 +270,7 @@ public class World {
 		if(dt < 0) throw new IllegalArgumentException("dt has to be positive");
 		if (Double.isNaN(dt)) throw new IllegalArgumentException("dt has to be a number");
 		double tC = getTimeNextCollision();
-		double[] position = getPositionNextCollision();
+		OrderedPair position = getPositionNextCollision();
 		Entity[] entities = getNextCollidingObjects();
 		while (tC <= dt){
 			for(Entity entity: getEntities()) {
@@ -280,11 +280,11 @@ public class World {
 				entity.move(tC);
 			}
 			if(entities[1] == null){
-				if(collisionListener != null) collisionListener.boundaryCollision(entities[0], position[0], position[1]);
+				if(collisionListener != null) collisionListener.boundaryCollision(entities[0], position.getX(), position.getY());
 				entities[0].collideBoundary();
 			}
 			else {
-				if(collisionListener != null) collisionListener.objectCollision(entities[0], entities[1], position[0], position[1]);
+				if(collisionListener != null) collisionListener.objectCollision(entities[0], entities[1], position.getX(), position.getY());
 				entities[0].collide((entities[1].getClass().cast(entities[1])));
 			}
 			
@@ -315,7 +315,7 @@ public class World {
 	 */
 	public Object getEntityAt(double x, double y) {
 		for (Entity entity : getEntities())
-			if (entity.getPosition()[0] == x && entity.getPosition()[1] == y) return entity;
+			if (entity.getPosition().getX() == x && entity.getPosition().getY() == y) return entity;
 		return null;
 	}
 

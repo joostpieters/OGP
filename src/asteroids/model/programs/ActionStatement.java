@@ -5,7 +5,7 @@ import java.util.Set;
 
 import asteroids.part3.programs.SourceLocation;
 
-public abstract class ActionStatement extends Statement {
+public abstract class ActionStatement extends ProgramElement implements Statement {
 
 	private boolean failedToAdvanceTime;
 
@@ -20,6 +20,12 @@ public abstract class ActionStatement extends Statement {
 	
 	public boolean failedToAdvanceTime(){
 		return failedToAdvanceTime;
+	}
+
+	@Override
+	public boolean hasActiveBreakStatement() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	@Override

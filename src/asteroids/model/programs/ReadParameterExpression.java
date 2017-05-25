@@ -6,7 +6,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class ReadParameterExpression extends Expression<Object> {
+public class ReadParameterExpression extends ProgramElement implements Expression<Object> {
 
 	private String parameterName;
 	private Function function;

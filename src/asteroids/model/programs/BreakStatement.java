@@ -6,7 +6,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class BreakStatement extends Statement {
+public class BreakStatement extends ProgramElement implements Statement {
 
 	public BreakStatement(SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
@@ -37,6 +37,11 @@ public class BreakStatement extends Statement {
 	public Optional execute(Object[] actualArgs, Set<Variable> localVariables) {
 		// TODO Auto-generated method stub
 		return Optional.empty();
+	}
+
+	@Override
+	public boolean failedToAdvanceTime() {
+		return false;
 	}
 
 }

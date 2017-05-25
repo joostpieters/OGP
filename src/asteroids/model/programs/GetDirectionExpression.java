@@ -5,7 +5,7 @@ import java.util.Set;
 import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
-public class GetDirectionExpression extends Expression<Double> {
+public class GetDirectionExpression extends ProgramElement implements Expression<Double> {
 
 	public GetDirectionExpression(SourceLocation location) {
 		// TODO Auto-generated constructor stub
